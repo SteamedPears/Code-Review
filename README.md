@@ -13,7 +13,7 @@ backend store. Also, it will serve web resources -- hence the name.
 * The backend store will keep the code and comments. It may also store extra
 data such as reserved usernames, if we implement that.
 
-See http://codereview.steamedpears.com for the prototype.
+See http://review.steamedpears.com for the prototype.
 
 
 # Milestones
