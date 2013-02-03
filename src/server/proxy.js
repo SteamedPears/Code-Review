@@ -7,7 +7,6 @@ var proxyServer = require('http-proxy');
  * proxy function                                                             *
  ******************************************************************************/
 function start(port,options,next) {
-    
 
 	proxyServer.createServer(options).listen(port, function() {
 

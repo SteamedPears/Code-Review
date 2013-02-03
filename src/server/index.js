@@ -12,13 +12,18 @@
  * Configuration
  ******************************************************************************/
 var serverPort = 20193;
-var proxyPort = 3000;
+
+// development mode options
+var staticPort = 8888;
+var proxyPort  = 8080;
+
+// check NODE_ENV environment variable
+var startDevProxy = (process.env.NODE_ENV === 'development');
 
 /******************************************************************************
  * Load Modules                                                                *
  ******************************************************************************/
 var server = require("./server");
-var proxyServer = require("./proxy");
 var router = require("./router");
 var requestHandlers = require("./requestHandlers");
 
@@ -43,26 +48,15 @@ try{
 
     //////////////////////////////////////////////////////////////////////
     // Development Static Server and Proxy
-    if (process.env.NODE_ENV === 'development') {
-		console.log('Developement Mode');
-		console.log('Serving app on port' + proxyPort);
+    if (startDevProxy) {
+        console.log('Developement Mode');
+
+        require('./static-server').start(staticPort,staticDirectory);
         
-		var static = require('node-static');
-        
-		var file = new (static.Server)('./public');
-        
-		require('http').createServer(function (request, response) {
-			request.addListener('end', function () {
-				console.log('Serving file');
-                
-				file.serve(request, response);
-			});
-		}).listen(proxyPort);
-        
-		proxyServer.start(proxyPort,{
+		require("./proxy").start(proxyPort,{
             router: { 
 				'localhost/do/' : 'localhost:' + serverPort,
-				'localhost/' : 'localhost:' + proxyPort
+				'localhost/'    : 'localhost:' + proxyPort
 			}
 		});
 	}
