@@ -1,18 +1,30 @@
 /******************************************************************************
-* Import parts                                                                *
-******************************************************************************/
+ * Server entry point (index)                                                  *
+ *                                                                             *
+ * Project: Code Review                                                        *
+ * By:      Steamed Pears                                                      *
+ *                                                                             *
+ * This is the node script that pulls together the various modules and         *
+ * starts the Code Review server.                                              *
+ ******************************************************************************/
+
+/******************************************************************************
+ * Configuration
+ ******************************************************************************/
+var serverPort = 20193;
+var proxyPort = 3000;
+
+/******************************************************************************
+ * Load Modules                                                                *
+ ******************************************************************************/
 var server = require("./server");
 var proxyServer = require("./proxy");
 var router = require("./router");
 var requestHandlers = require("./requestHandlers");
-var serverPort = 20193;
-var proxyPort = 3000;
-
-var NODE_ENV = process.env.NODE_ENV;
 
 /******************************************************************************
-* Connect the request handlers, aka. Routes                                   *
-******************************************************************************/
+ * Connect the request handlers, aka. Routes                                   *
+ ******************************************************************************/
 var handle = {};
 handle["/"] = requestHandlers.start;
 handle["/code"] = requestHandlers.code;
@@ -25,41 +37,38 @@ handle["/languages"] = requestHandlers.languages;
 handle["not_found"] = requestHandlers.not_found;
 
 /******************************************************************************
-* Start the server                                                            *
-******************************************************************************/
+ * Start the server                                                            *
+ ******************************************************************************/
 try{
 
-		//Running modes
-    if (NODE_ENV === 'development') {
-			console.log('Developement Mode');
-			console.log('Serving app on port' + proxyPort);
+    //////////////////////////////////////////////////////////////////////
+    // Development Static Server and Proxy
+    if (process.env.NODE_ENV === 'development') {
+		console.log('Developement Mode');
+		console.log('Serving app on port' + proxyPort);
+        
+		var static = require('node-static');
+        
+		var file = new (static.Server)('./public');
+        
+		require('http').createServer(function (request, response) {
+			request.addListener('end', function () {
+				console.log('Serving file');
+                
+				file.serve(request, response);
+			});
+		}).listen(proxyPort);
+        
+		proxyServer.start(proxyPort,{
+            router: { 
+				'localhost/do/' : 'localhost:' + serverPort,
+				'localhost/' : 'localhost:' + proxyPort
+			}
+		});
+	}
 
-			var static = require('node-static');
-
-			var file = new(static.Server)('./public');
-
-			require('http').createServer(function (request, response) {
-				request.addListener('end', function () {
-					console.log('Serving file');
-
-					file.serve(request, response);
-				});
-			}).listen(8080);
-
-			proxyServer.start(proxyPort
-					, { router: { 
-							'localhost/do/' : 'localhost:20193',
-							'localhost/' : 'localhost:8080',
-							}
-					});
-		}
-		else if (NODE_ENV === 'production') {
-    	console.log('Production Mode');
-			//Do production stuff
-
-		}
-    
-    
+    //////////////////////////////////////////////////////////////////////
+    // Server
     server.start(serverPort, router.route, handle);
 
 } catch(e) {
