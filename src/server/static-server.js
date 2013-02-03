@@ -1,5 +1,5 @@
 exports.start = function(port,folder,next) {
-    console.log('Serving app on port' + proxyPort);
+    console.log('Serving app on port ' + port);
 
     var static = require('node-static');
 

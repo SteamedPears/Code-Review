@@ -1,6 +1,21 @@
 #!/bin/bash
+######################################################################
+# Development Server Stop Script
+#
+# Project: Code Review
+# By:      Steamed Pears
+#
+# This script should stop a development server serving the front and
+# back ends via node.
+######################################################################
 
-# TODO: read pid from file
-# TODO: stop the dev server
+######################################################################
+# Configuration
 
-echo Not yet implemented.  --sdp
+PID_FILE="var/server.pid"
+
+######################################################################
+# Stop server
+
+kill -9 `cat $PID_FILE`
+

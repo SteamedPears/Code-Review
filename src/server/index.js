@@ -16,6 +16,7 @@ var serverPort = 20193;
 // development mode options
 var staticPort = 8888;
 var proxyPort  = 8080;
+var staticDirectory = '../client/';
 
 // check NODE_ENV environment variable
 var startDevProxy = (process.env.NODE_ENV === 'development');
@@ -56,7 +57,7 @@ try{
 		require("./proxy").start(proxyPort,{
             router: { 
 				'localhost/do/' : 'localhost:' + serverPort,
-				'localhost/'    : 'localhost:' + proxyPort
+				'localhost/'    : 'localhost:' + staticPort
 			}
 		});
 	}
