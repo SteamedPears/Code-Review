@@ -1,0 +1,14 @@
+/******************************************************************************
+* Sqlite Database Information                                                 *
+*                                                                             *
+* Project: CodeReview                                                         *
+* By:      Steamed Pears                                                      *
+*                                                                             *
+* This file contains the basic configuration information needed to            *
+* connect to a sqlite databse.  This is built with the intention of           *
+* being used by developers to run on their personal computers.                *
+******************************************************************************/
+
+exports.db = '';
+exports.user = '';
+exports.pw = '';
