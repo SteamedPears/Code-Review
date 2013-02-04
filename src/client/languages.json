@@ -1,5 +1,5 @@
 {
-	"include_path":"include/CodeMirror/mode/",
+	"include_path":"include/CodeMirror-2.3/mode/",
 	"data":{
 		"none":{"mode":"text/plain",
 				"requires":[]},
