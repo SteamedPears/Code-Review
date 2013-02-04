@@ -7,16 +7,18 @@ var DB_Info = require("./models/db_info");
 var uuid = require('node-uuid');
 
 // make the db connection
-var sequelize = new Sequelize(DB_Info.db,DB_Info.user,DB_Info.pw);
+var sequelize = new Sequelize(DB_Info.db,
+                              DB_Info.user,
+                              DB_Info.pw,
+                              DB_Info.options);
 
 // import the models
 var Code = sequelize.import(__dirname + "/models/code");
 var Comment = sequelize.import(__dirname + "/models/comment");
-//var Language = sequelize.import(__dirname + "/models/language");
+var langs = require('./languageList.js');
 
 // set the associations
 Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
-//Language.hasMany(Code, {foreignKey: 'language_id'});
 
 /******************************************************************************
 * Helper Functions                                                            *
@@ -69,7 +71,7 @@ function code(request,response) {
 	}
 	console.log('Finding code with id '+id);
 	Code
-		.find({where:{id:id}})
+		.find({where:{uuid:id}})
 		.success(function(code) {
 			if(code === null) {
 				error(response,404,"text/plain");
@@ -80,6 +82,7 @@ function code(request,response) {
 				return;
 			}
 			success(response);
+            code.id = code.uuid;
 			response.write(JSON.stringify(code));
 			response.end();
 		})
@@ -92,6 +95,7 @@ function code(request,response) {
 			response.end();
 		});
 }
+
 function comment(request,response) {
 	var query = url.parse(request.url).query;
 	var params = querystring.parse(query);
@@ -116,6 +120,7 @@ function comment(request,response) {
 		response.end();
 	});
 }
+
 function comments(request,response) {
 	var query = url.parse(request.url).query;
 	var params = querystring.parse(query);
@@ -128,10 +133,7 @@ function comments(request,response) {
 	});
 }
 
-
-var langs = require('./languageList.js');
 function language(request,response) {
-
 	function responseError(id) {
 		error(response,404);
 		response.write('{"id":'+id+' ,"text":"Language not found"}');
@@ -144,37 +146,36 @@ function language(request,response) {
 	var idString = params["id"];
 	var id;
 
-	//Check if numeric
-	//http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
+	// Check if numeric
+	// http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
 	if (!isNaN(parseFloat(idString)) && isFinite(idString)) {
 		id = parseFloat(idString,10);
 
 	}
 	else {
-		responseError(-1);
+		responseError(idString);
 		return;
 	}
 
-
-	//Within bounds
+	// Within bounds
 	if (id >= langs.length + 1 || id < 1) {
 		responseError(id);
 		return;
 	}
 
-	id--; //Convert to zero index for langs array
+	id--; // Convert to zero index for langs array
 	var returnLang = langs[id];
 
 	success(response);
 	response.write(JSON.stringify(returnLang));
 	response.end();
 }
+
 function languages(request,response) {
 	success(response);
 	response.write('{"languages":'+JSON.stringify(langs)+'}');
-		response.end();
-
-	}
+	response.end();
+}
 
 /******************************************************************************
 * Setters                                                                     *
@@ -183,44 +184,27 @@ function newcode(request,response) {
 	var form = new formidable.IncomingForm();
 	form.type = 'multipart';
 	form.parse(request, function(error, fields, files) {
-		console.log('============================================================');
-		console.log('NEW CODE');
-		console.log('============================================================');
-		console.log(error);
-		console.log('============================================================');
 		// do some basic validation
 		if(fields === null || !isValidString(fields.text)) {
 			redirect(response,"/index.html?error=Can't review empty code");
+            console.log("Invalid new code submission")
 			return;
 		}
-		// validate the language id
-		Language.find(Number(fields.language_id)).success(function(language) {
-			if(language === null) {
-				redirect(response,"/index.html?error=Invalid language");
-				return;
-			}
-			// valid, build code
-			var id=uuid.v4();
-			Code.build({
-				id: id,
-				text: fields.text,
-				language_id: fields.language_id
-			}).save()
-				.success(function(code){
-		console.log('============================================================');
-					console.log('saved code');
-					console.log(code);
-		console.log('============================================================');
-					redirect(response,"/view.html?id="+id);
-				})
-				.error(function(error){
-					console.log('===ERROR===');
-					console.log(error);
-					redirect(response,"/index.html?error=Invalid code");
-				});
+		var id=uuid.v4();
+		Code.build({
+			uuid: id,
+			text: fields.text,
+			language_id: 0 + new Number(fields.language_id)
+		}).save().success(function(code){
+			redirect(response,"/view.html?id="+id);
+		}).error(function(error){
+			console.log('===ERROR===');
+			console.log(error);
+			redirect(response,"/index.html?error=Invalid code");
 		});
 	});
 }
+
 function newcomment(request,response) {
 	// reject if no referer
 	if(request === null ||
@@ -254,7 +238,7 @@ function newcomment(request,response) {
 			redirect(response,'/view.html?id='+params.id+"&error=Invalid line numbers");
 		}
 		// first find the code associated with the new comment
-		Code.find({where:{id:fields.code_id}})
+		Code.find({where:{uuid:fields.code_id}})
 			.success(function (code) {
 				if(code === null) {
 					redirect(response,
