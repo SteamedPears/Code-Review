@@ -82,7 +82,6 @@ function code(request,response) {
 				return;
 			}
 			success(response);
-            code.id = code.uuid;
 			response.write(JSON.stringify(code));
 			response.end();
 		})
