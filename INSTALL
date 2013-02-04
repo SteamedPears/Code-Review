@@ -1,0 +1,43 @@
+Installation Instructions
+=========================
+
+Development
+-----------
+
+Requirements:
+
+ * unix (tested with Mac OS X 10.6.8)
+ * node (tested with v0.8.17)
+ * sqlite (tested with version 3.7.15.1 2012-12-19 20:39:10)
+
+Instructions:
+
+ 1. open a terminal
+ 2. cd to the root directory of the project (containing this text
+    file).
+ 3. Run bin/start_dev.sh
+
+Now you should be able to access the server running on localhost:8080.
+
+If you would like to stop the server, follow the above instructions
+but instead run bin/stop_dev.sh as the final step.
+
+
+
+Production
+----------
+
+Requirements:
+
+ * unix (Server uses CentOS release 5.8 (Final))
+ * node (Server uses v0.6.18)
+ * nginx (Server uses ??)
+ * MySQL (Server uses Ver 14.12 Distrib 5.0.95, for redhat-linux-gnu
+   (i686) using readline 5.1)
+
+Instructions:
+
+(Assuming ssh'd into server, pulled latest repo and reading this.)
+
+ 1. cd to root directory
+ 2. run bin/update_server.sh
