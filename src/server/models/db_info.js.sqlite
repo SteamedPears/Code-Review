@@ -9,6 +9,12 @@
 * being used by developers to run on their personal computers.                *
 ******************************************************************************/
 
+exports.host = '';
+exports.port = '';
 exports.db = '';
 exports.user = '';
 exports.pw = '';
+exports.options = {
+    dialect: 'sqlite',
+    storage: './models/data.db'
+};

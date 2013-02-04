@@ -4,7 +4,7 @@
 
 module.exports = function(sequelize, DataTypes) {
 	var Code = sequelize.define('Code',{
-	id: {
+	uuid: {
 		type: DataTypes.STRING,
 		primaryKey: true,
 		notNull: true,
@@ -27,8 +27,8 @@ module.exports = function(sequelize, DataTypes) {
 		}
 	}
 	},{
-	// don't pluralize code
-	freezeTableName: true
+	    // don't pluralize code
+	    freezeTableName: true
 	});
 
 	return Code;
