@@ -22,6 +22,9 @@ Now you should be able to access the server running on localhost:8080.
 If you would like to stop the server, follow the above instructions
 but instead run bin/stop_dev.sh as the final step.
 
+If you would like to restart the server, follow the above instructions
+but instead run bin/restart_dev.sh as the final step.
+
 If something has gone horribly wrong, follow the above instructions
 but instead run bin/reset_dev.sh as the final step.  WARNING!!!  This
 will destroy your development database and delete the locally
