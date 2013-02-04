@@ -12,9 +12,24 @@
 ######################################################################
 # Configuration
 
-DB_INFO_FILE="src/server/models/db_info.js"
+SERVER_DIR="src/server"
+DB_INFO_FILE="models/db_info.js"
 PID_FILE="var/server.pid"
 LOG_FILE="var/server.log"
+NODE_EXE="node"
+BUILD_DB_SCRIPT="models/build_db.js"
+TEST_DATA_SCRIPT="models/test_data.js"
+INDEX_SCRIPT="index.js"
+
+######################################################################
+# Install needed packages
+
+ROOT_DIR=`pwd`
+
+cd $SERVER_DIR
+
+echo "Installing needed packages"
+npm install
 
 ######################################################################
 # Database setup
@@ -24,16 +39,16 @@ if [ ! -f $DB_INFO_FILE ]; then
     cp $DB_INFO_FILE.sqlite $DB_INFO_FILE
 
     echo "Building needed databases"
-    # TODO: build databases
+    $NODE_EXE $BUILD_DB_SCRIPT
+
+    echo "Inserting test data"
+    $NODE_EXE $TEST_DATA_SCRIPT
 fi
 
 ######################################################################
 # Server initialization
 
-ROOT_DIR=`pwd`
-
-cd src/server/
-npm install
-NODE_ENV=development node index.js \
+echo Starting development server
+NODE_ENV=development $NODE_EXE $INDEX_SCRIPT \
     1>> $ROOT_DIR/$LOG_FILE 2>> $ROOT_DIR/$LOG_FILE &
 echo $! > $ROOT_DIR/$PID_FILE

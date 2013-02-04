@@ -523,8 +523,8 @@ var CodeReview = (function( CodeReview ) {
 		if((typeof code) === "string"){
 			code = jQuery.parseJSON(code);
 		}
-		codeId = code.id;
-		$('#code-id').val(code.id);
+		codeId = code.uuid;
+		$('#code-id').val(code.uuid);
 		var lines = code.text.split('\n');
 		num_lines = lines.length;
 		$("#code-view").text(code.text);
@@ -585,13 +585,13 @@ var CodeReview = (function( CodeReview ) {
 
 				// TODO: Make the code appear in the minimap
 				
-				getComments(code.id,writeComments,handleAjaxError);
+				getComments(code.uuid,writeComments,handleAjaxError);
 				setTimeout(rustleMyJimmmies,1000);
 			},handleAjaxError);
 		}else{
 			comments = [];
 			$(".comment-set").remove();
-			getComments(code.id,writeComments,handleAjaxError);
+			getComments(code.uuid,writeComments,handleAjaxError);
 		}
 	}
 
