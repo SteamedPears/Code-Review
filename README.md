@@ -21,7 +21,7 @@ See http://review.steamedpears.com for the prototype.
 The recommended milestones do not make as much sense for our project as for a
 completely new project, because we already have a working prototype.
 
-These correspond to the Thursdays beginning 7 February 2013, skipping 21
+These correspond to the Fridays beginning 8 February 2013, skipping 22
 February (Reading Week).
 
 1. Architecture design and goals for Sprint 1.
