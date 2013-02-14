@@ -51,3 +51,13 @@ Instructions:
 
  1. cd to root directory
  2. run bin/update_server.sh
+
+
+Troubleshooting
+---------------
+
+After running bin/server/start_dev.sh for the first time, if you get the following error `Error: Cannot find module '../build/Release/node_sqlite3.node'`, you may need to build the node sqlite3 module.
+
+ 1. Install node-gyp: `sudo npm install -g node-gyp`
+ 2. Navigate to bin/server/node_modules_sqlite3/
+ 3. Run `./configure` and `./make`
