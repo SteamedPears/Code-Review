@@ -159,5 +159,7 @@
 								  .data('lang'));
 			});
 		});
+
+		$.getScript('login.js');
 	});
 })();

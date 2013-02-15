@@ -26,6 +26,11 @@ label{
 	padding:5px;
 }
 
+#user-id {
+	float: right;
+	padding: 0.5em;
+}
+
 #error {
 	background-color: #FE2E2E;
 	text-decoration:none;
