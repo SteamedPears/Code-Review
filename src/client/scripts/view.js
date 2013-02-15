@@ -9,22 +9,65 @@
 ******************************************************************************/
 
 define([
-    "jquery"
-], function($) {
+    "jquery",
+    "CodeMirror"
+], function($,CodeMirror) {
     var view = {};
 
-    var mode = null;
+    var cm_inst = null;
+
+    var codeOptions = {
+		lineNumbers: true,
+		lineWrapping: true,
+		fixedGutter: true,
+		readOnly: false,
+		//mode: language.mode,
+		//onCursorActivity: handleSelection
+	},
+	diffOptions = {
+		lineNumbers: true,
+		lineWrapping: true,
+		fixedGutter: true,
+		readOnly: false,
+		smartIndent:false,
+		//mode: language.mode
+	},
+	commentOptions = {
+		lineNumbers: true,
+		lineWrapping: true,
+		fixedGutter: true,
+		readOnly: true,
+		//mode: language.mode
+	};
 
     view.displayError = function(err_html) {
         $('#error').html(err_html);
     };
 
-    view.initNewCodeMode = function() {
-        //
+    var init = function() {
+        cm_inst = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
+
+        // never run again
+        init = function() {};
     };
 
-    view.initNewCommentMode = function() {
-        //
+    view.initCodeMode = function() {
+        init();
+        // TODO: finish this
+    };
+
+    view.initCommentMode = function() {
+        init();
+        // TODO: finish this
+        cm_inst.setOption('readOnly',true);
+    };
+
+    view.displayCode = function(code) {
+        // TODO: finish this
+    };
+
+    view.displayComments = function(comments_array) {
+        // TODO: finish this
     };
 
     return view;

@@ -13,7 +13,8 @@ require.config({
 	paths:{
 		'QUnit':'lib/qunit-1.9.0',
         'underscore':'lib/underscore',
-        'URI':'lib/URI'
+        'URI':'lib/URI',
+        'CodeMirror':'lib/CodeMirror-2.3/lib/codemirror'
 	},
     shim:{
 		'QUnit':{
@@ -33,6 +34,12 @@ require.config({
             init:function() {
                 return this.URI;
             }
+        },
+        'CodeMirror':{
+            exports:'CodeMirror',
+            init:function() {
+                return this.CodeMirror;
+            }
         }
     }
 });
@@ -43,16 +50,23 @@ require([
     "underscore",
     "URI",
     // internal modules
-    "view"
+    "view",
+    "code",
+    "comment"
 ], function($,_,URI) {
     var view = require("view");
+    var code = require("code");
+    var comment = require("comment");
 
     // dispatch based on query
     var query = URI(document.URL).query(true);
     if(query.error !== undefined)
         view.displayError(query.error);
-    if(query.id === undefined)
-        view.initNewCodeMode();
-    else
-        view.initNewCommentMode();
+    if(query.id === undefined) {
+        view.initCodeMode();
+    } else {
+        view.initCommentMode();
+        view.displayCode(code.getCode(query.id));
+        view.displayComments(comment.getComments(query.id));
+    }
 });
