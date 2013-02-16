@@ -1,6 +1,6 @@
 html, body {
 	height: 99.99%;
-	width: 99.99%;
+	width: 99%;
 }
 
 div, p, pre, img, table, h1, h2, h3, h4, textarea, input {
@@ -18,12 +18,6 @@ label{
 	margin-right:1em;
 }
 
-.column{
-	float:left;
-	width:40%;
-	padding:5px;
-}
-
 #error {
 	background-color: #FE2E2E;
 	text-decoration:none;
@@ -32,26 +26,11 @@ label{
 #code {
 	width: 45%;
 	float: left;
-	position: relative;
-	min-height:1px;
-}
-
-#code-view {
-	width: 100%;
-	position: absolute;
-	
-}
-
-#comment-info{
-	float:left;
-	width:10%;
-	min-height:1px;
-	position:relative;
 }
 
 .right-side {
 	width:45%;
-	float:left;
+	float:right;
 	min-height:1px;
 	position:relative;
 }
@@ -110,39 +89,14 @@ label{
 	width: 50px;
 }
 
-#minimap {
-	position: fixed;
-	top: 0px;
-	right: 0px;
-	width: 100px;
-	height: 99.99%;
-	z-index: 2;
-	overflow: hidden;
-	opacity: 0.5;
-}
-
-#minimap textarea {
-	width: 100%;
-	height: 100%;
-	background-color: #CCCCCC;
-	font-size: 3px;
-	cursor: default;
-	/* Disable selection <http://stackoverflow.com/a/4358620> */
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
 .CodeMirror {
 	border: 1px solid #AAAAAA;
+    height: auto;
 }
 
 .CodeMirror-scroll {
-	height: auto;
-	overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .CodeMirror-gutter {
@@ -172,7 +126,9 @@ label{
 	border:0;
 }
 
+/*
 .CodeMirror, .CodeMirror-scroll {
 	min-height: 2em;
 	line-height: 1.3em;
 }
+*/

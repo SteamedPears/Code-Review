@@ -14,7 +14,7 @@ require.config({
 		'QUnit':'lib/qunit-1.9.0',
         'underscore':'lib/underscore',
         'URI':'lib/URI',
-        'CodeMirror':'lib/CodeMirror-2.3/lib/codemirror'
+        'CodeMirror':'lib/CodeMirror-3.02/lib/codemirror'
 	},
     shim:{
 		'QUnit':{
@@ -68,7 +68,7 @@ require([
         language.getLanguages(view.populateLanguageList);
     } else {
         view.initCommentMode();
-        code.getCode(query.id,view.displayCode);
+        code.getCode(query.id,view.displayCode,view.displayError);
         comment.getComments(query.id,view.displayComments);
     }
 });

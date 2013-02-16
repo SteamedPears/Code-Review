@@ -16,7 +16,7 @@ define([
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
-    var cm_inst = null;
+    var editor = null;
     var codeOptions = {
 		lineNumbers: true,
 		lineWrapping: true,
@@ -35,7 +35,8 @@ define([
         // never run again
         init = function() {};
         
-        cm_inst = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
+        editor = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
+        editor.refresh();
     };
 
     view.initCodeMode = function() {
@@ -68,16 +69,14 @@ define([
         $('#comment_instructions').hide();
         $('#code_controls').show();
         $('#comment_controls').hide();
-        // TODO: finish this
     };
 
     var commentMode = function() {
-        cm_inst.setOption('readOnly',true);
+        editor.setOption('readOnly',true);
         $('#code_instructions').hide();
         $('#comment_instructions').show();
         $('#code_controls').hide();
         $('#comment_controls').show();
-        // TODO: finish this
     };
 
 /******************************************************************************
@@ -88,7 +87,10 @@ define([
     };
 
     view.displayCode = function(code) {
-        // TODO: finish this
+        console.dir(code);
+        console.dir(editor);
+        editor.setValue(code.text);
+        editor.refresh();
     };
 
     view.displayComments = function(comments_array) {
