@@ -87,8 +87,6 @@ define([
     };
 
     view.displayCode = function(code) {
-        console.dir(code);
-        console.dir(editor);
         editor.setValue(code.text);
         editor.refresh();
     };
