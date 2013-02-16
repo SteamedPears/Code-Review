@@ -13,10 +13,15 @@ define([
 ], function($) {
     var language = {};
 
-    language.getLanguages = function(callback) {
-        $.get('/do/languages',function(data) {
-            callback(data.languages);
-        });
+    language.getLanguages = function(callback,error_fn) {
+		$.ajax('/do/languages',{
+			data:	 {code_id:code_id},
+			dataType: 'json',
+			error:	error_fn,
+			success:  function(data) {
+                callback(data.languages);
+            }
+		});
     };
 
     return language;

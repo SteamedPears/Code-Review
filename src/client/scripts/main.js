@@ -65,7 +65,7 @@ require([
         view.displayError(query.error);
     if(query.id === undefined) {
         view.initCodeMode();
-        language.getLanguages(view.populateLanguageList);
+        language.getLanguages(view.populateLanguageList,view.displayError);
     } else {
         view.initCommentMode();
         code.getCode(query.id,view.displayCode,view.displayError);
