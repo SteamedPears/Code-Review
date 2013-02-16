@@ -69,6 +69,6 @@ require([
     } else {
         view.initCommentMode();
         code.getCode(query.id,view.displayCode,view.displayError);
-        comment.getComments(query.id,view.displayComments);
+        comment.getComments(query.id,view.displayComments,view.displayError);
     }
 });

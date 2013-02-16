@@ -13,8 +13,13 @@ define([
 ], function($) {
     var comment = {};
 
-    comment.getComments = function(code_id,callback) {
-        callback([]); // TODO: fix this
+    comment.getComments = function(code_id,callback,error_fn) {
+		$.ajax('/do/comments',{
+			data:	 {code_id:code_id},
+			dataType: 'json',
+			error:	error_fn,
+			success:  callback
+		});
     };
     
     return comment;
