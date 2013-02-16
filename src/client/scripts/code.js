@@ -13,8 +13,8 @@ define([
 ], function($) {
     var code = {};
 
-    code.getCode = function(id) {
-        return {}; // TODO: fix this
+    code.getCode = function(id,callback) {
+        callback({}); // TODO: fix this
     };
 
     return code;

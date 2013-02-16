@@ -70,5 +70,17 @@ define([
         // TODO: finish this
     };
 
+    view.populateLanguageList = function(langs_array) {
+        var lang_list = $('#language_id');
+		for(var index in langs_array) {
+			var language = langs_array[index];
+			var option = $('<option>');
+			option.data('lang',language.mode);
+			option.val(language.id);
+			option.text(language.description);
+			lang_list.append(option);
+		}
+    };
+
     return view;
 });

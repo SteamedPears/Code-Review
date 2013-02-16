@@ -52,11 +52,13 @@ require([
     // internal modules
     "view",
     "code",
-    "comment"
+    "comment",
+    "language"
 ], function($,_,URI) {
     var view = require("view");
     var code = require("code");
     var comment = require("comment");
+    var language = require("language");
 
     // dispatch based on query
     var query = URI(document.URL).query(true);
@@ -64,9 +66,10 @@ require([
         view.displayError(query.error);
     if(query.id === undefined) {
         view.initCodeMode();
+        language.getLanguages(view.populateLanguageList);
     } else {
         view.initCommentMode();
-        view.displayCode(code.getCode(query.id));
-        view.displayComments(comment.getComments(query.id));
+        code.getCode(query.id,view.display);
+        comment.getComments(query.id,view.displayComments);
     }
 });
