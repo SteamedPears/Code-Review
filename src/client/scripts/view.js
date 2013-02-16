@@ -13,53 +13,78 @@ define([
     "CodeMirror"
 ], function($,CodeMirror) {
     var view = {};
-
+/******************************************************************************
+* Configuration                                                               *
+******************************************************************************/
     var cm_inst = null;
-
     var codeOptions = {
 		lineNumbers: true,
 		lineWrapping: true,
 		fixedGutter: true,
-		readOnly: false,
-		//mode: language.mode,
-		//onCursorActivity: handleSelection
-	},
-	diffOptions = {
-		lineNumbers: true,
-		lineWrapping: true,
-		fixedGutter: true,
-		readOnly: false,
-		smartIndent:false,
-		//mode: language.mode
-	},
-	commentOptions = {
-		lineNumbers: true,
-		lineWrapping: true,
-		fixedGutter: true,
-		readOnly: true,
-		//mode: language.mode
+		readOnly: false
 	};
-
-    view.displayError = function(err_html) {
-        $('#error').html(err_html);
+    
+    view.setHighlighting = function(lang) {
+        // TODO: finish this
     };
 
+/******************************************************************************
+* Initialization                                                              *
+******************************************************************************/
     var init = function() {
-        cm_inst = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
-
         // never run again
         init = function() {};
+        
+        cm_inst = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
     };
 
     view.initCodeMode = function() {
+        // never run again
+        view.initCodeMode = codeMode;
+        
         init();
-        // TODO: finish this
+        var select = $('#language_id');
+        select.change(function(eventOb) {
+            view.setHighlighting(select
+								 .children('[value='+selected_lang_id+']')
+								 .data('lang'));
+        });
+        codeMode();
     };
 
     view.initCommentMode = function() {
+        // never run again
+        view.initCommentMode = commentMode;
+        
         init();
+        commentMode();
+    };
+
+/******************************************************************************
+* View Modes                                                                  *
+******************************************************************************/
+    var codeMode = function() {
+        $('#code_instructions').show();
+        $('#comment_instructions').hide();
+        $('#code_controls').show();
+        $('#comment_controls').hide();
         // TODO: finish this
+    };
+
+    var commentMode = function() {
         cm_inst.setOption('readOnly',true);
+        $('#code_instructions').hide();
+        $('#comment_instructions').show();
+        $('#code_controls').hide();
+        $('#comment_controls').show();
+        // TODO: finish this
+    };
+
+/******************************************************************************
+* Display                                                                     *
+******************************************************************************/
+    view.displayError = function(err_html) {
+        $('#error').html(err_html);
     };
 
     view.displayCode = function(code) {
@@ -70,6 +95,9 @@ define([
         // TODO: finish this
     };
 
+/******************************************************************************
+* Controls                                                                    *
+******************************************************************************/
     view.populateLanguageList = function(langs_array) {
         var lang_list = $('#language_id');
 		for(var index in langs_array) {
@@ -82,5 +110,8 @@ define([
 		}
     };
 
+/******************************************************************************
+* End                                                                         *
+******************************************************************************/
     return view;
 });

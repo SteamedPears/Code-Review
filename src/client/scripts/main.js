@@ -47,14 +47,13 @@ require.config({
 require([
     // external libs
     "jquery",
-    "underscore",
     "URI",
     // internal modules
     "view",
     "code",
     "comment",
     "language"
-], function($,_,URI) {
+], function($,URI) {
     var view = require("view");
     var code = require("code");
     var comment = require("comment");
@@ -69,7 +68,7 @@ require([
         language.getLanguages(view.populateLanguageList);
     } else {
         view.initCommentMode();
-        code.getCode(query.id,view.display);
+        code.getCode(query.id,view.displayCode);
         comment.getComments(query.id,view.displayComments);
     }
 });

@@ -195,7 +195,7 @@ function newcode(request,response) {
 			text: fields.text,
 			language_id: 0 + new Number(fields.language_id)
 		}).save().success(function(code){
-			redirect(response,"/view.html?id="+id);
+			redirect(response,"/index.html?id="+id);
 		}).error(function(error){
 			console.log('===ERROR===');
 			console.log(error);

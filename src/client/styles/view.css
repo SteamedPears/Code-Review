@@ -49,7 +49,7 @@ label{
 	position:relative;
 }
 
-#right-side {
+.right-side {
 	width:45%;
 	float:left;
 	min-height:1px;
@@ -89,8 +89,12 @@ label{
 	padding-left: 2px;
 }
 
+#comment_controls, #code_controls, #code_instructions, #comment_instructions {
+    display: none;
+}
+
 #comment-new {
-    display: none; /* TODO: fix this */
+    display: none;
 	padding: 5px 5px 3px 3px;
 	border: 1px solid #CCCCCC;
 	position: absolute;
