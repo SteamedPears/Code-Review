@@ -110,7 +110,6 @@ define([
 		$('#line-end-num').text(end+1);
         editor.setSelected(start,end);
         var pos = editor.getLinePosition(start);
-        console.log(start,pos);
         $('#comment-new').css('top',pos);
 		$('#comment-new').slideDown();
     };
@@ -135,7 +134,6 @@ define([
 		var commentInfoBtn =  $("<button type='button' class='commentButton'>");
 		commentInfoBtn.text(count+" comments");
         var pos = editor.getLinePosition(line);
-        console.log(line,pos);
         commentInfoBtn.css('top',pos);
         commentInfoBtn.click(function() {
             view.displayComments(callback(line));
@@ -144,9 +142,25 @@ define([
     };
 
     view.displayComments = function(comments) {
+        view.clearComments();
         for(var i in comments) {
-            console.log(comments[i]);
+            view.addComment(comments[i]);
         }
+    };
+
+    view.clearComments = function() {
+        $('#comment-old').html('');
+    };
+
+    view.addComment = function(comment) {
+        // TODO: finish this
+		var commentDiv = $("<div class='comment-box'>");
+		var title = $("<div class='comment-title'>");
+		title.text(comment.user);
+		var body = $("<div class='comment-body'>");
+		body.text(comment.text);
+        commentDiv.append(title).append(body);
+        $('#comment-old').append(commentDiv);
     };
 
 /******************************************************************************
