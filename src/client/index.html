@@ -36,8 +36,7 @@
     <div id="comment_controls" class="right-side">
       <div id="comment-old"></div>
 	  <div id="comment-new">
-	    <form id="comment-form" enctype="multipart/form-data" 
-			  method="POST" action="/do/newcomment">
+	    <form id="comment-form" method="POST" action="/do/newcomment">
 		  <input type="hidden" name="code_id" id="code-id" value="-1" />
 		  <input type="hidden" name="line_start" id="line-start" value="-1" />
 		  <input type="hidden" name="line_end" id="line-end" value="-1" />
@@ -48,7 +47,7 @@
             <br/>
 		    <textarea id="text" name="text"></textarea><br />
 		    <textarea id="diffs" name="diffs"></textarea><br />
-		    <input type="submit" value="Submit Comment" />
+		    <input id="comment-submit-button" type="submit" value="Submit Comment" />
 		  </p>
 	    </form>
 	  </div>

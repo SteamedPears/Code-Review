@@ -14,31 +14,26 @@ require.config({
 		'QUnit':'lib/qunit-1.9.0',
         'underscore':'lib/underscore',
         'URI':'lib/URI',
-        'CodeMirror':'lib/CodeMirror-3.02/lib/codemirror'
+        'CodeMirror':'lib/CodeMirror-3.02/lib/codemirror',
+        'jquery.form':'lib/jquery.form'
 	},
     shim:{
 		'QUnit':{
-			exports:'QUnit',
-            init:function() {
-				return this.QUnit;
-			}
+			exports:'QUnit'
 		},
 		'underscore':{
-			exports:'underscore',
-            init:function() {
-				return this._;
-			}
+			exports:'underscore'
 		},
         'URI':{
-            exports:'URI',
-            init:function() {
-                return this.URI;
-            }
+            exports:'URI'
         },
         'CodeMirror':{
-            exports:'CodeMirror',
-            init:function() {
-                return this.CodeMirror;
+            exports:'CodeMirror'
+        },
+        'jquery.form':{
+            deps:['jquery'],
+            init:function($) {
+                return $.ajaxForm;
             }
         }
     }
@@ -69,7 +64,7 @@ require([
         view.initCodeMode();
         view.populateLanguageList(language.langs);
     } else {
-        view.initCommentMode();
+        view.initCommentMode(query.id);
         code.getCode(query.id,view.displayCode,view.displayError);
         comment.getCommentCounts(query.id,view.addCommentButtons,view.displayError);
     }

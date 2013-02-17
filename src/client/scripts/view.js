@@ -10,6 +10,7 @@
 
 define([
     "jquery",
+    "jquery.form",
     "editor"
 ], function($) {
     var editor = require('editor');
@@ -43,13 +44,16 @@ define([
         codeMode();
     };
 
-    view.initCommentMode = function() {
+    view.initCommentMode = function(id) {
         // never run again
         view.initCommentMode = commentMode;
         
         init();
         editor.diffFromTextArea($('#diffs')[0]);
-        commentMode();
+        $('#comment-form').ajaxForm(function(ob) {
+            // TODO: reload comments
+        });
+        commentMode(id);
     };
 
 /******************************************************************************
@@ -64,7 +68,7 @@ define([
         editor.onCursorActivity(noop);
     };
 
-    var commentMode = function() {
+    var commentMode = function(id) {
         editor.setOption('readOnly',true);
         $('#code_instructions').hide();
         $('#comment_instructions').show();
@@ -85,6 +89,7 @@ define([
                 view.showComments();
             }
         });
+        $('#code-id').val(id);
     };
 
 /******************************************************************************
