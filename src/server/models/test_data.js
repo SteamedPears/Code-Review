@@ -16,13 +16,13 @@ var Comment = sequelize.import(__dirname + "/comment");
 Code.build({
     uuid: '1',
 	text: 'print "Hello, world!"',
-	lang : 'python'
+	lang : 'python3'
 }).save().success(function(helloCode) {
 	Comment.build({
 		user: 'sdp',
 		code_id: helloCode.uuid,
-		line_start: 1,
-		line_end: 1,
+		line_start: 0,
+		line_end: 0,
 		text: 'Nice job.'
 	}).save();
 });

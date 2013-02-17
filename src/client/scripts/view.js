@@ -124,7 +124,7 @@ define([
         editor.setHighlighting(code.lang);
     };
 
-    view.displayComments = function(comment_counts,callback) {
+    view.addCommentButtons = function(comment_counts,callback) {
         for(var i in comment_counts) {
             view.addCommentButton(i,comment_counts[i],callback);
         }
@@ -132,15 +132,21 @@ define([
 
     view.addCommentButton = function(line,count,callback) {
 		var commentInfo = $("#comment-info");
-		var commentInfoBtn =  $("<button class='commentButton'>");
+		var commentInfoBtn =  $("<button type='button' class='commentButton'>");
 		commentInfoBtn.text(count+" comments");
         var pos = editor.getLinePosition(line);
         console.log(line,pos);
         commentInfoBtn.css('top',pos);
         commentInfoBtn.click(function() {
-            callback(line);
+            view.displayComments(callback(line));
         });
         commentInfo.append(commentInfoBtn);
+    };
+
+    view.displayComments = function(comments) {
+        for(var i in comments) {
+            console.log(comments[i]);
+        }
     };
 
 /******************************************************************************
