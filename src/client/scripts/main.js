@@ -52,12 +52,14 @@ require([
     "view",
     "code",
     "comment",
-    "language"
+    "language",
+    "editor"
 ], function($,URI) {
     var view = require("view");
     var code = require("code");
     var comment = require("comment");
     var language = require("language");
+    var editor = require("editor");
 
     // dispatch based on query
     var query = URI(document.URL).query(true);
@@ -65,7 +67,7 @@ require([
         view.displayError(query.error);
     if(query.id === undefined) {
         view.initCodeMode();
-        language.getLanguages(view.populateLanguageList,view.displayError);
+        view.populateLanguageList(language.langs);
     } else {
         view.initCommentMode();
         code.getCode(query.id,view.displayCode,view.displayError);

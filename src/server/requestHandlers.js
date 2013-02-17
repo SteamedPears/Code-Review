@@ -193,7 +193,7 @@ function newcode(request,response) {
 		Code.build({
 			uuid: id,
 			text: fields.text,
-			language_id: 0 + new Number(fields.language_id)
+			lang: fields.lang
 		}).save().success(function(code){
 			redirect(response,"/index.html?id="+id);
 		}).error(function(error){

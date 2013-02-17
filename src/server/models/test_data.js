@@ -16,7 +16,7 @@ var Comment = sequelize.import(__dirname + "/comment");
 Code.build({
     uuid: '1',
 	text: 'print "Hello, world!"',
-	language_id : 39
+	lang : 'python'
 }).save().success(function(helloCode) {
 	Comment.build({
 		user: 'sdp',

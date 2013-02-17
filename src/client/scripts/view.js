@@ -10,23 +10,12 @@
 
 define([
     "jquery",
-    "CodeMirror"
-], function($,CodeMirror) {
-    var view = {};
-/******************************************************************************
-* Configuration                                                               *
-******************************************************************************/
-    var editor = null;
-    var codeOptions = {
-		lineNumbers: true,
-		lineWrapping: true,
-		fixedGutter: true,
-		readOnly: false
-	};
+    "editor"
+], function($) {
+    var editor = require('editor');
     
-    view.setHighlighting = function(lang) {
-        // TODO: finish this
-    };
+    var view = {};
+    var languages = null;
 
 /******************************************************************************
 * Initialization                                                              *
@@ -35,8 +24,7 @@ define([
         // never run again
         init = function() {};
         
-        editor = CodeMirror.fromTextArea($('#code-view')[0],codeOptions);
-        editor.refresh();
+        editor.fromTextArea($('#code-view')[0]);
     };
 
     view.initCodeMode = function() {
@@ -88,25 +76,34 @@ define([
 
     view.displayCode = function(code) {
         editor.setValue(code.text);
-        editor.refresh();
+        editor.setHighlighting(code.lang);
     };
 
     view.displayComments = function(comments_array) {
+        for(var i in comments_array) {
+            view.displayComment(comments_array[i]);
+        }
+    };
+
+    view.displayComment = function(comment) {
         // TODO: finish this
     };
 
 /******************************************************************************
 * Controls                                                                    *
 ******************************************************************************/
-    view.populateLanguageList = function(langs_array) {
-        var lang_list = $('#language_id');
+    view.populateLanguageList = function(langs_ob) {
+        langs_array = langs_ob.data;
+        var lang_list = $('#lang');
 		for(var index in langs_array) {
 			var language = langs_array[index];
-			var option = $('<option>');
-			option.data('lang',language.mode);
-			option.val(language.id);
-			option.text(language.description);
-			lang_list.append(option);
+            if(language.mode) {
+			    var option = $('<option>');
+			    option.data('lang',index);
+			    option.val(index);
+			    option.text(language.description);
+			    lang_list.append(option);
+            }
 		}
     };
 
