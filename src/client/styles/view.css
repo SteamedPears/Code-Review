@@ -85,6 +85,11 @@ label{
     display: none;
 }
 
+#comment-old {
+	position: absolute;
+	width: 100%;
+}
+
 #comment-new {
     display: none;
 	padding: 5px 5px 3px 3px;

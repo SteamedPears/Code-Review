@@ -65,7 +65,11 @@ require([
         view.populateLanguageList(language.langs);
     } else {
         view.initCommentMode(query.id);
-        code.getCode(query.id,view.displayCode,view.displayError);
-        comment.getCommentCounts(query.id,view.addCommentButtons,view.displayError);
+        code.getCode(query.id,function(code) {
+            view.displayCode(code);
+            comment.getCommentCounts(query.id,
+                                     view.addCommentButtons,
+                                     view.displayError);
+        },view.displayError);
     }
 });

@@ -148,6 +148,9 @@ define([
 
     view.displayComments = function(comments) {
         view.clearComments();
+        var pos = editor.getLinePosition(comments[0].line_start);
+        console.log(pos);
+        $('#comment-old').css('top',pos);
         for(var i in comments) {
             view.addComment(comments[i]);
         }
