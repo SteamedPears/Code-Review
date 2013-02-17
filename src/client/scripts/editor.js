@@ -16,6 +16,7 @@ define([
     var editor = {};
     var inst = null;
     var languages = require("language").langs;
+    
     var codeOptions = {
 		lineNumbers: true,
 		lineWrapping: true,
@@ -44,9 +45,12 @@ define([
         resolveReqs(languages.data,lang,reqs_ob,reqs);
         return reqs;
     };
+
+    editor.onCursorActivity = function(callback) {
+        inst.on("cursorActivity",callback);
+    };
     
     editor.setHighlighting = function(lang) {
-        // TODO: finish this
         var reqs = resolveRequirements(languages,lang);
         var files = ["CodeMirror"];
         for(var i in reqs) {
@@ -74,6 +78,16 @@ define([
     editor.setValue = function(val) {
         if(inst === null) return;
         inst.setValue(val);
+    };
+
+    editor.somethingSelected = function() {
+        if(inst === null) return;
+        return inst.somethingSelected();
+    };
+
+    editor.getCursor = function(start) {
+        if(inst === null) return;
+        return inst.getCursor(start);
     };
 
     return editor;

@@ -59,6 +59,8 @@ define([
         $('#comment_instructions').hide();
         $('#code_controls').show();
         $('#comment_controls').hide();
+
+        editor.onCursorActivity(noop);
     };
 
     var commentMode = function() {
@@ -67,11 +69,48 @@ define([
         $('#comment_instructions').show();
         $('#code_controls').hide();
         $('#comment_controls').show();
+
+        editor.onCursorActivity(function() {
+            if(editor.somethingSelected()) {
+                var line_start = editor.getCursor(true).line;
+                var line_end = editor.getCursor(false).line;
+		        if(editor.getCursor(false).ch === 0){
+			        --(result.end);
+		        }
+                view.hideComments();
+                view.showCommentEditor(line_start,line_end);
+            } else {
+                view.hideCommentEditor();
+                view.showComments();
+            }
+        });
     };
 
 /******************************************************************************
 * Display                                                                     *
 ******************************************************************************/
+    view.hideComments = function() {
+        $('#comment-old').hide();
+    };
+
+    view.showComments = function() {
+        $('#comment-old').show();
+    };
+
+    view.hideCommentEditor = function() {
+        $('#comment-new').hide();
+    };
+
+    view.showCommentEditor = function(start,end) {
+        // TODO: finish this
+        $('#comment-new').show();
+		$('input#line-start').val(start);
+		$('input#line-end').val(end);
+		$('#line-start-num').text(start);
+		$('#line-end-num').text(end);
+		$('#comment-new').slideDown();
+    };
+
     view.displayError = function(err_html) {
         $('#error').html(err_html);
     };
