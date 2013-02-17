@@ -28,6 +28,19 @@ label{
 	float: left;
 }
 
+
+#comment-info{
+	float:left;
+	width:10%;
+	min-height:1px;
+	position:relative;
+}
+
+.commentButton {
+    display: block;
+    position: absolute;
+}
+
 .right-side {
 	width:45%;
 	float:right;

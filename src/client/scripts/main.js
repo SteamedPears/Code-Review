@@ -71,6 +71,6 @@ require([
     } else {
         view.initCommentMode();
         code.getCode(query.id,view.displayCode,view.displayError);
-        comment.getComments(query.id,view.displayComments,view.displayError);
+        comment.getCommentCounts(query.id,view.displayComments,view.displayError);
     }
 });

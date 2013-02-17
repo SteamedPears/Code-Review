@@ -103,7 +103,6 @@ define([
     };
 
     view.showCommentEditor = function(start,end) {
-        // TODO: finish this
         $('#comment-new').show();
 		$('input#line-start').val(start);
 		$('input#line-end').val(end);
@@ -111,6 +110,7 @@ define([
 		$('#line-end-num').text(end+1);
         editor.setSelected(start,end);
         var pos = editor.getLinePosition(start);
+        console.log(start,pos);
         $('#comment-new').css('top',pos);
 		$('#comment-new').slideDown();
     };
@@ -124,14 +124,23 @@ define([
         editor.setHighlighting(code.lang);
     };
 
-    view.displayComments = function(comments_array) {
-        for(var i in comments_array) {
-            view.displayComment(comments_array[i]);
+    view.displayComments = function(comment_counts,callback) {
+        for(var i in comment_counts) {
+            view.addCommentButton(i,comment_counts[i],callback);
         }
     };
 
-    view.displayComment = function(comment) {
-        // TODO: finish this
+    view.addCommentButton = function(line,count,callback) {
+		var commentInfo = $("#comment-info");
+		var commentInfoBtn =  $("<button class='commentButton'>");
+		commentInfoBtn.text(count+" comments");
+        var pos = editor.getLinePosition(line);
+        console.log(line,pos);
+        commentInfoBtn.css('top',pos);
+        commentInfoBtn.click(function() {
+            callback(line);
+        });
+        commentInfo.append(commentInfoBtn);
     };
 
 /******************************************************************************

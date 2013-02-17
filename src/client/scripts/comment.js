@@ -13,13 +13,30 @@ define([
 ], function($) {
     var comment = {};
 
-    comment.getComments = function(code_id,callback,error_fn) {
+    var comments = null;
+
+    comment.getCommentCounts = function(code_id,callback,error_fn) {
 		$.ajax('/do/comments',{
 			data:	 {code_id:code_id},
 			dataType: 'json',
 			error:	error_fn,
-			success:  callback
+			success:  function(data) {
+                var counts = {};
+                for(var i in data.comments) {
+                    var line_start = data.comments[i].line_start;
+                    if(!counts[line_start])
+                        counts[line_start] = 0;
+                    ++(counts[line_start]);
+                }
+                comments = data.comments;
+                callback(counts,comment.getCommentsOnLine);
+            }
 		});
+    };
+
+    comment.getCommentsOnLine = function(line) {
+        if(comments === null) return;
+        return comments[line];
     };
     
     return comment;
