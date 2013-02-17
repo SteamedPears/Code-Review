@@ -111,8 +111,6 @@ define([
 		}
 
         lang_list.change(function(eo) {
-            //console.dir(eo);
-            //console.log(lang_list.val());
             editor.setHighlighting(lang_list.val());
         });
     };
