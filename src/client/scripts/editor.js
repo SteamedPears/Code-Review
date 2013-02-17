@@ -14,7 +14,7 @@ define([
     "language"
 ], function($,CodeMirror) {
     var editor = {};
-    var inst = null;
+    var inst = null, diff_inst = null;
     var languages = require("language").langs;
     
     var codeOptions = {
@@ -22,6 +22,13 @@ define([
 		lineWrapping: true,
 		fixedGutter: true,
 		readOnly: false
+	};
+	var diffOptions = {
+		lineNumbers: true,
+		lineWrapping: true,
+		fixedGutter: true,
+		readOnly: false,
+		smartIndent:false
 	};
 
     var resolveRequirements = function(languages,lang) {
@@ -70,6 +77,11 @@ define([
             inst = CodeMirror.fromTextArea(textarea,codeOptions);
     };
 
+    editor.diffFromTextArea = function(textarea) {
+        if(diff_inst === null)
+            diff_inst = CodeMirror.fromTextArea(textarea,diffOptions);
+    };
+
     editor.setOption = function(name,val) {
         if(inst === null) return;
         inst.setOption(name,val);
@@ -88,6 +100,24 @@ define([
     editor.getCursor = function(start) {
         if(inst === null) return;
         return inst.getCursor(start);
+    };
+
+    editor.setSelected = function(start,end) {
+        if(diff_inst === null) return;
+        diff_inst.setOption("firstLineNumber",start+1);
+        diff_inst.setOption("mode",inst.getOption("mode"));
+        diff_inst.setValue(inst.getRange({line:start,ch:0},{line:end,ch:999999}));
+        diff_inst.refresh();
+    };
+
+    editor.getLinePosition = function(line) {
+        if(inst === null) return;
+		var pos = inst.charCoords({line:line,ch:0}).top;
+		var parent = $(inst.getTextArea()).parent();
+		if(parent.position()){
+			pos-=parent.position().top;
+		}
+        return pos;
     };
 
     return editor;

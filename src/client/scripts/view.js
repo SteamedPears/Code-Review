@@ -48,6 +48,7 @@ define([
         view.initCommentMode = commentMode;
         
         init();
+        editor.diffFromTextArea($('#diffs')[0]);
         commentMode();
     };
 
@@ -75,7 +76,7 @@ define([
                 var line_start = editor.getCursor(true).line;
                 var line_end = editor.getCursor(false).line;
 		        if(editor.getCursor(false).ch === 0){
-			        --(result.end);
+			        --line_end;
 		        }
                 view.hideComments();
                 view.showCommentEditor(line_start,line_end);
@@ -106,8 +107,11 @@ define([
         $('#comment-new').show();
 		$('input#line-start').val(start);
 		$('input#line-end').val(end);
-		$('#line-start-num').text(start);
-		$('#line-end-num').text(end);
+		$('#line-start-num').text(start+1);
+		$('#line-end-num').text(end+1);
+        editor.setSelected(start,end);
+        var pos = editor.getLinePosition(start);
+        $('#comment-new').css('top',pos);
 		$('#comment-new').slideDown();
     };
 
