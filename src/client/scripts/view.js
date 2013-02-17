@@ -18,6 +18,8 @@ define([
     var view = {};
     var languages = null;
 
+    var noSelect = false;
+
     var noop = function() {};
 
 /******************************************************************************
@@ -51,6 +53,8 @@ define([
         init();
         editor.diffFromTextArea($('#diffs')[0]);
         $('#comment-form').ajaxForm(function(ob) {
+            view.hideCommentEditor();
+            $('#comment-form').resetForm();
             // TODO: reload comments
         });
         commentMode(id);
@@ -76,17 +80,19 @@ define([
         $('#comment_controls').show();
 
         editor.onCursorActivity(function() {
-            if(editor.somethingSelected()) {
-                var line_start = editor.getCursor(true).line;
-                var line_end = editor.getCursor(false).line;
-		        if(editor.getCursor(false).ch === 0){
-			        --line_end;
-		        }
-                view.hideComments();
-                view.showCommentEditor(line_start,line_end);
-            } else {
-                view.hideCommentEditor();
-                view.showComments();
+            if(!noSelect) {
+                if(editor.somethingSelected()) {
+                    var line_start = editor.getCursor(true).line;
+                    var line_end = editor.getCursor(false).line;
+		            if(editor.getCursor(false).ch === 0){
+			            --line_end;
+		            }
+                    view.hideComments();
+                    view.showCommentEditor(line_start,line_end);
+                } else {
+                    view.hideCommentEditor();
+                    view.showComments();
+                }
             }
         });
         $('#code-id').val(id);
@@ -113,7 +119,7 @@ define([
 		$('input#line-end').val(end);
 		$('#line-start-num').text(start+1);
 		$('#line-end-num').text(end+1);
-        editor.setSelected(start,end);
+        editor.setDiffSelected(start,end);
         var pos = editor.getLinePosition(start);
         $('#comment-new').css('top',pos);
 		$('#comment-new').slideDown();
@@ -149,7 +155,6 @@ define([
     view.displayComments = function(comments) {
         view.clearComments();
         var pos = editor.getLinePosition(comments[0].line_start);
-        console.log(pos);
         $('#comment-old').css('top',pos);
         for(var i in comments) {
             view.addComment(comments[i]);
@@ -167,6 +172,11 @@ define([
 		title.text(comment.user);
 		var body = $("<div class='comment-body'>");
 		body.text(comment.text);
+		commentDiv.mouseover(function() {
+            noSelect = true;
+            editor.setSelected(comment.line_start,comment.line_end+1);
+            noSelect = false;
+        });
         commentDiv.append(title).append(body);
         $('#comment-old').append(commentDiv);
     };

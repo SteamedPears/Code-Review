@@ -102,12 +102,22 @@ define([
         return inst.getCursor(start);
     };
 
-    editor.setSelected = function(start,end) {
+    editor.setDiffSelected = function(start,end) {
         if(diff_inst === null) return;
         diff_inst.setOption("firstLineNumber",start+1);
         diff_inst.setOption("mode",inst.getOption("mode"));
         diff_inst.setValue(inst.getRange({line:start,ch:0},{line:end,ch:999999}));
         diff_inst.refresh();
+    };
+
+    editor.setSelected = function(start,end) {
+        if(inst === null) return;
+        inst.setSelection({line:start,ch:0},{line:end,ch:0});
+    };
+
+    editor.unsetSelected = function() {
+        if(inst === null) return;
+        inst.setSelection({line:0});
     };
 
     editor.getLinePosition = function(line) {
