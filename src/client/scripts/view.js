@@ -17,12 +17,14 @@ define([
     var view = {};
     var languages = null;
 
+    var noop = function() {};
+
 /******************************************************************************
 * Initialization                                                              *
 ******************************************************************************/
     var init = function() {
         // never run again
-        init = function() {};
+        init = noop;
         
         editor.fromTextArea($('#code-view')[0]);
     };
@@ -93,6 +95,8 @@ define([
 * Controls                                                                    *
 ******************************************************************************/
     view.populateLanguageList = function(langs_ob) {
+        view.populateLanguageList = noop;
+        
         langs_array = langs_ob.data;
         var lang_list = $('#lang');
 		for(var index in langs_array) {
@@ -105,6 +109,12 @@ define([
 			    lang_list.append(option);
             }
 		}
+
+        lang_list.change(function(eo) {
+            //console.dir(eo);
+            //console.log(lang_list.val());
+            editor.setHighlighting(lang_list.val());
+        });
     };
 
 /******************************************************************************
