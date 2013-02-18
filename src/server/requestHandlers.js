@@ -195,7 +195,9 @@ function newcode(request,response) {
 			text: fields.text,
 			lang: fields.lang
 		}).save().success(function(code){
-			redirect(response,"/index.html?id="+id);
+			success(response);
+			response.write(JSON.stringify(code));
+			response.end();
 		}).error(function(error){
 			console.log('===ERROR===');
 			console.log(error);

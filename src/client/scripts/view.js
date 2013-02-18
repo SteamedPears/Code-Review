@@ -43,6 +43,14 @@ define([
 								 .children('[value='+selected_lang_id+']')
 								 .data('lang'));
         });
+		$('#code-form').ajaxForm({
+			success: function(code) {
+				view.initCommentMode(code.uuid);
+			},
+			error: function(ob) {
+				view.displayError("Failed to upload code");
+			}
+		});
         codeMode();
     };
 
