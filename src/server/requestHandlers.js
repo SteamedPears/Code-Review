@@ -23,17 +23,16 @@ Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
 /******************************************************************************
 * Helper Functions                                                            *
 ******************************************************************************/
-function success(response) {
+function success(response,ob) {
 	response.writeHead(200, {"Content-Type": "application/json"});
-}
-
-function error(response,errno,content) {
-	response.writeHead(errno, {"Content-Type": content});
-}
-
-function redirect(response,location) {
-	response.writeHead(302, {"Location":location});
+	response.write(JSON.stringify(ob));
 	response.end();
+}
+
+function error(response,errno,errtext) {
+	response.writeHead(errno, {"Content-Type": "application/json"});
+	response.write(JSON.stringify({error:errtext}));
+	response.end();				   
 }
 
 function isUndefined(x) {
@@ -64,34 +63,16 @@ function code(request,response) {
 	var params = querystring.parse(query);
 	var id = params["id"];
 	if(id === undefined) {
-		error(response,404);
-		response.write('{"id":-1,"text":"Code not found"}');
-		response.end();
-		return;
+		return error(response,400,'Invalid code id');
 	}
 	console.log('Finding code with id '+id);
 	Code
 		.find({where:{uuid:id}})
 		.success(function(code) {
 			if(code === null) {
-				error(response,404,"text/plain");
-				response.write("Code with id ");
-				response.write(id);
-				response.write(" not found.");
-				response.end();
-				return;
+				return error(response,404,'Code not found');
 			}
-			success(response);
-			response.write(JSON.stringify(code));
-			response.end();
-		})
-		.error(function(error) {
-			error(response,404,"text/plain");
-			response.write("An error occured while finding code with id ");
-			response.write(id); response.write("\n");
-			response.write("Error object: ");
-			response.write(JSON.stringify(error));
-			response.end();
+			return success(response,code);
 		});
 }
 
@@ -100,24 +81,16 @@ function comment(request,response) {
 	var params = querystring.parse(query);
 	var id = params["id"];
 	if(id === undefined) {
-		error(response,404);
-		response.write('{"id":-1,"text":"Comment not found"}');
-		response.end();
-		return;
+		return error(response,400,'Invalid comment id');
 	}
-	Comment.find(Number(id)).success(function(comment) {
-		if(comment === null) {
-			error(response,404,"text/plain");
-			response.write("Comment with id ");
-			response.write(id);
-			response.write(" not found.");
-			response.end();
-			return;
-		}
-		success(response);
-		response.write(JSON.stringify(comment));
-		response.end();
-	});
+	Comment
+		.find(Number(id))
+		.success(function(comment) {
+			if(comment === null) {
+				return error(response,404,'Comment not found');
+			}
+			return success(response,comment);
+		});
 }
 
 function comments(request,response) {
@@ -125,55 +98,8 @@ function comments(request,response) {
 	var params = querystring.parse(query);
 	var code_id = params["code_id"];
 	Comment.findAll({where: {code_id: code_id}}).success(function(comments) {
-		success(response);
-		response.write('{"code_id":"'+code_id+
-					   '","comments":'+JSON.stringify(comments)+'}');
-		response.end();
+		return success(response,{code_id:code_id,comments:comments});
 	});
-}
-
-function language(request,response) {
-	function responseError(id) {
-		error(response,404);
-		response.write('{"id":'+id+' ,"text":"Language not found"}');
-		response.end();
-	}
-
-
-	var query = url.parse(request.url).query;
-	var params = querystring.parse(query);
-	var idString = params["id"];
-	var id;
-
-	// Check if numeric
-	// http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
-	if (!isNaN(parseFloat(idString)) && isFinite(idString)) {
-		id = parseFloat(idString,10);
-
-	}
-	else {
-		responseError(idString);
-		return;
-	}
-
-	// Within bounds
-	if (id >= langs.length + 1 || id < 1) {
-		responseError(id);
-		return;
-	}
-
-	id--; // Convert to zero index for langs array
-	var returnLang = langs[id];
-
-	success(response);
-	response.write(JSON.stringify(returnLang));
-	response.end();
-}
-
-function languages(request,response) {
-	success(response);
-	response.write('{"languages":'+JSON.stringify(langs)+'}');
-	response.end();
 }
 
 /******************************************************************************
@@ -185,9 +111,7 @@ function newcode(request,response) {
 	form.parse(request, function(error, fields, files) {
 		// do some basic validation
 		if(fields === null || !isValidString(fields.text)) {
-			redirect(response,"/index.html?error=Can't review empty code");
-            console.log("Invalid new code submission")
-			return;
+			return error(response,400,'Invalid code text.');
 		}
 		var id=uuid.v4();
 		Code.build({
@@ -195,13 +119,11 @@ function newcode(request,response) {
 			text: fields.text,
 			lang: fields.lang
 		}).save().success(function(code){
-			success(response);
-			response.write(JSON.stringify(code));
-			response.end();
+			return success(response,code);
 		}).error(function(error){
 			console.log('===ERROR===');
 			console.log(error);
-			redirect(response,"/index.html?error=Invalid code");
+			return error(response,500,'Error writing code to database');
 		});
 	});
 }
@@ -220,31 +142,23 @@ function newcomment(request,response) {
 	var form = new formidable.IncomingForm();
 	form.type = 'multipart';
 	form.parse(request, function(error, fields, files) {
-		console.log('============================================================');
-		console.log('NEW COMMENT');
-		console.log('============================================================');
-		console.log(error);
-		console.log('============================================================');
 		// do some basic validation
 		if(fields === null ||
 		   !isValidString(fields.user) ||
 		   !isValidString(fields.text) ||
 		   !isValidPositiveIntegerString(fields.line_start) ||
 		   !isValidPositiveIntegerString(fields.line_end)) {
-			redirect(response,'/view.html?id='+params.id+"&error=Invalid field");
-			return;
+			return error(response,400,'Invalid field');
 		}
 		// make sure the line numbers are sane
 		if(Number(fields.line_start) > Number(fields.line_end)) {
-			redirect(response,'/view.html?id='+params.id+"&error=Invalid line numbers");
+			return error(response,400,'Invalid line numbers');
 		}
 		// first find the code associated with the new comment
 		Code.find({where:{uuid:fields.code_id}})
 			.success(function (code) {
 				if(code === null) {
-					redirect(response,
-							 "/view.html?id="+params.id+"&error=Invalid code id");
-					return;
+					return error(response,400,'Invalid code id');
 				}
 				// Once we've established it's legit, build the comment
 				Comment.build({
@@ -256,16 +170,12 @@ function newcomment(request,response) {
 					diffs: fields.diffs
 				}).save()
 					.success(function(comment){ // success!!
-						redirect(response,"/view.html?id="+fields.code_id);
+						return success(response,comment);
 					}).error(function(error) { // invalid comment
 						console.log('===ERROR===');
 						console.log(error);
-						redirect(response,
-								 "/view.html?id="+params.id+"&error=Invalid comment");
+						return error(response,502,'Error while saving comment');
 					});
-			}).error(function(error) { // couldn't find associated code
-				redirect(response,
-						 "/view.html?id="+params.id+"&error=Invalid code id");
 			});
 	});
 }
@@ -285,8 +195,6 @@ function not_found(request,response) {
 exports.code = code;
 exports.comment = comment;
 exports.comments = comments;
-exports.language = language;
-exports.languages = languages;
 exports.newcode = newcode;
 exports.newcomment = newcomment;
 exports.not_found = not_found;
