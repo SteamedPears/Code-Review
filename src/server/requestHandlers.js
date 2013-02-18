@@ -32,7 +32,7 @@ function success(response,ob) {
 function error(response,errno,errtext) {
 	response.writeHead(errno, {"Content-Type": "application/json"});
 	response.write(JSON.stringify({error:errtext}));
-	response.end();				   
+	response.end();		   
 }
 
 function isUndefined(x) {
@@ -108,7 +108,7 @@ function comments(request,response) {
 function newcode(request,response) {
 	var form = new formidable.IncomingForm();
 	form.type = 'multipart';
-	form.parse(request, function(error, fields, files) {
+	form.parse(request, function(err, fields, files) {
 		// do some basic validation
 		if(fields === null || !isValidString(fields.text)) {
 			return error(response,400,'Invalid code text.');
@@ -120,9 +120,9 @@ function newcode(request,response) {
 			lang: fields.lang
 		}).save().success(function(code){
 			return success(response,code);
-		}).error(function(error){
+		}).error(function(err){
 			console.log('===ERROR===');
-			console.log(error);
+			console.log(err);
 			return error(response,500,'Error writing code to database');
 		});
 	});
@@ -140,7 +140,7 @@ function newcomment(request,response) {
 	// otherwise, go ahead
 	var form = new formidable.IncomingForm();
 	form.type = 'multipart';
-	form.parse(request, function(error, fields, files) {
+	form.parse(request, function(err, fields, files) {
 		// do some basic validation
 		if(fields === null ||
 		   !isValidString(fields.user) ||
@@ -170,9 +170,9 @@ function newcomment(request,response) {
 				}).save()
 					.success(function(comment){ // success!!
 						return success(response,comment);
-					}).error(function(error) { // invalid comment
+					}).error(function(err) { // invalid comment
 						console.log('===ERROR===');
-						console.log(error);
+						console.log(err);
 						return error(response,502,'Error while saving comment');
 					});
 			});

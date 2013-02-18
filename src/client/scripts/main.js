@@ -50,6 +50,7 @@ require([
     // external libs
     "jquery",
     "URI",
+	"jquery.form",
     // internal modules
     "view",
     "code",
@@ -63,6 +64,29 @@ require([
     var language = require("language");
     var editor = require("editor");
 
+	// initialize the view
+	view.init();
+
+	// ajaxify forms
+	$('#code-form').ajaxForm({
+		success: function(ob) {
+			history.pushState({},"CodeReview","index.html?id="+ob.uuid);
+			view.initCommentMode(ob.uuid);
+		},
+		error: function(ob) {
+			view.displayError("Failed to upload code");
+		}
+	});
+    $('#comment-form').ajaxForm({
+		success: function(ob) {
+			view.hideCommentEditor();
+			$('#comment-form').resetForm();
+			comment.getCommentCounts(ob.code_id,
+									 view.addCommentButtons,
+									 view.displayError);
+		}
+	});
+
     // dispatch based on query
     var query = URI(document.URL).query(true);
     if(query.error !== undefined)
@@ -72,8 +96,8 @@ require([
         view.populateLanguageList(language.langs);
     } else {
         view.initCommentMode(query.id);
-        code.getCode(query.id,function(code) {
-            view.displayCode(code);
+        code.getCode(query.id,function(ob) {
+            view.displayCode(ob);
             comment.getCommentCounts(query.id,
                                      view.addCommentButtons,
                                      view.displayError);

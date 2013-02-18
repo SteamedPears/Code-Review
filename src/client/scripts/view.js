@@ -10,7 +10,6 @@
 
 define([
     "jquery",
-    "jquery.form",
     "editor",
 	"diff"
 ], function($) {
@@ -27,33 +26,24 @@ define([
 /******************************************************************************
 * Initialization                                                              *
 ******************************************************************************/
-    var init = function() {
+    view.init = function() {
         // never run again
-        init = noop;
+        view.init = noop;
         
         editor.codeFromTextArea($('#code-view')[0]);
+        editor.diffFromTextArea($('#diffs')[0]);
     };
 
     view.initCodeMode = function() {
         // never run again
         view.initCodeMode = codeMode;
         
-        init();
         var select = $('#language_id');
         select.change(function(eventOb) {
             view.setHighlighting(select
 								 .children('[value='+selected_lang_id+']')
 								 .data('lang'));
         });
-		$('#code-form').ajaxForm({
-			success: function(code) {
-				history.pushState({},"CodeReview","index.html?id="+code.uuid);
-				view.initCommentMode(code.uuid);
-			},
-			error: function(ob) {
-				view.displayError("Failed to upload code");
-			}
-		});
         codeMode();
     };
 
@@ -61,13 +51,6 @@ define([
         // never run again
         view.initCommentMode = commentMode;
         
-        init();
-        editor.diffFromTextArea($('#diffs')[0]);
-        $('#comment-form').ajaxForm(function(ob) {
-            view.hideCommentEditor();
-            $('#comment-form').resetForm();
-            // TODO: reload comments
-        });
         commentMode(id);
     };
 
@@ -146,6 +129,7 @@ define([
     };
 
     view.addCommentButtons = function(comment_counts,callback) {
+		$("#comment-info").text('');
         for(var i in comment_counts) {
             view.addCommentButton(i,comment_counts[i],callback);
         }

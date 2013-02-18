@@ -171,5 +171,15 @@ define([
 		}
 	};
 
+	editor.saveCode = function() {
+		if(inst === null) return;
+		inst.save();
+	};
+
+	editor.saveComment = function() {
+		if(diff_inst === null) return;
+		diff_inst.save();
+	};
+
     return editor;
 });

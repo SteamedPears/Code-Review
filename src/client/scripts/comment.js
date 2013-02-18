@@ -13,9 +13,10 @@ define([
 ], function($) {
     var comment = {};
 
-    var comments = {};
+    var comments = null;
 
     comment.getCommentCounts = function(code_id,callback,error_fn) {
+		comments = {};
 		$.ajax('/do/comments',{
 			data:	 {code_id:code_id},
 			dataType: 'json',
