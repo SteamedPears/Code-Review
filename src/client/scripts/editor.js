@@ -14,6 +14,7 @@ define([
     "language"
 ], function($,CodeMirror) {
     var editor = {};
+	
     var inst = null, diff_inst = null;
     var languages = require("language").langs;
     
@@ -34,7 +35,7 @@ define([
 		lineNumbers: true,
 		lineWrapping: true,
 		fixedGutter: true,
-		readOnly: true,
+		readOnly: true
 	};
 
     var resolveRequirements = function(languages,lang) {
@@ -80,7 +81,8 @@ define([
 
 	editor.fromTextArea = function(textarea,firstLine) {
 		var this_inst = CodeMirror.fromTextArea(textarea,commentOptions);
-        //this_inst.setOption("mode",inst.getOption("mode"));
+		if(inst !== null)
+			this_inst.setOption("mode",inst.getOption("mode"));
 		this_inst.setOption("firstLineNumber",firstLine);
 		return this_inst;
 	};
@@ -179,6 +181,14 @@ define([
 	editor.saveComment = function() {
 		if(diff_inst === null) return;
 		diff_inst.save();
+	};
+
+	editor.appendTo = function(container,firstLine) {
+		var this_inst = CodeMirror(container,commentOptions);
+		if(inst !== null)
+			this_inst.setOption("mode",inst.getOption("mode"));
+		this_inst.setOption("firstLineNumber",firstLine);
+		return this_inst;
 	};
 
     return editor;

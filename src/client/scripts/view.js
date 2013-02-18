@@ -143,8 +143,8 @@ define([
         commentInfoBtn.css('top',pos);
         commentInfoBtn.click(function() {
             view.hideCommentEditor();
-            view.displayComments(callback(line));
             view.showComments();
+            view.displayComments(callback(line));
         });
         commentInfo.append(commentInfoBtn);
     };
@@ -190,13 +190,10 @@ define([
 											  comment.line_end);
 			var newText = comment.diffs.replace(/\r/gm,'');
 			if(originalText !== newText) {
-				var diffTextArea = $('<textarea class="comment-diffs">');
-				commentDiv.append(diffTextArea);
 				var rawDiffs = computeDiff(originalText,newText);
 				var diff_text = computeDiffText(rawDiffs)
-				diffTextArea.text(diff_text);
-				var area = editor.fromTextArea(diffTextArea[0],
-											   comment.line_start+1);
+				var area = editor.appendTo(commentDiv[0],comment.line_start+1);
+				area.setValue(diff_text);
 				editor.styleDiffArea(area,rawDiffs);
 			}
 		}
