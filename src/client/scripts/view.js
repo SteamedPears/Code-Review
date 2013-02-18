@@ -11,9 +11,11 @@
 define([
     "jquery",
     "jquery.form",
-    "editor"
+    "editor",
+	"diff"
 ], function($) {
     var editor = require('editor');
+	var diff = require('diff');
     
     var view = {};
     var languages = null;
@@ -29,7 +31,7 @@ define([
         // never run again
         init = noop;
         
-        editor.fromTextArea($('#code-view')[0]);
+        editor.codeFromTextArea($('#code-view')[0]);
     };
 
     view.initCodeMode = function() {
@@ -45,6 +47,7 @@ define([
         });
 		$('#code-form').ajaxForm({
 			success: function(code) {
+				history.pushState({},"CodeReview","index.html?id="+code.uuid);
 				view.initCommentMode(code.uuid);
 			},
 			error: function(ob) {
@@ -175,20 +178,49 @@ define([
         $('#comment-old').html('');
     };
 
+	var computeDiff = function(originalText,newText) {
+		var rawDiffs = diff.diff_main(originalText,newText);
+		diff.diff_cleanupSemantic(rawDiffs);
+		return rawDiffs;
+	}
+
+	var computeDiffText = function(rawDiffs) {
+		var str = "";
+		for(var index = 0; index<rawDiffs.length; index++){
+			var diff = rawDiffs[index];
+			str+=diff[1];
+		}
+		return str;
+	};
+
     view.addComment = function(comment) {
-        // TODO: finish this
 		var commentDiv = $("<div class='comment-box'>");
 		var title = $("<div class='comment-title'>");
 		title.text(comment.user);
 		var body = $("<div class='comment-body'>");
 		body.text(comment.text);
+        commentDiv.append(title).append(body);
+        $('#comment-old').append(commentDiv);
+		if(comment.diffs) {
+			var originalText = editor.getText(comment.line_start,
+											  comment.line_end);
+			var newText = comment.diffs.replace(/\r/gm,'');
+			if(originalText !== newText) {
+				var diffTextArea = $('<textarea class="comment-diffs">');
+				commentDiv.append(diffTextArea);
+				var rawDiffs = computeDiff(originalText,newText);
+				var diff_text = computeDiffText(rawDiffs)
+				diffTextArea.text(diff_text);
+				var area = editor.fromTextArea(diffTextArea[0],
+											   comment.line_start+1);
+				editor.styleDiffArea(area,rawDiffs);
+			}
+		}
 		commentDiv.mouseover(function() {
             noSelect = true;
             editor.setSelected(comment.line_start,comment.line_end+1);
             noSelect = false;
         });
-        commentDiv.append(title).append(body);
-        $('#comment-old').append(commentDiv);
     };
 
 /******************************************************************************

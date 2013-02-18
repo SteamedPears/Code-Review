@@ -30,6 +30,12 @@ define([
 		readOnly: false,
 		smartIndent:false
 	};
+	var commentOptions = {
+		lineNumbers: true,
+		lineWrapping: true,
+		fixedGutter: true,
+		readOnly: true,
+	};
 
     var resolveRequirements = function(languages,lang) {
         var resolveReqs = function(languages,language,requirements,req_list) {
@@ -72,7 +78,14 @@ define([
         });
     };
 
-    editor.fromTextArea = function(textarea) {
+	editor.fromTextArea = function(textarea,firstLine) {
+		var this_inst = CodeMirror.fromTextArea(textarea,commentOptions);
+        //this_inst.setOption("mode",inst.getOption("mode"));
+		this_inst.setOption("firstLineNumber",firstLine);
+		return this_inst;
+	};
+
+    editor.codeFromTextArea = function(textarea) {
         if(inst === null)
             inst = CodeMirror.fromTextArea(textarea,codeOptions);
     };
@@ -102,11 +115,15 @@ define([
         return inst.getCursor(start);
     };
 
+	editor.getText = function(start,end) {
+		return inst.getRange({line:start,ch:0},{line:end,ch:999999});
+	};
+
     editor.setDiffSelected = function(start,end) {
         if(diff_inst === null) return;
         diff_inst.setOption("firstLineNumber",start+1);
         diff_inst.setOption("mode",inst.getOption("mode"));
-        diff_inst.setValue(inst.getRange({line:start,ch:0},{line:end,ch:999999}));
+        diff_inst.setValue(editor.getText(start,end));
         diff_inst.refresh();
     };
 
@@ -129,6 +146,30 @@ define([
 		}
         return pos;
     };
+	
+	var getPosFromIndex = function(area,index) {
+		var pos = area.posFromIndex(index);
+		if(pos.ch==0 && pos.line!=0){
+			pos.line--;
+			pos.ch=999999;
+		}
+		return pos;
+	}
+
+	editor.styleDiffArea = function(area,rawDiffs) {
+		var curIndex = 0;
+		var curPos = getPosFromIndex(area,curIndex);
+		for(var index = 0; index<rawDiffs.length; index++){
+			var diff = rawDiffs[index];
+			var type = diff[0];
+			var text = diff[1];
+			var newIndex = curIndex+text.length;
+			var newPos = getPosFromIndex(area,newIndex);
+			area.markText(curPos,newPos,{className:"diffStyle_"+type});
+			curIndex = newIndex;
+			curPos = newPos;
+		}
+	};
 
     return editor;
 });

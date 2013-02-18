@@ -15,7 +15,8 @@ require.config({
         'underscore':'lib/underscore',
         'URI':'lib/URI',
         'CodeMirror':'lib/CodeMirror-3.02/lib/codemirror',
-        'jquery.form':'lib/jquery.form'
+        'jquery.form':'lib/jquery.form',
+		'diff':'lib/diff_match_patch'
 	},
     shim:{
 		'QUnit':{
@@ -35,7 +36,13 @@ require.config({
             init:function($) {
                 return $.ajaxForm;
             }
-        }
+        },
+		'diff':{
+			exports:'diff',
+			init:function() {
+				return new diff_match_patch();
+			}
+		}
     }
 });
 
