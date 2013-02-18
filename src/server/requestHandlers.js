@@ -133,8 +133,7 @@ function newcomment(request,response) {
 	if(request === null ||
 	   request.headers === undefined ||
 	   request.headers.referer === undefined) {
-		redirect(response,"/index.html?error=No referer");
-		return;
+		return error(response,400,'Invalid referer');
 	}
 	var query = url.parse(request.headers.referer).query;
 	var params = querystring.parse(query);
@@ -184,9 +183,7 @@ function newcomment(request,response) {
 * Errors                                                                      *
 ******************************************************************************/
 function not_found(request,response) {
-	error(response,404);
-	response.write('{"id":-1,"text":"Path not found"}');
-	response.end();
+	return error(response,404,'Path not found');
 }
 
 /******************************************************************************
