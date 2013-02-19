@@ -38,8 +38,6 @@ handle["/comment"] = requestHandlers.comment;
 handle["/newcode"] = requestHandlers.newcode;
 handle["/newcomment"] = requestHandlers.newcomment;
 handle["/comments"] = requestHandlers.comments;
-handle["/language"] = requestHandlers.language;
-handle["/languages"] = requestHandlers.languages;
 handle["not_found"] = requestHandlers.not_found;
 
 /******************************************************************************
