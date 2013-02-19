@@ -1,10 +1,21 @@
-(function(window,undefined) {
+(function(win,doc,undefined) {
 'use strict';
+
+var g = {}; //Globals
+g.debug = true; //Debug mode
+g.vendors = {
+	gist : /https?:\/\/gist.github.com/  //Github gists
+};
+g.vendorDefault = "readability";
+g.baseUrl = g.debug ? '//localhost:8000' : 'http://review.steamedpears.com';
+g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
+g.vendorUri = g.debug ? '/': '/bookmarklet/vendors/';
+
+function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
 var assetLoader = (function() {
 	var assets = {},
-			doc = document,
-			head = document.getElementsByTagName('head')[0];
+			head = doc.getElementsByTagName('head')[0];
 
 	var ext_re= /\.[0-9a-zA-Z]+$/; // matches a URL's extension
 	
@@ -23,7 +34,7 @@ var assetLoader = (function() {
 
 		switch (type) {
 			case 'css' :
-				tag = document.createElement('link');
+				tag = doc.createElement('link');
 				tag.type= 'text/css';
 				tag.rel='stylesheet';
 				tag.href=url;
@@ -31,16 +42,15 @@ var assetLoader = (function() {
 
 			case 'js':
 			case 'javascript':
-				tag = document.createElement('script');
+				tag = doc.createElement('script');
 				tag.src = url;
 				break;
 
 			default:
-				tag = document.createElement('link');
+				tag = doc.createElement('link');
 				tag.href=url;
 				break;
 		}
-
 		return tag;
 	};
 
@@ -48,23 +58,7 @@ var assetLoader = (function() {
 		head.appendChild(tag);
 	};
 
-	/* Invoke callback when asset is loaded
-	 * USAGE:
-	 *	runOnLoad(someTag, function() { //do stuff });
-	 */
-	var runOnLoad = function runOnLoad (asset, callback) {
-		if (asset.readyState){  //IE
-			asset.onreadystatechange = function(){
-				if (asset.readyState == "loaded" ||asset.readyState == "complete"){
-					asset.onreadystatechange = null;
-					return callback();
-				}
-			};
-		} else {  //W3C
-			asset.addEventListener('load',callback);
-		}
-	};
-
+	//API
 	return {
 		/* Loads assets
 		 * USAGE:
@@ -76,13 +70,49 @@ var assetLoader = (function() {
 		 */
 		load : function (url, callback) {
 
+			if (assets[url]) return;
+
 			var tag = createTag(url);
+			dbg("assetLoader.load: ", tag);
 			assets[url] = tag;
 			if (callback !== undefined) this.runOnLoad(tag, callback);
 			addToHead(tag);
 		},
-		runOnLoad: runOnLoad
+		/* Invoke callback when asset is loaded
+		* USAGE:
+		*	runOnLoad(someTag, function() { //do stuff });
+		*/
+		runOnLoad  : function (asset, callback) {
+			if (asset.readyState){  //IE
+				asset.onreadystatechange = function(){
+					if (asset.readyState == "loaded" ||asset.readyState == "complete"){
+						asset.onreadystatechange = null;
+						return callback();
+					}
+				};
+			} else {  //W3C
+				asset.addEventListener('load',callback);
+			}
+		}
 	};
 })();
 
-})(window);
+var helpers = {
+	vendorGetFromUrl : function(url) {
+		var matches,
+		regex;
+
+		for (var vendor in g.vendors) {
+			regex = g.vendors[vendor];
+			matches = regex.test(url);
+			if (matches) return vendor;
+		}
+		return null;
+	},
+	loadVendor : function (vendor, callback) {
+		dbg("helpers.loadVendor: " + vendor);
+		assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
+	}
+};
+
+})(window,document);
