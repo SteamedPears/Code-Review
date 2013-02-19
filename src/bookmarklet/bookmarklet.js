@@ -11,6 +11,9 @@ g.baseUrl = g.debug ? '//localhost:8000' : 'http://review.steamedpears.com';
 g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
 g.vendorUri = g.debug ? '/vendors/': '/bookmarklet/vendors/';
 
+//Will be the exposed API
+var that, codeReview = that = {};
+
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
 var assetLoader = (function() {
@@ -117,6 +120,13 @@ var helpers = {
 	}
 };
 
+//Expose API
+that.dbg = dbg;
+window.codeReview = that;
+
+helpers.vendorLoad("readability", function () {
+	console.log(that.vendor.getContent());
+});
 
 
 })(window,document);
