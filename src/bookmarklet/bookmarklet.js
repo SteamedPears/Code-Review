@@ -9,7 +9,7 @@ g.vendors = {
 g.vendorDefault = "readability";
 g.baseUrl = g.debug ? '//localhost:8000' : 'http://review.steamedpears.com';
 g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
-g.vendorUri = g.debug ? '/': '/bookmarklet/vendors/';
+g.vendorUri = g.debug ? '/vendors/': '/bookmarklet/vendors/';
 
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
@@ -98,6 +98,7 @@ var assetLoader = (function() {
 })();
 
 var helpers = {
+	//Figure out if this url uses a known vendor
 	vendorGetFromUrl : function(url) {
 		var matches,
 		regex;
@@ -109,10 +110,13 @@ var helpers = {
 		}
 		return null;
 	},
-	loadVendor : function (vendor, callback) {
-		dbg("helpers.loadVendor: " + vendor);
+	//Load a given vendor
+	vendorLoad: function (vendor, callback) {
+		dbg("helpers.vendorLoad: " + vendor);
 		assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
 	}
 };
+
+
 
 })(window,document);
