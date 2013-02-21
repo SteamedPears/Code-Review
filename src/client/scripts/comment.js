@@ -16,12 +16,12 @@ define([
     var comments = null;
 
     comment.getCommentCounts = function(code_id,callback,error_fn) {
-		comments = {};
-		$.ajax('/do/comments',{
-			data:	 {code_id:code_id},
-			dataType: 'json',
-			error:	error_fn,
-			success:  function(data) {
+	comments = {};
+	$.ajax('/do/comments',{
+	    data:	 {code_id:code_id},
+	    dataType: 'json',
+	    error:	error_fn,
+	    success:  function(data) {
                 var counts = {};
                 for(var i in data.comments) {
                     var c = data.comments[i];
@@ -35,7 +35,7 @@ define([
                 }
                 callback(counts,comment.getCommentsOnLine);
             }
-		});
+	});
     };
 
     comment.getCommentsOnLine = function(line) {

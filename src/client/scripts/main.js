@@ -1,12 +1,12 @@
 /******************************************************************************
- * main.js                                                                     *
- * Copyright 2013                                                              *
- * For details about the copyright holders, see the COPYRIGHT file.            *
- * This software is freely distributed under the ISC License.                  *
- * For details about the license, see the LICENSE file.                        *
- *                                                                             *
- * This module is the main entry point for CodeReview.                         *
- ******************************************************************************/
+* main.js                                                                     *
+* Copyright 2013                                                              *
+* For details about the copyright holders, see the COPYRIGHT file.            *
+* This software is freely distributed under the ISC License.                  *
+* For details about the license, see the LICENSE file.                        *
+*                                                                             *
+* This module is the main entry point for CodeReview.                         *
+******************************************************************************/
 
 require.config({
     // specify the paths for the various libraries
