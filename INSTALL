@@ -5,10 +5,14 @@ Development
 -----------
 
 Requirements:
+(tested versions appear in parentheses)
 
- * unix (tested with Mac OS X 10.6.8)
- * node (tested with v0.8.17)
- * sqlite (tested with version 3.7.15.1 2012-12-19 20:39:10)
+ * unix (OS X 10.6.8, OS X 10.8.2, Fedora 18)
+ * node (v0.8.17, v0.8.20)
+ * npm (1.2.11)
+ * node-gyp (v0.8.4)
+ * sqlite3 (3.7.15.1, 3.7.13)
+ * g++ (4.7.2)
 
 Instructions:
 
