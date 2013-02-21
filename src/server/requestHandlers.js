@@ -24,7 +24,10 @@ Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
 * Helper Functions                                                            *
 ******************************************************************************/
 function success(response,ob) {
-	response.writeHead(200, {"Content-Type": "application/json"});
+	response.writeHead(200, {
+		"Content-Type" : "application/json", 
+		"Access-Control-Allow-Origin" : "*"
+	});
 	response.write(JSON.stringify(ob));
 	response.end();
 }
