@@ -1,3 +1,4 @@
+// vim: tabstop=4 noexpandtab textwidth=80
 /******************************************************************************
 * main.js                                                                     *
 * Copyright 2013                                                              *
@@ -11,20 +12,20 @@
 require.config({
     // specify the paths for the various libraries
     paths:{
-	'QUnit':'lib/qunit-1.9.0',
+        'QUnit':'lib/qunit-1.9.0',
         'underscore':'lib/underscore',
         'URI':'lib/URI',
         'CodeMirror':'lib/codemirror-3.02/lib/codemirror',
         'jquery.form':'lib/jquery.form',
-	'diff':'lib/diff_match_patch'
+        'diff':'lib/diff_match_patch'
     },
     shim:{
-	'QUnit':{
-	    exports:'QUnit'
-	},
-	'underscore':{
-	    exports:'underscore'
-	},
+        'QUnit':{
+            exports:'QUnit'
+        },
+        'underscore':{
+            exports:'underscore'
+        },
         'URI':{
             exports:'URI'
         },
@@ -37,12 +38,12 @@ require.config({
                 return $.ajaxForm;
             }
         },
-	'diff':{
-	    exports:'diff',
-	    init:function() {
-		return new diff_match_patch();
-	    }
-	}
+        'diff':{
+            exports:'diff',
+            init:function() {
+                return new diff_match_patch();
+            }
+        }
     }
 });
 
@@ -69,22 +70,22 @@ require([
 
     // ajaxify forms
     $('#code-form').ajaxForm({
-	success: function(ob) {
-	    history.pushState({},"CodeReview","index.html?id="+ob.uuid);
-	    view.initCommentMode(ob.uuid);
-	},
-	error: function(ob) {
-	    view.displayError("Failed to upload code");
-	}
+        success: function(ob) {
+            history.pushState({},"CodeReview","index.html?id="+ob.uuid);
+            view.initCommentMode(ob.uuid);
+        },
+        error: function(ob) {
+            view.displayError("Failed to upload code");
+        }
     });
     $('#comment-form').ajaxForm({
-	success: function(ob) {
-	    view.hideCommentEditor();
-	    $('#comment-form').resetForm();
-	    comment.getCommentCounts(ob.code_id,
-				     view.addCommentButtons,
-				     view.displayError);
-	}
+        success: function(ob) {
+            view.hideCommentEditor();
+            $('#comment-form').resetForm();
+            comment.getCommentCounts(ob.code_id,
+                                     view.addCommentButtons,
+                                     view.displayError);
+        }
     });
 
     // dispatch based on query

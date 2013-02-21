@@ -1,3 +1,4 @@
+// vim: tabstop=4 noexpandtab textwidth=80
 /******************************************************************************
 * code.js                                                                     *
 * Copyright 2013                                                              *
@@ -14,12 +15,12 @@ define([
     var code = {};
 
     code.getCode = function(id,callback,error_fn) {
-	$.ajax('/do/code',{
-	    data:	 {id:id},
-	    dataType: 'json',
-	    error:	error_fn,
-	    success:  callback
-	});
+        $.ajax('/do/code',{
+            data:     {id:id},
+            dataType: 'json',
+            error:    error_fn,
+            success:  callback
+        });
     };
 
     return code;
