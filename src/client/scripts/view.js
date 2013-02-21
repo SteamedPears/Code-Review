@@ -1,3 +1,4 @@
+// vim: tabstop=4 noexpandtab textwidth=80
 /******************************************************************************
 * view.js                                                                     *
 * Copyright 2013                                                              *
@@ -11,10 +12,10 @@
 define([
     "jquery",
     "editor",
-	"diff"
+    "diff"
 ], function($) {
     var editor = require('editor');
-	var diff = require('diff');
+    var diff = require('diff');
     
     var view = {};
     var languages = null;
@@ -41,8 +42,8 @@ define([
         var select = $('#language_id');
         select.change(function(eventOb) {
             view.setHighlighting(select
-								 .children('[value='+selected_lang_id+']')
-								 .data('lang'));
+                                 .children('[value='+selected_lang_id+']')
+                                 .data('lang'));
         });
         codeMode();
     };
@@ -78,9 +79,9 @@ define([
                 if(editor.somethingSelected()) {
                     var line_start = editor.getCursor(true).line;
                     var line_end = editor.getCursor(false).line;
-		            if(editor.getCursor(false).ch === 0){
-			            --line_end;
-		            }
+                    if(editor.getCursor(false).ch === 0){
+                        --line_end;
+                    }
                     view.hideComments();
                     view.showCommentEditor(line_start,line_end);
                 } else {
@@ -109,14 +110,14 @@ define([
 
     view.showCommentEditor = function(start,end) {
         $('#comment-new').show();
-		$('input#line-start').val(start);
-		$('input#line-end').val(end);
-		$('#line-start-num').text(start+1);
-		$('#line-end-num').text(end+1);
+        $('input#line-start').val(start);
+        $('input#line-end').val(end);
+        $('#line-start-num').text(start+1);
+        $('#line-end-num').text(end+1);
         editor.setDiffSelected(start,end);
         var pos = editor.getLinePosition(start);
         $('#comment-new').css('top',pos);
-		$('#comment-new').slideDown();
+        $('#comment-new').slideDown();
     };
 
     view.displayError = function(err_html) {
@@ -129,16 +130,16 @@ define([
     };
 
     view.addCommentButtons = function(comment_counts,callback) {
-		$("#comment-info").text('');
+        $("#comment-info").text('');
         for(var i in comment_counts) {
             view.addCommentButton(i,comment_counts[i],callback);
         }
     };
 
     view.addCommentButton = function(line,count,callback) {
-		var commentInfo = $("#comment-info");
-		var commentInfoBtn =  $('<button type="button" class="commentButton">');
-		commentInfoBtn.text(count+" comments");
+        var commentInfo = $("#comment-info");
+        var commentInfoBtn =  $('<button type="button" class="commentButton">');
+        commentInfoBtn.text(count+" comments");
         var pos = editor.getLinePosition(line);
         commentInfoBtn.css('top',pos);
         commentInfoBtn.click(function() {
@@ -162,42 +163,42 @@ define([
         $('#comment-old').html('');
     };
 
-	var computeDiff = function(originalText,newText) {
-		var rawDiffs = diff.diff_main(originalText,newText);
-		diff.diff_cleanupSemantic(rawDiffs);
-		return rawDiffs;
-	}
+    var computeDiff = function(originalText,newText) {
+        var rawDiffs = diff.diff_main(originalText,newText);
+        diff.diff_cleanupSemantic(rawDiffs);
+        return rawDiffs;
+    }
 
-	var computeDiffText = function(rawDiffs) {
-		var str = "";
-		for(var index = 0; index<rawDiffs.length; index++){
-			var diff = rawDiffs[index];
-			str+=diff[1];
-		}
-		return str;
-	};
+    var computeDiffText = function(rawDiffs) {
+        var str = "";
+        for(var index = 0; index<rawDiffs.length; index++){
+            var diff = rawDiffs[index];
+            str+=diff[1];
+        }
+        return str;
+    };
 
     view.addComment = function(comment) {
-		var commentDiv = $("<div class='comment-box'>");
-		var title = $("<div class='comment-title'>");
-		title.text(comment.user);
-		var body = $("<div class='comment-body'>");
-		body.text(comment.text);
+        var commentDiv = $("<div class='comment-box'>");
+        var title = $("<div class='comment-title'>");
+        title.text(comment.user);
+        var body = $("<div class='comment-body'>");
+        body.text(comment.text);
         commentDiv.append(title).append(body);
         $('#comment-old').append(commentDiv);
-		if(comment.diffs) {
-			var originalText = editor.getText(comment.line_start,
-											  comment.line_end);
-			var newText = comment.diffs.replace(/\r/gm,'');
-			if(originalText !== newText) {
-				var rawDiffs = computeDiff(originalText,newText);
-				var diff_text = computeDiffText(rawDiffs)
-				var area = editor.appendTo(commentDiv[0],comment.line_start+1);
-				area.setValue(diff_text);
-				editor.styleDiffArea(area,rawDiffs);
-			}
-		}
-		commentDiv.mouseover(function() {
+        if(comment.diffs) {
+            var originalText = editor.getText(comment.line_start,
+                                              comment.line_end);
+            var newText = comment.diffs.replace(/\r/gm,'');
+            if(originalText !== newText) {
+                var rawDiffs = computeDiff(originalText,newText);
+                var diff_text = computeDiffText(rawDiffs)
+                var area = editor.appendTo(commentDiv[0],comment.line_start+1);
+                area.setValue(diff_text);
+                editor.styleDiffArea(area,rawDiffs);
+            }
+        }
+        commentDiv.mouseover(function() {
             noSelect = true;
             editor.setSelected(comment.line_start,comment.line_end+1);
             noSelect = false;
@@ -212,24 +213,21 @@ define([
         
         langs_array = langs_ob.data;
         var lang_list = $('#lang');
-		for(var index in langs_array) {
-			var language = langs_array[index];
+        for(var index in langs_array) {
+            var language = langs_array[index];
             if(language.mode) {
-			    var option = $('<option>');
-			    option.data('lang',index);
-			    option.val(index);
-			    option.text(language.description);
-			    lang_list.append(option);
+                var option = $('<option>');
+                option.data('lang',index);
+                option.val(index);
+                option.text(language.description);
+                lang_list.append(option);
             }
-		}
+        }
 
         lang_list.change(function(eo) {
             editor.setHighlighting(lang_list.val());
         });
     };
 
-/******************************************************************************
-* End                                                                         *
-******************************************************************************/
     return view;
 });
