@@ -24,7 +24,10 @@ Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
 * Helper Functions                                                            *
 ******************************************************************************/
 function success(response,ob) {
-	response.writeHead(200, {"Content-Type": "application/json"});
+	response.writeHead(200, {
+		"Content-Type" : "application/json", 
+		"Access-Control-Allow-Origin" : "*"
+	});
 	response.write(JSON.stringify(ob));
 	response.end();
 }
@@ -106,26 +109,51 @@ function comments(request,response) {
 * Setters                                                                     *
 ******************************************************************************/
 function newcode(request,response) {
-	var form = new formidable.IncomingForm();
-	form.type = 'multipart';
-	form.parse(request, function(err, fields, files) {
-		// do some basic validation
-		if(fields === null || !isValidString(fields.text)) {
-			return error(response,400,'Invalid code text.');
-		}
-		var id=uuid.v4();
-		Code.build({
-			uuid: id,
-			text: fields.text,
-			lang: fields.lang
-		}).save().success(function(code){
-			return success(response,code);
-		}).error(function(err){
-			console.log('===ERROR===');
-			console.log(err);
-			return error(response,500,'Error writing code to database');
+
+	//On validation or parsing success
+	var writetodb = function(err,obj, files) {
+			// do some basic validation
+			if( obj === null || !isValidString(obj['text'])) {
+				return error(response,400,'Invalid code text.');
+			}
+			var id=uuid.v4();
+			Code.build({
+				uuid: id,
+				text: obj.text,
+				lang: obj.lang
+			}).save().success(function(code){
+				return success(response,code);
+			}).error(function(err){
+				console.log('===ERROR===');
+				console.log(err);
+				return error(response,500,'Error writing code to database');
+			});
+	}
+	//Test if request is a form or a json object
+	var content_type = request.headers['content-type'];
+	if (content_type && content_type.indexOf('x-www-form-urlencoded') >= 0) {
+		var form = new formidable.IncomingForm();
+		form.type = 'multipart';
+		form.parse(request, writetodb );
+	}
+	//Handle JSON
+	else if (content_type && content_type.indexOf('application/json') >= 0) {
+		
+		request.setEncoding('utf8');
+		var json_str = '';
+
+		request.on('data', function(chunk) {
+			json_str += chunk;
 		});
-	});
+		request.on('end', function() {
+			var json_obj = JSON.parse(json_str);
+			writetodb(undefined,json_obj, undefined);
+		});
+	}
+	//Otherwise, fail gracefully
+	else {
+		return error(response,400,'Invalid content type header.');
+	}
 }
 
 function newcomment(request,response) {
