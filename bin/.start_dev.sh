@@ -16,7 +16,8 @@ SERVER_DIR="src/server"
 DB_INFO_FILE="models/db_info.js"
 PID_FILE="var/server.pid"
 LOG_FILE="var/server.log"
-NODE_EXE="node"
+NODE_EXE=REPLACE_NODE_EXE
+NPM_EXE=REPLACE_NPM_EXE
 BUILD_DB_SCRIPT="models/build_db.js"
 TEST_DATA_SCRIPT="models/test_data.js"
 INDEX_SCRIPT="index.js"
@@ -29,7 +30,7 @@ ROOT_DIR=`pwd`
 cd $SERVER_DIR
 
 echo "Installing needed packages"
-npm install
+$NPM_EXE install
 
 ######################################################################
 # Database setup
