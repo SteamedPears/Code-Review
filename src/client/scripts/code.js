@@ -1,4 +1,3 @@
-// vim: tabstop=4 noexpandtab textwidth=80
 /******************************************************************************
 * code.js                                                                     *
 * Copyright 2013                                                              *
@@ -10,18 +9,20 @@
 ******************************************************************************/
 
 define([
-    "jquery"
+  "jquery"
 ], function($) {
-    var code = {};
+  var code = {};
 
-    code.getCode = function(id,callback,error_fn) {
-        $.ajax('/do/code',{
-            data:     {id:id},
-            dataType: 'json',
-            error:    error_fn,
-            success:  callback
-        });
-    };
+  code.getCode = function(id,callback,error_fn) {
+    $.ajax('/do/code',{
+      data:   {id:id},
+      dataType: 'json',
+      error:  error_fn,
+      success:  callback
+    });
+  };
 
-    return code;
+  return code;
 });
+
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
