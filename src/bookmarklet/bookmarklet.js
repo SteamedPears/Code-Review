@@ -119,6 +119,13 @@ var helpers = {
     dbg("helpers.vendorLoad: " + vendor);
     assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
   }, 
+  //Cors Request
+  Request : function (method, url, type){
+    var xhr = new XMLHttpRequest();
+    xhr.open(method || 'POST', url, true);
+    xhr.setRequestHeader("Content-type", type || "application/json");
+    return xhr;
+  }
 };
 
 //Expose API
@@ -126,7 +133,15 @@ that.dbg = dbg;
 window.codeReview = that;
 
 helpers.vendorLoad("readability", function () {
-  console.log(that.vendor.getContent());
+  var content = that.vendor.getContent();
+  
+  var req = new helpers.Request(null,g.baseUrl);
+  console.dir(req);
+  req.send("BAH");
+  req.onload = function() {
+    console.log("DONE!");
+  }
+
 });
 
 })(window,document);
