@@ -1,41 +1,39 @@
-/* vim: tabstop=4 noexpandtab textwidth=80
-*/
 html, body {
-	height: 99.99%;
-	width: 99%;
+  height: 99.99%;
+  width: 99%;
 }
 
 div, p, pre, img, table, h1, h2, h3, h4, textarea, input {
-	padding: 0px;
-	margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 a { 
-	color: #0174DF;
+  color: #0174DF;
 }
 
 label{
-	float:left;
-	width:200px;
-	margin-right:1em;
+  float:left;
+  width:200px;
+  margin-right:1em;
 }
 
 #error {
-	background-color: #FE2E2E;
-	text-decoration:none;
+  background-color: #FE2E2E;
+  text-decoration:none;
 }
 
 #code {
-	width: 45%;
-	float: left;
+  width: 45%;
+  float: left;
 }
 
 
 #comment-info{
-	float:left;
-	width:10%;
-	min-height:1px;
-	position:relative;
+  float:left;
+  width:10%;
+  min-height:1px;
+  position:relative;
 }
 
 .commentButton {
@@ -44,43 +42,43 @@ label{
 }
 
 .right-side {
-	width:45%;
-	float:right;
-	min-height:1px;
-	position:relative;
+  width:45%;
+  float:right;
+  min-height:1px;
+  position:relative;
 }
 
 .right-button{
-	float:right;
+  float:right;
 }
 
 .comment-set {
-	width: 100%;
-	position:absolute;
+  width: 100%;
+  position:absolute;
 }
 
 #comment-view{
-	min-height:1;
+  min-height:1;
 }
 
 #comment > #comment-view .comment-box {
-	border: 1px solid #CCCCCC;
-	margin-bottom: 4px;
+  border: 1px solid #CCCCCC;
+  margin-bottom: 4px;
 }
 
 .comment-box > .comment-title {
-	background-color: #AAAAAA;
-	color: #000000;
-	font-weight: bold;
-	padding-top: 3px;
-	padding-left: 2px;
-	font-size: 0.9em;
+  background-color: #AAAAAA;
+  color: #000000;
+  font-weight: bold;
+  padding-top: 3px;
+  padding-left: 2px;
+  font-size: 0.9em;
 }
 
 .comment-box > .comment-text {
-	background-color: #FCFCFC;
-	padding-top: 3px;
-	padding-left: 2px;
+  background-color: #FCFCFC;
+  padding-top: 3px;
+  padding-left: 2px;
 }
 
 #comment_controls, #code_controls, #code_instructions, #comment_instructions {
@@ -88,29 +86,29 @@ label{
 }
 
 #comment-old {
-	position: absolute;
-	width: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 #comment-new {
     display: none;
-	padding: 5px 5px 3px 3px;
-	border: 1px solid #CCCCCC;
-	position: absolute;
-	width: 100%;
+  padding: 5px 5px 3px 3px;
+  border: 1px solid #CCCCCC;
+  position: absolute;
+  width: 100%;
 }
 
 #comment-new input, #comment-new textarea {
-	width: 80%;
-	margin-bottom: 3px;
+  width: 80%;
+  margin-bottom: 3px;
 }
 
 #comment > #comment-new input[type=submit] {
-	width: 50px;
+  width: 50px;
 }
 
 .CodeMirror {
-	border: 1px solid #AAAAAA;
+  border: 1px solid #AAAAAA;
     height: auto;
 }
 
@@ -120,33 +118,35 @@ label{
 }
 
 .CodeMirror-gutter {
-	background: white;
+  background: white;
 }
 
 .comment-number{
-	float:left;
+  float:left;
 }
 
 .clear{
-	clear:both;
+  clear:both;
 }
 
 .diffStyle_-1{
-	background-color:rgb(255,200,200);
-	margin:0;
-	padding:0;
-	border:0;
+  background-color:rgb(255,200,200);
+  margin:0;
+  padding:0;
+  border:0;
 }
 .diffStyle_0{
 }
 .diffStyle_1{
-	background-color: rgb( 200, 255, 200 );
-	margin:0;
-	padding:0;
-	border:0;
+  background-color: rgb( 200, 255, 200 );
+  margin:0;
+  padding:0;
+  border:0;
 }
 
 .CodeMirror, .CodeMirror-scroll {
-	min-height: 2em;
-	line-height: 1.3em;
+  min-height: 2em;
+  line-height: 1.3em;
 }
+
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

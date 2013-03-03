@@ -1,5 +1,3 @@
-<!-- vim: tabstop=4 noexpandtab textwidth=80
--->
 <!DOCTYPE html>
 <html>
   <head>
@@ -13,8 +11,8 @@
     <h1><a href="index.html">CodeReview</a></h1>
     <div id="error"></div>
     <div id="code_instructions">
-	  Insert the code you would like reviewed then
-	  hit submit, and share the url with your reviewers.
+    Insert the code you would like reviewed then
+    hit submit, and share the url with your reviewers.
     </div>
     <div id="comment_instructions">
       Review the code, select the lines of code on which you would like
@@ -27,32 +25,34 @@
       <div id="comment-info"></div>
       <div id="code_controls" class="right-side">
         <div>
-		  <label for="lang">Syntax Highlighting:</label>
-		  <select id="lang" name="lang" ></select>
-	    </div>
-	    <div>
-		  <input type="submit" value="Submit Code" />
-	    </div>
-	  </div>
+      <label for="lang">Syntax Highlighting:</label>
+      <select id="lang" name="lang" ></select>
+      </div>
+      <div>
+      <input type="submit" value="Submit Code" />
+      </div>
+    </div>
     </form>
     <div id="comment_controls" class="right-side">
       <div id="comment-old"></div>
-	  <div id="comment-new">
-	    <form id="comment-form" method="POST" action="/do/newcomment">
-		  <input type="hidden" name="code_id" id="code-id" value="-1" />
-		  <input type="hidden" name="line_start" id="line-start" value="-1" />
-		  <input type="hidden" name="line_end" id="line-end" value="-1" />
-		  <input type="text" name="user" id="user" value="Anonymous" />
-		  <p>
-		    Commenting on:
-		    <span id="line-start-num">?</span>-<span id="line-end-num">?</span>
+    <div id="comment-new">
+      <form id="comment-form" method="POST" action="/do/newcomment">
+      <input type="hidden" name="code_id" id="code-id" value="-1" />
+      <input type="hidden" name="line_start" id="line-start" value="-1" />
+      <input type="hidden" name="line_end" id="line-end" value="-1" />
+      <input type="text" name="user" id="user" value="Anonymous" />
+      <p>
+        Commenting on:
+        <span id="line-start-num">?</span>-<span id="line-end-num">?</span>
             <br/>
-		    <textarea id="text" name="text"></textarea><br />
-		    <textarea id="diffs" name="diffs"></textarea><br />
-		    <input id="comment-submit-button" type="submit" value="Submit Comment" />
-		  </p>
-	    </form>
-	  </div>
+        <textarea id="text" name="text"></textarea><br />
+        <textarea id="diffs" name="diffs"></textarea><br />
+        <input id="comment-submit-button" type="submit" value="Submit Comment" />
+      </p>
+      </form>
+    </div>
     </div>
   </body>
 </html>
+
+<!-- vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: -->
