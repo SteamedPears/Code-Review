@@ -135,9 +135,16 @@ window.codeReview = that;
 helpers.vendorLoad("readability", function () {
   var content = that.vendor.getContent();
   
-  var req = new helpers.Request(null,g.baseUrl);
+  var req = new helpers.Request(null,g.baseUrl + g.newCodeApi);
   console.dir(req);
-  req.send("BAH");
+  console.log(g.newCodeApi);
+  
+  console.log(JSON);
+  var obj = JSON.stringify({
+    language_id : 1,
+    text : content
+  });
+  req.send(obj);
   req.onload = function() {
     console.log("DONE!");
   }
