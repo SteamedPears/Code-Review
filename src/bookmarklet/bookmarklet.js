@@ -7,7 +7,7 @@ g.vendors = {
   gist : /https?:\/\/gist.github.com/  //Github gists
 };
 g.vendorDefault = "readability";
-g.baseUrl = g.debug ? '//localhost:8000' : 'http://review.steamedpears.com';
+g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
 g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
 g.vendorUri = g.debug ? '/vendors/': '/bookmarklet/vendors/';
 g.newCodeApi = '/do/newcode'
@@ -132,22 +132,22 @@ var helpers = {
 that.dbg = dbg;
 window.codeReview = that;
 
+//Sketch of what's to come
 helpers.vendorLoad("readability", function () {
   var content = that.vendor.getContent();
   
   var req = new helpers.Request(null,g.baseUrl + g.newCodeApi);
-  console.dir(req);
-  console.log(g.newCodeApi);
-  
-  console.log(JSON);
+
   var obj = JSON.stringify({
     language_id : 1,
-    text : content
+    text : content.text
   });
+  req.onreadystatechange = function() {
+    if (req.readyState === 4){
+      console.log(req.responseText);
+    }
+  };
   req.send(obj);
-  req.onload = function() {
-    console.log("DONE!");
-  }
 
 });
 
