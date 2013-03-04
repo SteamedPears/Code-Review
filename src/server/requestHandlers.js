@@ -113,6 +113,7 @@ function newcode(request,response) {
 	//On validation or parsing success
 	var writetodb = function(err,obj, files) {
 			// do some basic validation
+
 			if( obj === null || !isValidString(obj['text'])) {
 				return error(response,400,'Invalid code text.');
 			}
@@ -129,6 +130,21 @@ function newcode(request,response) {
 				return error(response,500,'Error writing code to database');
 			});
 	}
+	if (request.method && request.method.toUpperCase() === 'OPTIONS') {
+		response.writeHead(
+				"204",
+				"No Content",
+				{
+					"access-control-allow-origin": "*",
+					"access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+					"access-control-allow-headers": "content-type, accept",
+					"access-control-max-age": 10, // Seconds.
+					"content-length": 0
+				});
+
+		return response.end();
+	}
+
 	//Test if request is a form or a json object
 	var content_type = request.headers['content-type'];
 	if (content_type && content_type.indexOf('x-www-form-urlencoded') >= 0) {
@@ -145,6 +161,7 @@ function newcode(request,response) {
 		request.on('data', function(chunk) {
 			json_str += chunk;
 		});
+
 		request.on('end', function() {
 			var json_obj = JSON.parse(json_str);
 			writetodb(undefined,json_obj, undefined);
