@@ -9,11 +9,15 @@ g.vendors = {
 g.vendorDefault = "readability";
 g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
 g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
-g.vendorUri = g.debug ? '/vendors/': '/bookmarklet/vendors/';
-g.newCodeApi = '/do/newcode'
+g.vendorUri = g.debug ? '/vendors/' : '/bookmarklet/vendors/';
+g.newCodeApi = '/do/newcode';
+
 
 //Will be the exposed API
-var that, codeReview = that = {};
+var that, 
+    codeReview;
+
+codeReview = that = {};
 
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
@@ -28,31 +32,31 @@ var assetLoader = (function() {
    * Returns an HTML element
    * Usage:
    *  var tag = createTag("http://example.com/style.css");
-   *  var tag =  createTag("http://example.com/someJSfile", "js");
+   *  var tag = createTag("http://example.com/someJSfile", "js");
    */
   var createTag = function createTag(url, t) {
     var tag, type;
 
     var matches = url.match(ext_re);
-    type = t || matches &&  matches[0].substr(1) || "default";
+    type = t || matches && matches[0].substr(1) || "default";
 
     switch (type) {
       case 'css' :
         tag = doc.createElement('link');
-        tag.type= 'text/css';
-        tag.rel='stylesheet';
-        tag.href=url;
+        tag.type = 'text/css';
+        tag.rel = 'stylesheet';
+        tag.href = url;
         break;
 
-      case 'js':
-      case 'javascript':
+      case 'js' :
+      case 'javascript' :
         tag = doc.createElement('script');
         tag.src = url;
         break;
 
-      default:
+      default :
         tag = doc.createElement('link');
-        tag.href=url;
+        tag.href = url;
         break;
     }
     return tag;
@@ -65,7 +69,7 @@ var assetLoader = (function() {
   //API
   return {
     /* Loads assets
-     * USAGE:
+     * USAGE :
      * Just load asset
      *  assetLoader.load('//example.ca/st.css'); 
      *
@@ -86,15 +90,15 @@ var assetLoader = (function() {
     * USAGE:
     * runOnLoad(someTag, function() { //do stuff });
     */
-    runOnLoad  : function (asset, callback) {
-      if (asset.readyState){  //IE
+    runOnLoad : function (asset, callback) {
+      if (asset.readyState){ //IE
         asset.onreadystatechange = function(){
           if (asset.readyState == "loaded" ||asset.readyState == "complete"){
             asset.onreadystatechange = null;
             return callback();
           }
         };
-      } else {  //W3C
+      } else { //W3C
         asset.addEventListener('load',callback);
       }
     }
