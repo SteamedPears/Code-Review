@@ -48,7 +48,7 @@ var assetLoader = (function() {
         tag.href = url;
         break;
 
-      case 'js' :
+      case 'js' : // FALLTHROUGH
       case 'javascript' :
         tag = doc.createElement('script');
         tag.src = url;
