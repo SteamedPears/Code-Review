@@ -1,4 +1,4 @@
-(function(win,doc,undefined) {
+(function(window,document,undefined) {
 'use strict';
 
 var g = {}; //Globals
@@ -23,7 +23,7 @@ function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
 var assetLoader = (function() {
   var assets = {},
-      head = doc.getElementsByTagName('head')[0];
+      head = document.getElementsByTagName('head')[0];
 
   var ext_re= /\.[0-9a-zA-Z]+$/; // matches a URL's extension
   
@@ -42,7 +42,7 @@ var assetLoader = (function() {
 
     switch (type) {
       case 'css' :
-        tag = doc.createElement('link');
+        tag = document.createElement('link');
         tag.type = 'text/css';
         tag.rel = 'stylesheet';
         tag.href = url;
@@ -50,12 +50,12 @@ var assetLoader = (function() {
 
       case 'js' : // FALLTHROUGH
       case 'javascript' :
-        tag = doc.createElement('script');
+        tag = document.createElement('script');
         tag.src = url;
         break;
 
       default :
-        tag = doc.createElement('link');
+        tag = document.createElement('link');
         tag.href = url;
         break;
     }
