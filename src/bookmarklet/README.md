@@ -2,9 +2,11 @@
 
 ##Development Usage
 
+Rum `make build` to build the bookmarklet and vendors.
+
 Run `make main` to start serving the bookmarklet for development.
 
-All vendors must be built before they can be used. Use `make vendorname`.
+All vendors must be built before they can be used. Use `make buildvendors`.
 
 To prepare the bookmarklet for production (eg. minification, concatenation,
 etc), use `make production`.

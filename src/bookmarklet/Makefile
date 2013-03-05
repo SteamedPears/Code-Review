@@ -1,7 +1,10 @@
 
 .PHONY=main
 
-TARGET=../client/
+TARGET=../client
+LIB=lib
+VENDORS_SRC=vendors_src
+VENDORS=vendors
 
 main:
 	python -m SimpleHTTPServer
@@ -10,25 +13,35 @@ lint:
 	jshint bookmarklet.js
 
 readability:
-	@echo "Compiling $@ to vendor"
-	cat ./vendors_src/readability_header.js \
-			./lib/readabilitySAX/readabilitySAX.js \
-			./lib/readabilitySAX/browsers/DOMasSAX.js \
-			./vendors_src/readability_footer.js \
-			> ./vendors/readability.js
+	@echo "Wrapping $@ and compiling to $(VENDORS)"
+	cat $(VENDORS_SRC)/readability_header.js \
+			$(LIB)/readabilitySAX/readabilitySAX.js \
+			$(LIB)/readabilitySAX/browsers/DOMasSAX.js \
+			$(VENDORS_SRC)/readability_footer.js \
+			> $(VENDORS)/readability.js
 
-build:
-	@echo "Building project to $(TARGET)"
-	cp bookmarklet.js $(TARGET)
-	mkdir -p $(TARGET)vendors/
-	cp vendors/* $(TARGET)vendors/
+
+getvendors:
+	@echo "Downloading vendors"
+	cd $(LIB); git clone git@github.com:fb55/readabilitySAX.git
+
+buildvendors: getvendors readability
+
+makedirs:
+	mkdir -p $(LIB)
+	mkdir -p $(VENDORS)
+
+#Build the bookmarklet, get all vendors and compile them
+build: makedirs buildvendors
 
 clean:
-	rm -rf *.min.js $(TARGET)bookmarklet.js $(TARGET)bookmarklet.min.js \
-		$(TARGET)vendors/
+	rm -rf *.min.js vendors/* 
 
+#TODO: minify vendors too.
+#TODO: figure out where this will be served on the production server.
 production:
+	@echo "Minifying and moving to $(TARGET)"
 	cat bookmarklet.js |\
 		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
 		uglify
-		> ../client/bookmarklet.min.js
+		> $(TARGET)/bookmarklet.min.js
