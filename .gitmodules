@@ -1,3 +1,0 @@
-[submodule "src/bookmarklet/lib/readabilitySAX"]
-	path = src/bookmarklet/lib/readabilitySAX
-	url = git@github.com:fb55/readabilitySAX.git
