@@ -8,7 +8,7 @@ g.vendors = {
 };
 g.vendorDefault = "readability";
 g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
-g.bookmarkletUri = g.debug ? '/' : '/bookmarklet/';
+g.bookmarkletUri =  '/bookmarklet/';
 g.vendorUri = g.debug ? '/vendors/' : '/bookmarklet/vendors/';
 g.newCodeApi = '/do/newcode';
 
