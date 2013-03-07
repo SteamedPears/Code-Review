@@ -112,9 +112,11 @@ var helpers = {
     regex;
 
     for (var vendor in g.vendors) {
-      regex = g.vendors[vendor];
-      matches = regex.test(url);
-      if (matches) return vendor;
+      if (g.vendors.hasOwnProperty(vendor)) {
+        regex = g.vendors[vendor];
+        matches = regex.test(url);
+        if (matches) return vendor;
+      }
     }
     return null;
   },
