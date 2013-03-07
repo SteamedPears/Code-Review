@@ -135,11 +135,11 @@ function newcode(request,response) {
 				"204",
 				"No Content",
 				{
-					"access-control-allow-origin": "*",
-					"access-control-allow-methods": "POST, OPTIONS",
-					"access-control-allow-headers": "content-type, accept",
-					"access-control-max-age": 10, // Seconds.
-					"content-length": 0
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "content-type, accept",
+					"Access-Control-Max-Age": 10, // Seconds.
+					"Content-Length": 0
 				});
 
 		return response.end();
