@@ -93,15 +93,18 @@ var assetLoader = (function() {
     * runOnLoad(someTag, function() { //do stuff });
     */
     runOnLoad : function (asset, callback) {
-      if (asset.readyState){ //IE
-        asset.onreadystatechange = function(){
-          if (asset.readyState == "loaded" ||asset.readyState == "complete"){
+      if (asset.addEventListener) { //W3C
+        asset.addEventListener('load',callback);
+      }
+      else if (asset.readyState){ //IE
+        asset.onreadystatechange = (function() {
+          if (asset.readyState == "loaded" || asset.readyState == "complete"){
             asset.onreadystatechange = null;
             return callback();
           }
-        };
-      } else { //W3C
-        asset.addEventListener('load',callback);
+        });
+      } else { 
+        throw "runOnLoad: Can't attach event.";
       }
     }
   };
