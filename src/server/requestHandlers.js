@@ -136,7 +136,7 @@ function newcode(request,response) {
 				"No Content",
 				{
 					"access-control-allow-origin": "*",
-					"access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+					"access-control-allow-methods": "POST, OPTIONS",
 					"access-control-allow-headers": "content-type, accept",
 					"access-control-max-age": 10, // Seconds.
 					"content-length": 0
