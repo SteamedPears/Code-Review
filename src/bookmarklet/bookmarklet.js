@@ -24,16 +24,22 @@ function dbg() { if (g.debug) console.log.apply(console,arguments); }
 var assetLoader = (function() {
   var assets = {},
       head = document.getElementsByTagName('head')[0];
-
-  var ext_re= /\.[0-9a-zA-Z]+$/; // matches a URL's extension
   
   /* 
-   * Create tag that will be appended to head
+   * Create a tag that will be appended to head. If you input only a URL, the
+   * file's extension will be matched to the appropriate tag. If no match is
+   * found, the tag used will be the default type.
+   *
    * Returns an HTML element
+   *
+   * Default type: javascript
+   *
    * Usage:
    *  var tag = createTag("http://example.com/style.css");
    *  var tag = createTag("http://example.com/someJSfile", "js");
+   *
    */
+  var ext_re= /\.[0-9a-zA-Z]+$/; // matches a URL's extension
   var createTag = function createTag(url, t) {
     var tag, type;
 
@@ -49,14 +55,10 @@ var assetLoader = (function() {
         break;
 
       case 'js' : // FALLTHROUGH
-      case 'javascript' :
+      case 'javascript' : // FALLTHROUGH
+      default :
         tag = document.createElement('script');
         tag.src = url;
-        break;
-
-      default :
-        tag = document.createElement('link');
-        tag.href = url;
         break;
     }
     return tag;
