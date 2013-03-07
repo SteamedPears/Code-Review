@@ -2,20 +2,25 @@
 
 ##Development Usage
 
-Rum `make build` to build the bookmarklet and vendors.
+Run `make init` to get the bookmarklet to a working state. It will download all
+the vendor dependencies, build them, and move everything to the static file
+server.
 
-Run `make main` to start serving the bookmarklet for development.
+Run `make build` to build the bookmarklet and vendors and move them to the
+static file server.
 
 All vendors must be built before they can be used. Use `make buildvendors`.
 
 To prepare the bookmarklet for production (eg. minification, concatenation,
 etc), use `make production`.
 
+Use `make clean` to delete all built files. 
+
 ##Vendors
 
-Vendors are different strategies used by the bookmarklet to scrape or extract
-content. They're dynamically loaded depending on which site the user is
-visiting. Currently, it will default to readability.
+Vendors are different strategies used to scrape or extract content. They're
+dynamically loaded depending on which site the user is visiting. Currently, it
+will default to readability.
 
 Compiled/prepared vendor files are located in `vendors/`. The files used to
 prepare/wrap them are located in `vendors_src/`.
@@ -29,9 +34,6 @@ Vendor source files are located in `libs/`.
 
 ##Build Dependencies
 
-* Python for a static file server. `node-static` caches static files so
-  reloading the browser didn't always fetch the newest version of the
-  bookmarklet. Using python's HTTP server is a work around.
 * uglifyjs for minifying.
 * jshint for linting.
 
