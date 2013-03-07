@@ -110,10 +110,31 @@ function comments(request,response) {
 ******************************************************************************/
 function newcode(request,response) {
 
+	/****************************************************************************
+	*	Preflight OPTIONS requests -- CORS																				*
+	****************************************************************************/
+	if (request.method && request.method.toUpperCase() === 'OPTIONS') {
+		response.writeHead(
+				"204",
+				"No Content",
+				{
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "content-type, accept",
+					"Access-Control-Max-Age": 10, // Seconds.
+					"Content-Length": 0
+				});
+
+		return response.end();
+	}
+
+	/****************************************************************************
+	* POST requests																															*	
+	****************************************************************************/
+
 	//On validation or parsing success
 	var writetodb = function(err,obj, files) {
 			// do some basic validation
-
 			if( obj === null || !isValidString(obj['text'])) {
 				return error(response,400,'Invalid code text.');
 			}
@@ -130,22 +151,7 @@ function newcode(request,response) {
 				return error(response,500,'Error writing code to database');
 			});
 	}
-	if (request.method && request.method.toUpperCase() === 'OPTIONS') {
-		response.writeHead(
-				"204",
-				"No Content",
-				{
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "POST, OPTIONS",
-					"Access-Control-Allow-Headers": "content-type, accept",
-					"Access-Control-Max-Age": 10, // Seconds.
-					"Content-Length": 0
-				});
-
-		return response.end();
-	}
-
-	//Test if request is a form or a json object
+	//Test if request is form data or a json object
 	var content_type = request.headers['content-type'];
 	if (content_type && content_type.indexOf('x-www-form-urlencoded') >= 0) {
 		var form = new formidable.IncomingForm();
@@ -158,6 +164,7 @@ function newcode(request,response) {
 		request.setEncoding('utf8');
 		var json_str = '';
 
+		//Build JSON string
 		request.on('data', function(chunk) {
 			json_str += chunk;
 		});
