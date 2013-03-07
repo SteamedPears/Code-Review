@@ -1,7 +1,6 @@
 
 dbg("readability.js: Readability loaded");
 
-
 window.codeReview.vendor = {
 	getContent : function () {
 		var readable = new Readability();
@@ -12,5 +11,6 @@ window.codeReview.vendor = {
 }
 
 })(window,document);
+/* End of wrapper. See readability_header.js for more details */
 
-/* To wrapped around ../lib/readabilitySAX.js and ../lib/browsers/DOMasSax.js*/
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
