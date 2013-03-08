@@ -50,8 +50,7 @@ try{
   if (startDevProxy) {
     console.log('Developement Mode');
 
-    require('./static-server', { cache : false })
-      .start(staticPort,staticDirectory);
+    require('./static-server').start(staticPort,staticDirectory);
 
     require("./proxy").start(proxyPort,{
       router: { 
