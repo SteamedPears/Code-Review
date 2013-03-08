@@ -19,7 +19,6 @@ function download() {
 	fi
 	echo "Downloading $filename..."
 	wget --quiet $f
-	return $?
 }
 
 function unzipCarefully() {
@@ -29,7 +28,6 @@ function unzipCarefully() {
 	fi
 	echo "Unzipping $filename..."
 	unzip -q $filename
-	return $?
 }
 
 function exitIfFailed() {
