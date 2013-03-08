@@ -15,11 +15,11 @@ g.debug = true; //Debug mode
 g.vendors = {
   gist: /https?:\/\/gist.github.com/  //Github gists
 };
+g.vendorUri = '/bookmarklet/vendors/';
 g.vendorDefault = 'readability';
-g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
 g.bookmarkletUri =  '/bookmarklet';
-g.vendorUri = g.debug ? '/bookmarklet/vendors/' : '/bookmarklet/vendors/';
 g.newCodeApi = '/do/newcode';
+g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
 
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
