@@ -1,8 +1,8 @@
 do/
 *.sublime-project
 *.sublime-workspace
-bookmarklet.js
-vendors*
 
 # Removed the shortcut
 include/CodeMirror
+
+bookmarklet/*
