@@ -99,7 +99,7 @@ var assetLoader = (function() {
           }
         });
       } else { 
-        throw 'runOnLoad: Can't attach event.';
+        throw 'runOnLoad: Can not attach event.';
       }
     }
   };
