@@ -17,7 +17,11 @@ NODE_MODULES="node_modules"
 
 ######################################################################
 # kill the server if running
-bin/stop_dev.sh
+bin/stop_dev.sh 2> /dev/null
+
+######################################################################
+# reset the client side
+bin/reset_client.sh
 
 ######################################################################
 # delete metadata and data so db rebuilds next start

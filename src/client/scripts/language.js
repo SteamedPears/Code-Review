@@ -14,7 +14,7 @@ define([
   var language = {};
 
   language.langs = {
-    "include_path":"lib/codemirror-3.02/mode/",
+    "include_path":"lib/codemirror-3.1/mode/",
     "data":{
       "none":{"description":"Plain Text",
               "mode":"text/plain",
