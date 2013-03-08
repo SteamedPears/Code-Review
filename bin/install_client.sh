@@ -18,7 +18,7 @@ function download() {
 		return 0
 	fi
 	echo "Downloading $filename..."
-	wget --no-verbose $f > /dev/null 2> /dev/null
+	wget --quiet $f
 	return $?
 }
 
