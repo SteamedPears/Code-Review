@@ -121,8 +121,8 @@ var helpers = {
     return null;
   },
   //Load a given vendor
-  vendorLoad: function (vendor, callback) {
-    dbg('helpers.vendorLoad: ' + vendor);
+  loadVendor: function (vendor, callback) {
+    dbg('helpers.loadVendor: ' + vendor);
     assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
   }, 
   //Returns an XML HTTP request object
@@ -135,7 +135,7 @@ var helpers = {
 };
 
 //Sketch of what's to come
-helpers.vendorLoad('readability', function () {
+helpers.loadVendor('readability', function () {
   var content = codeReview.vendor.getContent();
   
   var req = helpers.request(null,g.baseUrl + g.newCodeApi);
