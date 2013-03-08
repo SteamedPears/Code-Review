@@ -23,7 +23,7 @@ function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
 var assetLoader = (function() {
   var assets = {},
-      head = document.getElementsByTagName('head')[0];
+      head = document.head;
   
   /* 
    * Create a tag that will be appended to head. If you input only a URL, the
@@ -39,8 +39,8 @@ var assetLoader = (function() {
    *  var tag = createTag("http://example.com/someJSfile", "js");
    *
    */
-  var ext_re= /\.[0-9a-zA-Z]+$/; // matches a URL's extension
   var createTag = function createTag(url, t) {
+    var ext_re = /\.[0-9a-zA-Z]+$/; // matches a URL's extension
     var tag, type;
 
     var matches = url.match(ext_re);
