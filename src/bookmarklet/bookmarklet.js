@@ -1,6 +1,11 @@
 (function(window,document,undefined) {
 'use strict';
 
+//Object that will be built up
+var codeReview = {};
+//Expose API
+window.codeReview = codeReview;
+
 var g = {}; //Globals
 g.debug = true; //Debug mode
 g.vendors = {
@@ -8,18 +13,13 @@ g.vendors = {
 };
 g.vendorDefault = "readability";
 g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
-g.bookmarkletUri =  '/bookmarklet/';
-g.vendorUri = g.debug ? '/vendors/' : '/bookmarklet/vendors/';
+g.bookmarkletUri =  '/bookmarklet';
+g.vendorUri = g.debug ? '/bookmarklet/vendors/' : '/bookmarklet/vendors/';
 g.newCodeApi = '/do/newcode';
 
-
-//Will be the exposed API
-var that, 
-    codeReview;
-
-codeReview = that = {};
-
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
+codeReview.dbg = dbg;
+
 
 var assetLoader = (function() {
   var assets = {},
@@ -138,13 +138,9 @@ var helpers = {
   }
 };
 
-//Expose API
-that.dbg = dbg;
-window.codeReview = that;
-
 //Sketch of what's to come
 helpers.vendorLoad("readability", function () {
-  var content = that.vendor.getContent();
+  var content = codeReview.vendor.getContent();
   
   var req = helpers.request(null,g.baseUrl + g.newCodeApi);
 
