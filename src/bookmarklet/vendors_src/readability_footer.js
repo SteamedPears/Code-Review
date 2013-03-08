@@ -1,5 +1,5 @@
 
-dbg("readability.js: Readability loaded");
+dbg('readability.js: Readability loaded');
 
 window.codeReview.vendor = {
   getContent: function () {
@@ -7,7 +7,7 @@ window.codeReview.vendor = {
     //XXX To review. Not sure about these defaults.
     readable.setSkipLevel(3); 
     saxParser(document.childNodes[document.childNodes.length-1], readable);
-    return readable.getArticle("text");
+    return readable.getArticle('text');
   }
 }
 

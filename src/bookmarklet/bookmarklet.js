@@ -11,7 +11,7 @@ g.debug = true; //Debug mode
 g.vendors = {
   gist: /https?:\/\/gist.github.com/  //Github gists
 };
-g.vendorDefault = "readability";
+g.vendorDefault = 'readability';
 g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
 g.bookmarkletUri =  '/bookmarklet';
 g.vendorUri = g.debug ? '/bookmarklet/vendors/' : '/bookmarklet/vendors/';
@@ -34,8 +34,8 @@ var assetLoader = (function() {
    * Default type: javascript
    *
    * Usage:
-   *  var tag = createTag("http://example.com/style.css");
-   *  var tag = createTag("http://example.com/someJSfile", "js");
+   *  var tag = createTag('http://example.com/style.css');
+   *  var tag = createTag('http://example.com/someJSfile', 'js');
    *
    */
   var createTag = function createTag(url, t) {
@@ -44,7 +44,7 @@ var assetLoader = (function() {
     var type;
 
     var matches = url.match(ext_re);
-    type = t || matches && matches[0].substr(1) || "default";
+    type = t || matches && matches[0].substr(1) || 'default';
 
     switch (type) {
       case 'css':
@@ -79,7 +79,7 @@ var assetLoader = (function() {
       if (assets[url]) return;
 
       var tag = createTag(url);
-      dbg("assetLoader.load: ", tag);
+      dbg('assetLoader.load: ', tag);
       assets[url] = tag;
       if (callback !== undefined) this.runOnLoad(tag, callback);
       document.head.appendChild(tag);
@@ -93,13 +93,13 @@ var assetLoader = (function() {
         asset.addEventListener('load',callback);
       } else if (asset.readyState){ //IE
         asset.onreadystatechange = (function() {
-          if (asset.readyState === "loaded" || asset.readyState === "complete"){
+          if (asset.readyState === 'loaded' || asset.readyState === 'complete'){
             asset.onreadystatechange = null;
             return callback();
           }
         });
       } else { 
-        throw "runOnLoad: Can't attach event.";
+        throw 'runOnLoad: Can't attach event.';
       }
     }
   };
@@ -122,20 +122,20 @@ var helpers = {
   },
   //Load a given vendor
   vendorLoad: function (vendor, callback) {
-    dbg("helpers.vendorLoad: " + vendor);
-    assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
+    dbg('helpers.vendorLoad: ' + vendor);
+    assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
   }, 
   //Returns an XML HTTP request object
   request: function (method, url, type){
     var xhr = new XMLHttpRequest();
     xhr.open(method || 'POST', url, true);
-    xhr.setRequestHeader("Content-type", type || "application/json");
+    xhr.setRequestHeader('Content-type', type || 'application/json');
     return xhr;
   }
 };
 
 //Sketch of what's to come
-helpers.vendorLoad("readability", function () {
+helpers.vendorLoad('readability', function () {
   var content = codeReview.vendor.getContent();
   
   var req = helpers.request(null,g.baseUrl + g.newCodeApi);

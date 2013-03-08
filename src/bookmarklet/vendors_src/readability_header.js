@@ -9,7 +9,7 @@
 	'use strict';
 
 if (!window.codeReview) {
-	throw new Error("codeReview object not loaded.");
+	throw new Error('codeReview object not loaded.');
 }
 
 var dbg = codeReview.dbg;
