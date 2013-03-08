@@ -16,5 +16,4 @@ fi
 ######################################################################
 # remove all files in the lib directory
 
-cd $LIB_DIR
-rm -rf *
+rm -rf $LIB_DIR/*
