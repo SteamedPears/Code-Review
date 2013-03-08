@@ -41,23 +41,17 @@ function exitIfFailed() {
 ######################################################################
 # Check valid starting directory
 
-if [ ! -d $CLIENT_DIR ]; then
-	echo "Please run this file from the root directory of the project"
-	exit 1
-fi
+test -d $CLIENT_DIR
+exitIfFailed "Please run this file from the root directory of the project"
 
 ######################################################################
 # Get dependencies
 
-if [ ! -f $RAW_DEPS_FILE ]; then
-	echo "$RAW_DEPS_FILE not found"
-	exit 2
-fi
+test ! -f $RAW_DEPS_FILE
+exitIfFailed "$RAW_DEPS_FILE not found"
 
-if [ ! -f $ZIP_DEPS_FILE ]; then
-	echo "$ZIP_DEPS_FILE not found"
-	exit 3
-fi
+test ! -f $ZIP_DEPS_FILE
+exitIfFailed "$ZIP_DEPS_FILE not found"
 
 ######################################################################
 # Install dependencies
