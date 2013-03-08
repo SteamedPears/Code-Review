@@ -3,7 +3,7 @@ exports.start = function(port,folder,next) {
 
     var static = require('node-static');
 
-    var file = new (static.Server)(folder);
+    var file = new (static.Server)(folder, { cache : 0 });
 
     require('http').createServer(function (request, response) {
 	    request.addListener('end', function () {

@@ -45,26 +45,27 @@ handle["not_found"] = requestHandlers.not_found;
  ******************************************************************************/
 try{
 
-    //////////////////////////////////////////////////////////////////////
-    // Development Static Server and Proxy
-    if (startDevProxy) {
-        console.log('Developement Mode');
+  //////////////////////////////////////////////////////////////////////
+  // Development Static Server and Proxy
+  if (startDevProxy) {
+    console.log('Developement Mode');
 
-        require('./static-server').start(staticPort,staticDirectory);
-        
-		require("./proxy").start(proxyPort,{
-            router: { 
-				'localhost/do/' : 'localhost:' + serverPort,
-				'localhost/'    : 'localhost:' + staticPort
-			}
-		});
-	}
+    require('./static-server').start(staticPort,staticDirectory);
 
-    //////////////////////////////////////////////////////////////////////
-    // Server
-    server.start(serverPort, router.route, handle);
+    require("./proxy").start(proxyPort,{
+      router: { 
+        'localhost/do/' : 'localhost:' + serverPort,
+        'localhost/'    : 'localhost:' + staticPort
+      }
+    });
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  // Server
+  server.start(serverPort, router.route, handle);
 
 } catch(e) {
-    console.log("===ERROR===");
-    console.log(e);
+  console.log("===ERROR===");
+  console.log(e);
 }
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
