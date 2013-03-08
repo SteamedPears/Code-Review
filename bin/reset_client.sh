@@ -14,6 +14,6 @@ if [ ! -d $LIB_DIR ]; then
 fi
 
 ######################################################################
-# remove all files in the lib directory
+# remove third-party libraries
 
 rm -rf $LIB_DIR/*
