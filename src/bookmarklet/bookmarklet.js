@@ -104,6 +104,16 @@ var assetLoader = (function() {
       } else { 
         throw 'runOnLoad: Can not attach event.';
       }
+    },
+    deleteAssets: function () {
+      var a;
+      for (var asset in assets) {
+        if (assets.hasOwnProperty(asset)) {
+          a = assets[asset];
+          a.parentNode.removeChild(a);
+          delete assets[asset];
+        }
+      }
     }
   };
 })();
@@ -155,6 +165,11 @@ helpers.loadVendor('readability', function () {
   req.send(obj);
 
 });
+
+codeReview.exit = function () {
+  dbg('Exiting...');
+  assetLoader.deleteAssets();
+};
 
 })(window,document);
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

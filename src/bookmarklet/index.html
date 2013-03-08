@@ -11,18 +11,17 @@
   <h1>Code Review bookmarklet test page</h1>
 
 
-	<a
-		href="javascript:(function(){window.codeReview&&window.codeReview.exitApp();window.codeReview_script=document.createElement('script');codeReview_script.src='//localhost:8080/bookmarklet.js';(document.head||document.body).appendChild(codeReview_script)})();">Local</a>
+	<p>Drag the following link to you bookmarks bar<\p>
+	<a href="javascript:(function(){window.codeReview&&window.codeReview.exit();window.codeReview_script=document.createElement('script');codeReview_script.src='//localhost:8080/bookmarklet.js';(document.head||document.body).appendChild(codeReview_script)})();">Local</a>
 
 <script> 
 	(function(){
-		window.codeReview && window.codeReview.exitApp(); //delete prior codeReview instance
+		window.codeReview && window.codeReview.exit(); //delete prior codeReview instance
 		window.codeReview_script = document.createElement('script');
 		codeReview_script.src ='//localhost:8080/bookmarklet.js';
 		(document.head || document.body).appendChild(codeReview_script); 
 	}());
 </script>
-
 
 </section>
 </body>
