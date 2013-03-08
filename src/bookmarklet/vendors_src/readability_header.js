@@ -6,12 +6,12 @@
  */
 
 (function(window,document,undefined) { 
-	'use strict';
+  'use strict';
 
-if (!window.codeReview) {
-	throw new Error('codeReview object not loaded.');
-}
+  if (!window.codeReview) {
+    throw new Error('codeReview object not loaded.');
+  }
 
-var dbg = codeReview.dbg;
+  var dbg = codeReview.dbg;
 
-/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
+  /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
