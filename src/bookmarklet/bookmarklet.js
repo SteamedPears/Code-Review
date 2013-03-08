@@ -91,9 +91,12 @@ var assetLoader = (function() {
     runOnLoad: function (asset, callback) {
       if (asset.addEventListener) { //W3C
         asset.addEventListener('load',callback);
-      } else if (asset.readyState){ //IE
+      } else if (asset.readyState) { //IE
         asset.onreadystatechange = (function() {
-          if (asset.readyState === 'loaded' || asset.readyState === 'complete'){
+
+          if (asset.readyState === 'loaded' || 
+            asset.readyState === 'complete') {
+
             asset.onreadystatechange = null;
             return callback();
           }
@@ -126,7 +129,7 @@ var helpers = {
     assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
   }, 
   //Returns an XML HTTP request object
-  request: function (method, url, type){
+  request: function (method, url, type) {
     var xhr = new XMLHttpRequest();
     xhr.open(method || 'POST', url, true);
     xhr.setRequestHeader('Content-type', type || 'application/json');
@@ -145,7 +148,7 @@ helpers.loadVendor('readability', function () {
     text: content.text
   });
   req.onreadystatechange = function() {
-    if (req.readyState === 4){
+    if (req.readyState === 4) {
       console.log(req.responseText);
     }
   };
