@@ -2,7 +2,7 @@
 
 ##Development Usage
 
-Run `make init` to get the bookmarklet to a working state. It will download all
+Run `make install` to get the bookmarklet to a working state. It will download all
 the vendor dependencies, build them, and move everything to the static file
 server.
 
