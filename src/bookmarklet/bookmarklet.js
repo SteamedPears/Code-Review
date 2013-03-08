@@ -1,6 +1,10 @@
 (function(window,document,undefined) {
 'use strict';
 
+/*******************************************************************************
+* Globals                                                                      *
+*******************************************************************************/
+
 //Object that will be built up
 var codeReview = {};
 //Expose API
