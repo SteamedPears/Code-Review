@@ -21,6 +21,9 @@ function dbg() { if (g.debug) console.log.apply(console,arguments); }
 codeReview.dbg = dbg;
 
 
+/*******************************************************************************
+* Asset loader                                                                 *
+*******************************************************************************/
 var assetLoader = (function() {
   var assets = {};
   
@@ -118,6 +121,9 @@ var assetLoader = (function() {
   };
 })();
 
+/*******************************************************************************
+* Helpers                                                                      *
+*******************************************************************************/
 var helpers = {
   //Figure out if this url uses a known vendor
   vendorGetFromUrl: function(url) {
@@ -147,6 +153,19 @@ var helpers = {
   }
 };
 
+/*******************************************************************************
+* Global API                                                                   *
+*******************************************************************************/
+
+codeReview.exit = function () {
+  dbg('Exiting...');
+  assetLoader.deleteAssets();
+};
+
+/*******************************************************************************
+* Main code                                                                    *
+*******************************************************************************/
+
 //Sketch of what's to come
 helpers.loadVendor('readability', function () {
   var content = codeReview.vendor.getContent();
@@ -166,10 +185,7 @@ helpers.loadVendor('readability', function () {
 
 });
 
-codeReview.exit = function () {
-  dbg('Exiting...');
-  assetLoader.deleteAssets();
-};
+
 
 })(window,document);
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
