@@ -98,7 +98,7 @@ var assetLoader = (function() {
       }
       else if (asset.readyState){ //IE
         asset.onreadystatechange = (function() {
-          if (asset.readyState == "loaded" || asset.readyState == "complete"){
+          if (asset.readyState === "loaded" || asset.readyState === "complete"){
             asset.onreadystatechange = null;
             return callback();
           }
