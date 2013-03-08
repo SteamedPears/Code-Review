@@ -12,12 +12,8 @@ ZIP_DEPS_FILE="$CLIENT_DIR/zip.deps.dev.txt"
 ######################################################################
 # Helper functions
 
-function extractFilename() {
-	sed -e 's!.*/!!' <<< "$1"
-}
-
 function download() {
-	filename=`extractFilename $1`
+	filename=`basename $1`
 	if [ -f $filename ]; then
 		return 0
 	fi
@@ -27,7 +23,7 @@ function download() {
 }
 
 function unzipCarefully() {
-	filename=`extractFilename $1`
+	filename=`basename $1`
 	if [ ! -f $filename ]; then
 		return 0
 	fi
@@ -76,8 +72,12 @@ for f in `cat $RAW_DEPS_FILE`; do
 done
 
 for f in `cat $ZIP_DEPS_FILE`; do
+	# check if the folder exists
+	if [ -d `basename -s .zip $f` ]; then
+		continue
+	fi
 	download $f
 	exitIfFailed "Failed to get $f"
 	unzipCarefully $f
-	exitIfFailed "There was an error unzipping `extractFilename $f`"
+	exitIfFailed "There was an error unzipping `basename $f`"
 done
