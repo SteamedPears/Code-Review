@@ -16,17 +16,8 @@ function download() {
 	if [ -f $filename ]; then
 		return 0
 	fi
-	echo "Downloading $filename..."
+	echo "Installing $filename..."
 	wget --quiet $1
-}
-
-function unzipCarefully() {
-	filename=`basename $1`
-	if [ -d `basename -s .zip $1` ]; then
-		return 0
-	fi
-	echo "Unzipping $filename..."
-	unzip -q $filename
 }
 
 function exitIfFailed() {
@@ -62,6 +53,6 @@ done
 for f in `cat "$ZIP_DEPS_FILE"`; do
 	download $f
 	exitIfFailed "Failed to get $f"
-	unzipCarefully $f
+	unzip -quo `basename $f`
 	exitIfFailed "There was an error unzipping `basename $f`"
 done
