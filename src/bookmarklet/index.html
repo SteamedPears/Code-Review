@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TestPage</title>
+	
+</head>
+<body bgcolor='pink'>
+
+<section id="main-content" role="main">
+  <h1>Code Review bookmarklet test page</h1>
+
+
+	<p>Drag the following link to you bookmarks bar</p>
+	<a href="javascript:(function(){window.codeReview&&window.codeReview.exit();var a=document.createElement('script');a.src='//localhost:8080/bookmarklet/bookmarklet.js';(document.head||document.body).appendChild(a)})();">Local</a>
+
+<script> 
+	(function(){
+		window.codeReview && window.codeReview.exit(); //delete prior codeReview instance
+		var codeReview_script = document.createElement('script');
+		codeReview_script.src ='//localhost:8080/bookmarklet/bookmarklet.js';
+		(document.head || document.body).appendChild(codeReview_script); 
+	}());
+</script>
+
+</section>
+</body>
+</html>

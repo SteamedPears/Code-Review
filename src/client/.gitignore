@@ -4,3 +4,5 @@ do/
 
 # Removed the shortcut
 include/CodeMirror
+
+bookmarklet/*
