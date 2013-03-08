@@ -130,8 +130,8 @@ var helpers = {
     dbg("helpers.vendorLoad: " + vendor);
     assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
   }, 
-  //Cors Request
-  Request : function (method, url, type){
+  //Returns an XML HTTP request object
+  request : function (method, url, type){
     var xhr = new XMLHttpRequest();
     xhr.open(method || 'POST', url, true);
     xhr.setRequestHeader("Content-type", type || "application/json");
@@ -147,7 +147,7 @@ window.codeReview = that;
 helpers.vendorLoad("readability", function () {
   var content = that.vendor.getContent();
   
-  var req = new helpers.Request(null,g.baseUrl + g.newCodeApi);
+  var req = helpers.request(null,g.baseUrl + g.newCodeApi);
 
   var obj = JSON.stringify({
     language_id : 1,
