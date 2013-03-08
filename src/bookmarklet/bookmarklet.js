@@ -22,8 +22,7 @@ codeReview.dbg = dbg;
 
 
 var assetLoader = (function() {
-  var assets = {},
-      head = document.head;
+  var assets = {};
   
   /* 
    * Create a tag that will be appended to head. If you input only a URL, the
@@ -41,7 +40,8 @@ var assetLoader = (function() {
    */
   var createTag = function createTag(url, t) {
     var ext_re = /\.[0-9a-zA-Z]+$/; // matches a URL's extension
-    var tag, type;
+    var tag;
+    var type;
 
     var matches = url.match(ext_re);
     type = t || matches && matches[0].substr(1) || "default";
@@ -65,7 +65,7 @@ var assetLoader = (function() {
   };
 
   var addToHead = function(tag) {
-    head.appendChild(tag);
+    document.head.appendChild(tag);
   };
 
   //API
@@ -112,8 +112,8 @@ var assetLoader = (function() {
 var helpers = {
   //Figure out if this url uses a known vendor
   vendorGetFromUrl: function(url) {
-    var matches,
-    regex;
+    var matches;
+    var regex;
 
     for (var vendor in g.vendors) {
       if (g.vendors.hasOwnProperty(vendor)) {
