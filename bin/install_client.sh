@@ -23,7 +23,7 @@ function download() {
 
 function unzipCarefully() {
 	filename=`basename $1`
-	if [ ! -f $filename ]; then
+	if [ -d `basename -s .zip $f` ]; then
 		return 0
 	fi
 	echo "Unzipping $filename..."
@@ -70,10 +70,6 @@ for f in `cat $RAW_DEPS_FILE`; do
 done
 
 for f in `cat $ZIP_DEPS_FILE`; do
-	# check if the folder exists
-	if [ -d `basename -s .zip $f` ]; then
-		continue
-	fi
 	download $f
 	exitIfFailed "Failed to get $f"
 	unzipCarefully $f
