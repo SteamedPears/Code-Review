@@ -35,35 +35,53 @@ RAW_DEPS=`cat $RAW_DEPS_FILE`
 ZIP_DEPS=`cat $ZIP_DEPS_FILE`
 
 ######################################################################
+# Helper functions
+
+function extractFilename() {
+	sed -e 's!.*/!!' <<< "$1"
+}
+
+function download() {
+	filename=`extractFilename $1`
+	if [ -f $filename ]; then
+		return 0
+	fi
+	echo "Downloading $filename..."
+	wget --no-verbose $f >> /dev/null 2>> /dev/null
+	return $?
+}
+
+function unzipCarefully() {
+	filename=`extractFilename $1`
+	if [ ! -f $filename ]; then
+		return 0
+	fi
+	echo "Unzipping $filename..."
+	unzip -q $filename
+	return $?
+}
+
+function exitIfFailed() {
+	ret=$?
+	if [ $ret -ne 0 ]; then
+		echo $1
+		exit $ret
+	fi
+}
+
+######################################################################
 # Install dependencies
 
 cd $LIB_DIR
 
 for f in $RAW_DEPS; do
-	filename=`echo $f | sed -e 's!.*/!!'`
-	if [ -f $filename ]; then
-		continue
-	fi
-	wget $f
-	if [ $? -ne 0 ]; then
-		echo "There was an error getting $f"
-		exit 4
-	fi
+	download $f
+	exitIfFailed "Failed to get $f"
 done
 
 for f in $ZIP_DEPS; do
-	filename=`echo $f | sed -e 's!.*/!!'`
-	if [ -f $filename ]; then
-		continue
-	fi
-	wget $f
-	if [ $? -ne 0 ]; then
-		echo "There was an error getting $f"
-		exit 5
-	fi
-	unzip $filename
-	if [ $? -ne 0 ]; then
-		echo "There was an error unzipping $filename"
-		exit 6
-	fi
+	download $f
+	exitIfFailed "Failed to get $f"
+	unzipCarefully $f
+	exitIfFailed "There was an error unzipping `extractFilename $f`"
 done
