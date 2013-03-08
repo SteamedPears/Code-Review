@@ -38,13 +38,10 @@ function exitIfFailed() {
 }
 
 ######################################################################
-# Check valid starting directory
+# Sanity check
 
 test -d "$CLIENT_DIR"
 exitIfFailed "Please run this file from the root directory of the project"
-
-######################################################################
-# Get dependencies
 
 test ! -f "$RAW_DEPS_FILE"
 exitIfFailed "$RAW_DEPS_FILE not found"
