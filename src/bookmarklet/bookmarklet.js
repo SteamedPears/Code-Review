@@ -22,7 +22,6 @@ g.vendorUri = g.debug ? '/bookmarklet/vendors/' : '/bookmarklet/vendors/';
 g.newCodeApi = '/do/newcode';
 
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
-codeReview.dbg = dbg;
 
 
 /*******************************************************************************
@@ -160,6 +159,8 @@ var helpers = {
 /*******************************************************************************
 * Global API                                                                   *
 *******************************************************************************/
+
+codeReview.dbg = dbg;
 
 codeReview.exit = function () {
   dbg('Exiting...');
