@@ -4,7 +4,7 @@
 var g = {}; //Globals
 g.debug = true; //Debug mode
 g.vendors = {
-  gist : /https?:\/\/gist.github.com/  //Github gists
+  gist: /https?:\/\/gist.github.com/  //Github gists
 };
 g.vendorDefault = "readability";
 g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
@@ -47,16 +47,16 @@ var assetLoader = (function() {
     type = t || matches && matches[0].substr(1) || "default";
 
     switch (type) {
-      case 'css' :
+      case 'css':
         tag = document.createElement('link');
         tag.type = 'text/css';
         tag.rel = 'stylesheet';
         tag.href = url;
         break;
 
-      case 'js' : // FALLTHROUGH
-      case 'javascript' : // FALLTHROUGH
-      default :
+      case 'js': // FALLTHROUGH
+      case 'javascript': // FALLTHROUGH
+      default:
         tag = document.createElement('script');
         tag.src = url;
         break;
@@ -71,14 +71,14 @@ var assetLoader = (function() {
   //API
   return {
     /* Loads assets
-     * USAGE :
+     * USAGE:
      * Just load asset
      *  assetLoader.load('//example.ca/st.css'); 
      *
      * Call callback when loaded
      *  assetLoader.load('//example.ca/script.js',callback)
      */
-    load : function (url, callback) {
+    load: function (url, callback) {
 
       if (assets[url]) return;
 
@@ -92,7 +92,7 @@ var assetLoader = (function() {
     * USAGE:
     * runOnLoad(someTag, function() { //do stuff });
     */
-    runOnLoad : function (asset, callback) {
+    runOnLoad: function (asset, callback) {
       if (asset.addEventListener) { //W3C
         asset.addEventListener('load',callback);
       } else if (asset.readyState){ //IE
@@ -111,7 +111,7 @@ var assetLoader = (function() {
 
 var helpers = {
   //Figure out if this url uses a known vendor
-  vendorGetFromUrl : function(url) {
+  vendorGetFromUrl: function(url) {
     var matches,
     regex;
 
@@ -130,7 +130,7 @@ var helpers = {
     assetLoader.load(g.baseUrl + g.vendorUri + vendor + ".js", callback);
   }, 
   //Returns an XML HTTP request object
-  request : function (method, url, type){
+  request: function (method, url, type){
     var xhr = new XMLHttpRequest();
     xhr.open(method || 'POST', url, true);
     xhr.setRequestHeader("Content-type", type || "application/json");
@@ -149,8 +149,8 @@ helpers.vendorLoad("readability", function () {
   var req = helpers.request(null,g.baseUrl + g.newCodeApi);
 
   var obj = JSON.stringify({
-    language_id : 1,
-    text : content.text
+    language_id: 1,
+    text: content.text
   });
   req.onreadystatechange = function() {
     if (req.readyState === 4){

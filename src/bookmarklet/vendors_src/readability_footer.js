@@ -2,7 +2,7 @@
 dbg("readability.js: Readability loaded");
 
 window.codeReview.vendor = {
-  getContent : function () {
+  getContent: function () {
     var readable = new Readability();
     //XXX To review. Not sure about these defaults.
     readable.setSkipLevel(3); 
