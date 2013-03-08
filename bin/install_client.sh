@@ -43,10 +43,10 @@ function exitIfFailed() {
 test -d "$CLIENT_DIR"
 exitIfFailed "Please run this file from the root directory of the project"
 
-test ! -f "$RAW_DEPS_FILE"
+test -f "$RAW_DEPS_FILE"
 exitIfFailed "$RAW_DEPS_FILE not found"
 
-test ! -f "$ZIP_DEPS_FILE"
+test -f "$ZIP_DEPS_FILE"
 exitIfFailed "$ZIP_DEPS_FILE not found"
 
 ######################################################################
