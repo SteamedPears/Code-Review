@@ -59,4 +59,3 @@ production: makeproductiondirs
 		uglify \
 		> $(TARGET)/bookmarklet.min.js
 
-# vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
