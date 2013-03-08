@@ -95,8 +95,7 @@ var assetLoader = (function() {
     runOnLoad : function (asset, callback) {
       if (asset.addEventListener) { //W3C
         asset.addEventListener('load',callback);
-      }
-      else if (asset.readyState){ //IE
+      } else if (asset.readyState){ //IE
         asset.onreadystatechange = (function() {
           if (asset.readyState === "loaded" || asset.readyState === "complete"){
             asset.onreadystatechange = null;
