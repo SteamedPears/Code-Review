@@ -4,13 +4,13 @@ LIB=lib
 VENDORS_SRC=vendors_src
 VENDORS=vendors
 
+#Initialize the bookmarklet
+.PHONY: install
+install: makedirs getvendors build
+
 .PHONY: lint
 lint:
 	jshint bookmarklet.js
-
-#Initialize the bookmarklet
-.PHONY: init
-init: makedirs getvendors build
 
 .PHONY: readability
 readability:
