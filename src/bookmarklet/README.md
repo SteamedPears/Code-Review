@@ -22,6 +22,10 @@ Vendors are different strategies used to scrape or extract content. They're
 dynamically loaded depending on which site the user is visiting. Currently, it
 will default to readability.
 
+All vendors must return an object to `window.codeReview.vendor` of the form 
+`{ getContent: function() { ... } }` where `getContent` is the abstraction used 
+by the rest of the program to get the page's content.
+
 Compiled/prepared vendor files are located in `vendors/`. The files used to
 prepare/wrap them are located in `vendors_src/`.
 
