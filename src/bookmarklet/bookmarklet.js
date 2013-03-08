@@ -64,10 +64,6 @@ var assetLoader = (function() {
     return tag;
   };
 
-  var addToHead = function(tag) {
-    document.head.appendChild(tag);
-  };
-
   //API
   return {
     /* Loads assets
@@ -86,7 +82,7 @@ var assetLoader = (function() {
       dbg("assetLoader.load: ", tag);
       assets[url] = tag;
       if (callback !== undefined) this.runOnLoad(tag, callback);
-      addToHead(tag);
+      document.head.appendChild(tag);
     },
     /* Invoke callback when asset is loaded
     * USAGE:
