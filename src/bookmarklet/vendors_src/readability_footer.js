@@ -2,12 +2,13 @@
 dbg("readability.js: Readability loaded");
 
 window.codeReview.vendor = {
-	getContent : function () {
-		var readable = new Readability();
-		readable.setSkipLevel(3); 
-		saxParser(document.childNodes[document.childNodes.length-1], readable);
-		return readable.getArticle("text");
-	}
+  getContent : function () {
+    var readable = new Readability();
+    //XXX To review. Not sure about these defaults.
+    readable.setSkipLevel(3); 
+    saxParser(document.childNodes[document.childNodes.length-1], readable);
+    return readable.getArticle("text");
+  }
 }
 
 })(window,document);
