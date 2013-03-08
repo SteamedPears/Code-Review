@@ -3,8 +3,7 @@
 ######################################################################
 # Configuration
 
-ROOT_DIR=$PWD
-CLIENT_DIR="$ROOT_DIR/src/client"
+CLIENT_DIR="$PWD/src/client"
 LIB_DIR="$CLIENT_DIR/scripts/lib"
 RAW_DEPS_FILE="$CLIENT_DIR/raw.deps.dev.txt"
 ZIP_DEPS_FILE="$CLIENT_DIR/zip.deps.dev.txt"
@@ -18,12 +17,12 @@ function download() {
 		return 0
 	fi
 	echo "Downloading $filename..."
-	wget --quiet $f
+	wget --quiet $1
 }
 
 function unzipCarefully() {
 	filename=`basename $1`
-	if [ -d `basename -s .zip $f` ]; then
+	if [ -d `basename -s .zip $1` ]; then
 		return 0
 	fi
 	echo "Unzipping $filename..."
@@ -41,29 +40,29 @@ function exitIfFailed() {
 ######################################################################
 # Check valid starting directory
 
-test -d $CLIENT_DIR
+test -d "$CLIENT_DIR"
 exitIfFailed "Please run this file from the root directory of the project"
 
 ######################################################################
 # Get dependencies
 
-test ! -f $RAW_DEPS_FILE
+test ! -f "$RAW_DEPS_FILE"
 exitIfFailed "$RAW_DEPS_FILE not found"
 
-test ! -f $ZIP_DEPS_FILE
+test ! -f "$ZIP_DEPS_FILE"
 exitIfFailed "$ZIP_DEPS_FILE not found"
 
 ######################################################################
 # Install dependencies
 
-cd $LIB_DIR
+cd "$LIB_DIR"
 
-for f in `cat $RAW_DEPS_FILE`; do
+for f in `cat "$RAW_DEPS_FILE"`; do
 	download $f
 	exitIfFailed "Failed to get $f"
 done
 
-for f in `cat $ZIP_DEPS_FILE`; do
+for f in `cat "$ZIP_DEPS_FILE"`; do
 	download $f
 	exitIfFailed "Failed to get $f"
 	unzipCarefully $f
