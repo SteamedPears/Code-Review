@@ -20,6 +20,10 @@ NODE_MODULES="node_modules"
 bin/stop_dev.sh
 
 ######################################################################
+# reset the client side
+bin/reset_client.sh
+
+######################################################################
 # delete metadata and data so db rebuilds next start
 cd src/server
 rm -f $DB_INFO_FILE

@@ -15,3 +15,5 @@ npm-debug.log
 *.db
 *.DS_Store
 *~
+
+src/client/scripts/lib/*

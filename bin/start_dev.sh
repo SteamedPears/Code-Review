@@ -20,6 +20,15 @@ NODE_EXE="node"
 BUILD_DB_SCRIPT="models/build_db.js"
 TEST_DATA_SCRIPT="models/test_data.js"
 INDEX_SCRIPT="index.js"
+CLIENT_INSTALL_SCRIPT="bin/install_client.sh"
+
+######################################################################
+# Install Client-Side
+$CLIENT_INSTALL_SCRIPT
+if [ $? -ne 0 ]; then
+	echo "There was an error resolving dependencies"
+	exit
+fi
 
 ######################################################################
 # Install needed packages

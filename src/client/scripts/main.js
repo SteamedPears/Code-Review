@@ -11,12 +11,16 @@
 require.config({
   // specify the paths for the various libraries
   paths:{
-    'QUnit':'lib/qunit-1.9.0',
-    'underscore':'lib/underscore',
+    'QUnit':'lib/qunit-1.11.0',
+    'underscore':'lib/underscore-min',
+    'IPv6':'lib/IPv6',
+    'SecondLevelDomains':'lib/SecondLevelDomains',
+    'punycode':'lib/punycode',
     'URI':'lib/URI',
-    'CodeMirror':'lib/codemirror-3.02/lib/codemirror',
+    'CodeMirror':'lib/codemirror-3.1/lib/codemirror',
     'jquery.form':'lib/jquery.form',
-    'diff':'lib/diff_match_patch'
+    'diff':'lib/diff_match_patch',
+    'jquery':'lib/jquery-1.9.1.min'
   },
   shim:{
     'QUnit':{
