@@ -111,7 +111,7 @@ function comments(request,response) {
 function newcode(request,response) {
 
 	/****************************************************************************
-	*	Preflight OPTIONS requests -- CORS																				*
+	*	Preflight OPTIONS requests -- CORS                                        *
 	****************************************************************************/
 	if (request.method && request.method.toUpperCase() === 'OPTIONS') {
 		response.writeHead(
@@ -129,7 +129,7 @@ function newcode(request,response) {
 	}
 
 	/****************************************************************************
-	* POST requests																															*	
+	* POST requests                                                             *
 	****************************************************************************/
 
 	//On validation or parsing success
