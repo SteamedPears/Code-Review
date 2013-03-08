@@ -26,7 +26,7 @@ INDEX_SCRIPT="index.js"
 bin/install_client.sh
 if [ $? -ne 0 ]; then
 	echo "There was an error resolving dependencies"
-	exit
+	exit 1
 fi
 
 ######################################################################
