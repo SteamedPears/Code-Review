@@ -112,10 +112,9 @@ var assetLoader = (function() {
       }
     },
     deleteAssets: function () {
-      var a;
       for (var asset in assets) {
         if (assets.hasOwnProperty(asset)) {
-          a = assets[asset];
+          var a = assets[asset];
           a.parentNode.removeChild(a);
           delete assets[asset];
         }
@@ -127,34 +126,34 @@ var assetLoader = (function() {
 /*******************************************************************************
 * Helpers                                                                      *
 *******************************************************************************/
-var helpers = {
-  //Figure out if this url uses a known vendor
-  vendorGetFromUrl: function(url) {
-    var matches;
-    var regex;
+//Figure out if this url uses a known vendor
+function vendorGetFromUrl (url) {
+  var matches;
+  var regex;
 
-    for (var vendor in g.vendors) {
-      if (g.vendors.hasOwnProperty(vendor)) {
-        regex = g.vendors[vendor];
-        matches = regex.test(url);
-        if (matches) return vendor;
-      }
+  for (var vendor in g.vendors) {
+    if (g.vendors.hasOwnProperty(vendor)) {
+      regex = g.vendors[vendor];
+      matches = regex.test(url);
+      if (matches) return vendor;
     }
-    return null;
-  },
-  //Load a given vendor
-  loadVendor: function (vendor, callback) {
-    dbg('helpers.loadVendor: ' + vendor);
-    assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
-  }, 
-  //Returns an XML HTTP request object
-  request: function (method, url, type) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method || 'POST', url, true);
-    xhr.setRequestHeader('Content-type', type || 'application/json');
-    return xhr;
   }
-};
+  return null;
+}
+
+//Load a given vendor
+function loadVendor (vendor, callback) {
+  dbg('helpers.loadVendor: ' + vendor);
+  assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
+} 
+
+//Returns an XML HTTP request object
+function request (method, url, type) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(method || 'POST', url, true);
+  xhr.setRequestHeader('Content-type', type || 'application/json');
+  return xhr;
+}
 
 /*******************************************************************************
 * Global API                                                                   *
@@ -172,10 +171,10 @@ codeReview.exit = function () {
 *******************************************************************************/
 
 //Sketch of what's to come
-helpers.loadVendor('readability', function () {
+loadVendor('readability', function () {
   var content = codeReview.vendor.getContent();
   
-  var req = helpers.request(null,g.baseUrl + g.newCodeApi);
+  var req = request(null,g.baseUrl + g.newCodeApi);
 
   var obj = JSON.stringify({
     language_id: 1,
