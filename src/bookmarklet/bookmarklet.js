@@ -156,6 +156,23 @@ function request (method, url, type) {
 }
 
 /*******************************************************************************
+* User interface                                                               *
+*******************************************************************************/
+
+function UI() {
+  var stylesheet = '/style.css';
+  
+  assetLoader.load(g.baseUrl + g.bookmarkletUri + stylesheet, function () {
+    dbg('UI: stylesheet loaded');
+  });
+
+  this.container = document.createElement('div'); 
+
+}
+
+var ui = new UI();
+
+/*******************************************************************************
 * Global API                                                                   *
 *******************************************************************************/
 
@@ -186,9 +203,7 @@ loadVendor('readability', function () {
     }
   };
   req.send(obj);
-
 });
-
 
 
 })(window,document);
