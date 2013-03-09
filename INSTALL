@@ -13,6 +13,7 @@ Requirements:
  * node-gyp (v0.8.4)
  * sqlite3 (3.7.15.1, 3.7.13)
  * g++ (4.7.2)
+ * GNU Wget (1.14)
 
 Instructions:
 

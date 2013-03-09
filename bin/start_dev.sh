@@ -22,6 +22,14 @@ TEST_DATA_SCRIPT="models/test_data.js"
 INDEX_SCRIPT="index.js"
 
 ######################################################################
+# Install Client-Side
+bin/install_client.sh
+if [ $? -ne 0 ]; then
+	echo "There was an error resolving dependencies"
+	exit 1
+fi
+
+######################################################################
 # Install needed packages
 
 ROOT_DIR=`pwd`

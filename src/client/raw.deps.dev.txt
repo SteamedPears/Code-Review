@@ -1,0 +1,10 @@
+http://files.simondavidpratt.com/js/URI.js
+http://files.simondavidpratt.com/js/IPv6.js
+http://files.simondavidpratt.com/js/punycode.js
+http://files.simondavidpratt.com/js/SecondLevelDomains.js
+http://files.simondavidpratt.com/js/diff_match_patch.js
+http://requirejs.org/docs/release/2.1.5/minified/require.js
+http://code.jquery.com/jquery-1.9.1.min.js
+http://code.jquery.com/qunit/qunit-1.11.0.js
+http://underscorejs.org/underscore-min.js
+http://malsup.github.com/jquery.form.js
