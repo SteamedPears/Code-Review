@@ -195,9 +195,10 @@ codeReview.dbg = dbg;
 
 //Exit and clean up
 codeReview.exit = function () {
-  dbg('Exiting...');
+  dbg('Exiting CodeReview');
   assetLoader.deleteAssets();
   if (ui) ui.exit();
+  delete window.codeReview;
 };
 
 /*******************************************************************************
