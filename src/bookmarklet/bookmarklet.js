@@ -160,14 +160,29 @@ function request (method, url, type) {
 *******************************************************************************/
 
 function UI() {
-  var stylesheet = '/style.css';
-  
-  assetLoader.load(g.baseUrl + g.bookmarkletUri + stylesheet, function () {
+  assetLoader.load(g.baseUrl + g.bookmarkletUri + '/style.css', function () {
     dbg('UI: stylesheet loaded');
   });
 
-  this.container = document.createElement('div'); 
+  var container = document.createElement('div'); 
+  container.id = 'codeReview-container';
 
+  var message = document.createElement('p');
+  message.id = 'message';
+  message.innerHTML = 'Initializing...';
+  container.appendChild(message);
+
+  document.body.appendChild(container);
+
+  //Write messages to the user
+  this.message = function (msg) {
+    message.innerHTML = msg;
+    dbg('UI: ', msg);
+  };
+  //Exit the UI
+  this.exit = function() {
+    container.parentNode.removeChild(container);
+  };
 }
 
 var ui = new UI();
@@ -178,9 +193,11 @@ var ui = new UI();
 
 codeReview.dbg = dbg;
 
+//Exit and clean up
 codeReview.exit = function () {
   dbg('Exiting...');
   assetLoader.deleteAssets();
+  if (ui) ui.exit();
 };
 
 /*******************************************************************************
@@ -189,6 +206,8 @@ codeReview.exit = function () {
 
 //Sketch of what's to come
 loadVendor('readability', function () {
+
+  ui.message('Sending content...');
   var content = codeReview.vendor.getContent();
   
   var req = request(null,g.baseUrl + g.newCodeApi);
@@ -199,7 +218,10 @@ loadVendor('readability', function () {
   });
   req.onreadystatechange = function() {
     if (req.readyState === 4) {
-      console.log(req.responseText);
+      var res = req.responseText;
+      var json_res = JSON.parse(res);
+      ui.message('<a href="' + g.baseUrl + '/index.html?id=' + 
+        json_res.uuid + '">View CodeReview Link<\a>');
     }
   };
   req.send(obj);
