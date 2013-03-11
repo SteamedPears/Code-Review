@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
- * Requirements                                                                *
+ * Requirements                                                               *
  ******************************************************************************/
 var proxyServer = require('http-proxy');
 
@@ -8,22 +8,24 @@ var proxyServer = require('http-proxy');
  ******************************************************************************/
 function start(port,options,next) {
 
-	proxyServer.createServer(options).listen(port, function() {
+  proxyServer.createServer(options).listen(port, function() {
 
-		var routeStr = "";
-		for (route in options.router) {
-			routeStr += '\t' + route + ' -> ' + options.router[route] + '\n';
-		}
+    var routeStr = "";
+    for (route in options.router) {
+      routeStr += '\t' + route + ' -> ' + options.router[route] + '\n';
+    }
 
-		console.log('Proxy server started and routing:\n', routeStr);
-	});
+    console.log('Proxy server started and routing:\n', routeStr);
+  });
     
-    //Callback
-	next && next();
-	
+  //Callback
+  next && next();
+  
 }
 
 /******************************************************************************
- * Exports                                                                     *
+ * Exports                                                                    *
  ******************************************************************************/
 exports.start = start;
+
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
