@@ -38,12 +38,6 @@ define([
     // never run again
     view.initCodeMode = codeMode;
     
-    var select = $('#language_id');
-    select.change(function(eventOb) {
-      view.setHighlighting(select
-                           .children('[value='+selected_lang_id+']')
-                           .data('lang'));
-    });
     codeMode();
   };
 
