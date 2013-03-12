@@ -59,13 +59,11 @@ require([
   "view",
   "code",
   "comment",
-  "language",
   "editor"
 ], function($,URI) {
   var view = require("view");
   var code = require("code");
   var comment = require("comment");
-  var language = require("language");
   var editor = require("editor");
 
   // initialize the view
@@ -97,7 +95,6 @@ require([
     view.displayError(query.error);
   if(query.id === undefined) {
     view.initCodeMode();
-    view.populateLanguageList(language.langs);
   } else {
     view.initCommentMode(query.id);
     code.getCode(query.id,function(ob) {

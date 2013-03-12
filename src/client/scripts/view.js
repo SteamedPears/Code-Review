@@ -10,11 +10,13 @@
 
 define([
   "jquery",
+  "language",
   "editor",
   "diff"
 ], function($) {
   var editor = require('editor');
   var diff = require('diff');
+  var language = require('language');
   
   var view = {};
   var languages = null;
@@ -37,7 +39,8 @@ define([
   view.initCodeMode = function() {
     // never run again
     view.initCodeMode = codeMode;
-    
+
+    view.populateLanguageList(language.langs);
     codeMode();
   };
 
