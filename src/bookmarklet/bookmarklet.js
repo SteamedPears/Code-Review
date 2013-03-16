@@ -1,3 +1,6 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
+
 (function(window,document,undefined) {
 'use strict';
 

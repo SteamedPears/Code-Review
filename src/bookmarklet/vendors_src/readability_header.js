@@ -1,3 +1,6 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
+
 /* 
  * This file, along with ./readability_footer.js, will wrap
  * ../lib/readabilitySAX/readabilitySAX.js and
