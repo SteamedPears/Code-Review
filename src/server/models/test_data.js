@@ -14,15 +14,17 @@ var Comment = sequelize.import(__dirname + "/comment");
 
 // create some test data
 Code.build({
-    uuid: '1',
-	text: 'print "Hello, world!"',
-	lang : 'python3'
+  uuid: '1',
+  text: 'print "Hello, world!"',
+  lang : 'python3'
 }).save().success(function(helloCode) {
-	Comment.build({
-		user: 'sdp',
-		code_id: helloCode.uuid,
-		line_start: 0,
-		line_end: 0,
-		text: 'Nice job.'
-	}).save();
+  Comment.build({
+    user: 'sdp',
+    code_id: helloCode.uuid,
+    line_start: 0,
+    line_end: 0,
+    text: 'Nice job.'
+  }).save();
 });
+
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

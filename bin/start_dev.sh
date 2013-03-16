@@ -22,6 +22,10 @@ TEST_DATA_SCRIPT="models/test_data.js"
 INDEX_SCRIPT="index.js"
 
 ######################################################################
+# Silently stop server, in case it's running
+bin/stop_dev.sh &> /dev/null
+
+######################################################################
 # Install Client-Side
 bin/install_client.sh
 if [ $? -ne 0 ]; then
