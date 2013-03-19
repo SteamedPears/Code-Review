@@ -44,6 +44,7 @@ makeproductiondirs:
 .PHONY: build
 build: makeproductiondirs buildvendors
 	cp bookmarklet.js $(TARGET)
+	cp style.css $(TARGET)
 	cp vendors/* $(TARGET)/$(VENDORS)
 
 .PHONY: clean
