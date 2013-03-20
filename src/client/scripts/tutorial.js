@@ -17,7 +17,7 @@ define([
 
   // initialization
   $(document).ready(function() {
-    tutorialBtn = $("#tutorialBtn");
+    tutorialBtn = $("#tutorial-btn");
     codeArea = $('#code');
     commentArea = $('#comment-new');
   });
