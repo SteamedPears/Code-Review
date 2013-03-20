@@ -29,7 +29,7 @@ define([
     commentArea.removeAttr('data-step');
   }
 
-  tutorial.codeMode = function codeMode() {
+  tutorial.codeMode = function tutorialCodeMode() {
     $(document).ready(function() {
       // set up the code mode of the tutorial
       tutorialBtn.click(function() {
@@ -44,7 +44,7 @@ define([
     });
   }
 
-  tutorial.commentMode = function commentMode() {
+  tutorial.commentMode = function tutorialCommentMode() {
     $(document).ready(function() {
       // set up the comment mode of the tutorial
       tutorialBtn.click(function() {
