@@ -11,10 +11,12 @@
 define([
   "jquery",
   "editor",
-  "diff"
+  "diff",
+  "tutorial"
 ], function($) {
   var editor = require('editor');
   var diff = require('diff');
+  var tutorial = require('tutorial');
   
   var view = {};
   var languages = null;
@@ -63,6 +65,8 @@ define([
     $('#code_controls').show();
     $('#comment_controls').hide();
 
+    tutorial.codeMode();
+    
     editor.onCursorActivity(noop);
   };
 
@@ -72,6 +76,8 @@ define([
     $('#comment_instructions').show();
     $('#code_controls').hide();
     $('#comment_controls').show();
+
+    tutorial.commentMode();
 
     editor.onCursorActivity(function() {
       if(!noSelect) {
@@ -231,4 +237,10 @@ define([
   return view;
 });
 
+/* Local Variables:         */
+/* espresso-indent-level: 2 */
+/* tab-width: 8             */
+/* indent-tabs-mode: nil    */
+/* fill-column: 80          */
+/* End:                     */
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
