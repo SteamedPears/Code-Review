@@ -7,8 +7,8 @@
 ******************************************************************************/
 
 define([
-  "jquery",
-  "intro"
+  'jquery',
+  'intro'
 ], function($,intro) {
   var tutorial = {};
 
@@ -17,7 +17,7 @@ define([
 
   // initialization
   $(document).ready(function() {
-    tutorialBtn = $("#tutorial-botn");
+    tutorialBtn = $('#tutorial-btn');
     codeArea = $('#code');
     commentArea = $('#comment-new');
   });
