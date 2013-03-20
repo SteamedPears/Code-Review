@@ -36,7 +36,8 @@ define([
         removeAllAttributes();
 
         codeArea.attr('data-step','1');
-        codeArea.attr('data-intro','Enter the text you would like to be reviewed');
+        codeArea.attr('data-intro',
+                      'Enter the text you would like to be reviewed');
         
         intro().start();
       });
