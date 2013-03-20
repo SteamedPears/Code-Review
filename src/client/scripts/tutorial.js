@@ -29,7 +29,7 @@ define([
     commentArea.removeAttr('data-step');
   }
 
-  function codeMode() {
+  tutorial.codeMode = function codeMode() {
     $(document).ready(function() {
       // set up the code mode of the tutorial
       tutorialBtn.click(function() {
@@ -43,9 +43,8 @@ define([
       });
     });
   }
-  tutorial.codeMode = codeMode;
 
-  function commentMode() {
+  tutorial.commentMode = function commentMode() {
     $(document).ready(function() {
       // set up the comment mode of the tutorial
       tutorialBtn.click(function() {
@@ -61,7 +60,6 @@ define([
       });
     });
   }
-  tutorial.commentMode = commentMode;
   
   return tutorial;
 });
