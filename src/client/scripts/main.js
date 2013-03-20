@@ -113,10 +113,4 @@ require([
   }
 });
 
-/* Local Variables:         */
-/* espresso-indent-level: 2 */
-/* tab-width: 8             */
-/* indent-tabs-mode: nil    */
-/* fill-column: 80          */
-/* End:                     */
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
