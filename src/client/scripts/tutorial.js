@@ -17,7 +17,7 @@ define([
 
   // initialization
   $(document).ready(function() {
-    tutorialBtn = $("#tutorial-btn");
+    tutorialBtn = $("#tutorial-botn");
     codeArea = $('#code');
     commentArea = $('#comment-new');
   });
@@ -33,8 +33,6 @@ define([
     $(document).ready(function() {
       // set up the code mode of the tutorial
       tutorialBtn.click(function() {
-        console.log('starting code tutorial');
-
         removeAllAttributes();
 
         codeArea.attr('data-step','1');
@@ -50,8 +48,6 @@ define([
     $(document).ready(function() {
       // set up the comment mode of the tutorial
       tutorialBtn.click(function() {
-        console.log('starting comment tutorial');
-
         removeAllAttributes();
         
         codeArea.attr('data-step','1');
