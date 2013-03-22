@@ -21,7 +21,7 @@ require.config({
     'jquery.form':'lib/jquery.form',
     'diff':'lib/diff_match_patch',
     'jquery':'lib/jquery-1.9.1.min',
-    'intro':'lib/intro.js-0.1.0/minified/intro.min'
+    'intro':'lib/intro.js-0.2.1/minified/intro.min'
   },
   shim:{
     'QUnit':{
