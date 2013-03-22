@@ -20,7 +20,8 @@ require.config({
     'CodeMirror':'lib/codemirror-3.1/lib/codemirror',
     'jquery.form':'lib/jquery.form',
     'diff':'lib/diff_match_patch',
-    'jquery':'lib/jquery-1.9.1.min'
+    'jquery':'lib/jquery-1.9.1.min',
+    'intro':'lib/intro.js-0.1.0/minified/intro.min'
   },
   shim:{
     'QUnit':{
@@ -46,6 +47,9 @@ require.config({
       init:function() {
         return new diff_match_patch();
       }
+    },
+    'intro':{
+      exports:'introJs'
     }
   }
 });
