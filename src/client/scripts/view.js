@@ -89,9 +89,11 @@ define([
           }
           view.hideComments();
           view.showCommentEditor(line_start,line_end);
+          tutorial.commentInputMode();
         } else {
           view.hideCommentEditor();
           view.showComments();
+          tutorial.commentDisplayMode();
         }
       }
     });
