@@ -1,8 +1,7 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
 /******************************************************************************
  * Server entry point (index)                                                  *
- *                                                                             *
- * Project: Code Review                                                        *
- * By:      Steamed Pears                                                      *
  *                                                                             *
  * This is the node script that pulls together the various modules and         *
  * starts the Code Review server.                                              *
@@ -68,4 +67,5 @@ try{
   console.log("===ERROR===");
   console.log(e);
 }
+
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
