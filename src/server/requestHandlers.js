@@ -15,7 +15,6 @@ var sequelize = new Sequelize(DB_Info.db,
 // import the models
 var Code = sequelize.import(__dirname + "/models/code");
 var Comment = sequelize.import(__dirname + "/models/comment");
-var langs = require('./languageList.js');
 
 // set the associations
 Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
