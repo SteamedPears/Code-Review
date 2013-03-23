@@ -13,6 +13,7 @@ var connect = require('connect');
 * Configuration                                                               *
 ******************************************************************************/
 var serverPort = 20193;
+var requestTimeout = 3000; // ms
 
 // check if this app is being run in development or production environment
 var devMode = (process.env.NODE_ENV === 'development');
@@ -42,7 +43,8 @@ var routes = {
 * Start the server                                                            *
 ******************************************************************************/
 var app = connect()
-  .use(connect.logger(devMode?'dev':'short'));
+  .use(connect.logger(devMode?'dev':'short'))
+  .use(connect.timeout(requestTimeout));
 
 for(var route in routes) {
   app.use(route,{handle:routes[route]});
