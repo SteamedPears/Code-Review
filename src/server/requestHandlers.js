@@ -1,9 +1,9 @@
 // Libraries
-var url = require("url");
-var querystring = require("querystring");
-var formidable = require("formidable");
-var Sequelize = require("sequelize");
-var DB_Info = require("./models/db_info");
+var url = require('url');
+var querystring = require('querystring');
+var formidable = require('formidable');
+var Sequelize = require('sequelize');
+var DB_Info = require('./models/db_info');
 var uuid = require('node-uuid');
 
 // make the db connection
@@ -13,8 +13,8 @@ var sequelize = new Sequelize(DB_Info.db,
                               DB_Info.options);
 
 // import the models
-var Code = sequelize.import(__dirname + "/models/code");
-var Comment = sequelize.import(__dirname + "/models/comment");
+var Code = sequelize.import(__dirname + '/models/code');
+var Comment = sequelize.import(__dirname + '/models/comment');
 
 // set the associations
 Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
@@ -24,15 +24,15 @@ Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
 ******************************************************************************/
 function success(response,ob) {
   response.writeHead(200, {
-    "Content-Type" : "application/json", 
-    "Access-Control-Allow-Origin" : "*"
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
   });
   response.write(JSON.stringify(ob));
   response.end();
 }
 
 function error(response,errno,errtext) {
-  response.writeHead(errno, {"Content-Type": "application/json"});
+  response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
 }
@@ -63,7 +63,7 @@ function isValidPositiveIntegerString(x) {
 function code(request,response) {
   var query = url.parse(request.url).query;
   var params = querystring.parse(query);
-  var id = params["id"];
+  var id = params.id;
   if(id === undefined) {
     return error(response,400,'Invalid code id');
   }
@@ -81,7 +81,7 @@ function code(request,response) {
 function comment(request,response) {
   var query = url.parse(request.url).query;
   var params = querystring.parse(query);
-  var id = params["id"];
+  var id = params.id;
   if(id === undefined) {
     return error(response,400,'Invalid comment id');
   }
@@ -98,7 +98,7 @@ function comment(request,response) {
 function comments(request,response) {
   var query = url.parse(request.url).query;
   var params = querystring.parse(query);
-  var code_id = params["code_id"];
+  var code_id = params.code_id;
   Comment.findAll({where: {code_id: code_id}}).success(function(comments) {
     return success(response,{code_id:code_id,comments:comments});
   });
@@ -114,15 +114,15 @@ function newcode(request,response) {
   ****************************************************************************/
   if (request.method && request.method.toUpperCase() === 'OPTIONS') {
     response.writeHead(
-        "204",
-        "No Content",
-        {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "content-type, accept",
-          "Access-Control-Max-Age": 10, // Seconds.
-          "Content-Length": 0
-        });
+      '204',
+      'No Content',
+      {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'content-type, accept',
+        'Access-Control-Max-Age': 10, // Seconds.
+        'Content-Length': 0
+      });
 
     return response.end();
   }
@@ -132,9 +132,9 @@ function newcode(request,response) {
   ****************************************************************************/
 
   //On validation or parsing success
-  var writetodb = function(err,obj, files) {
+  var writetodb = function(err,obj) {
     // do some basic validation
-    if( obj === null || !isValidString(obj['text'])) {
+    if( obj === null || !isValidString(obj.text)) {
       return error(response,400,'Invalid code text.');
     }
     var id=uuid.v4();
@@ -149,7 +149,7 @@ function newcode(request,response) {
       console.log(err);
       return error(response,500,'Error writing code to database');
     });
-  }
+  };
   //Test if request is form data or a json object
   var content_type = request.headers['content-type'];
   if (content_type && content_type.indexOf('x-www-form-urlencoded') >= 0) {
@@ -159,7 +159,6 @@ function newcode(request,response) {
   }
   //Handle JSON
   else if (content_type && content_type.indexOf('application/json') >= 0) {
-    
     request.setEncoding('utf8');
     var json_str = '';
 
@@ -186,12 +185,10 @@ function newcomment(request,response) {
      request.headers.referer === undefined) {
     return error(response,400,'Invalid referer');
   }
-  var query = url.parse(request.headers.referer).query;
-  var params = querystring.parse(query);
   // otherwise, go ahead
   var form = new formidable.IncomingForm();
   form.type = 'multipart';
-  form.parse(request, function(err, fields, files) {
+  form.parse(request, function(err, fields) {
     // do some basic validation
     if(fields === null ||
        !isValidString(fields.user) ||
