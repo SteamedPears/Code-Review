@@ -30,13 +30,14 @@ var requestHandlers = require('./requestHandlers');
 /******************************************************************************
 * Connect the request handlers, aka. Routes                                   *
 ******************************************************************************/
-var routes = {
-  '/':           requestHandlers.start,
+var getRoutes = {
   '/code':       requestHandlers.code,
   '/comment':    requestHandlers.comment,
+  '/comments':   requestHandlers.comments
+};
+var postRoutes = {
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
-  '/comments':   requestHandlers.comments
 };
 
 /******************************************************************************
@@ -44,11 +45,36 @@ var routes = {
 ******************************************************************************/
 var app = connect()
   .use(connect.logger(devMode?'dev':'short'))
-  .use(connect.timeout(requestTimeout));
+  .use(connect.timeout(requestTimeout))
+  .use(function(request,response,next) {
+    // Preflight OPTIONS requests -- CORS
+    if (request.method && request.method.toUpperCase() === 'OPTIONS') {
+      response.writeHead(
+        '204',
+        'No Content',
+        {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'content-type, accept',
+          'Access-Control-Max-Age': 10, // Seconds.
+          'Content-Length': 0
+        });
+      
+      return response.end();
+    }
+    next();
+  });
 
-for(var route in routes) {
-  app.use(route,{handle:routes[route]});
+for(var route in getRoutes) {
+  app.use(route,{handle:getRoutes[route]});
 }
+
+app.use(connect.bodyParser());
+
+for(var route in postRoutes) {
+  app.use(route,{handle:postRoutes[route]});
+}
+
 
 app.listen(serverPort);
 
