@@ -10,18 +10,25 @@
 ######################################################################
 
 ROOT_DIR=`pwd`
+TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
-TIMESTAMP_FORM="+%Y-%m-%dT%H%M%S%Z"
-NODE_EXE="node"
-PID_FILE=$ROOT_DIR/var/server.pid
-LATEST_LINK=$ROOT_DIR/var/server.log
-LOG_FILE=$ROOT_DIR/var/logs/server
+NODE="node"
+
+DB="redis-server"
+DB_DIR=$ROOT_DIR/var/db/
+DB_OPTIONS="--dir $DB_DIR"
+DB_CONF=$ROOT_DIR/etc/redis.conf
+DB_LOG=$ROOT_DIR/var/logs/db
+DB_LINK=$ROOT_DIR/var/db.log
+DB_PID=$ROOT_DIR/var/db.pid
+
+SERVER_PID=$ROOT_DIR/var/server.pid
+SERVER_LINK=$ROOT_DIR/var/server.log
+SERVER_LOG=$ROOT_DIR/var/logs/server
 SERVER_DIR=$ROOT_DIR/src/server
-DB_INFO_FILE=$SERVER_DIR/models/db_info.js
-BUILD_DB_SCRIPT=$SERVER_DIR/models/build_db.js
-TEST_DATA_SCRIPT=$SERVER_DIR/models/test_data.js
+
 INDEX_SCRIPT=$SERVER_DIR/index.js
 
 ######################################################################
@@ -46,22 +53,15 @@ if [ ${#OUTDATED} -ne 0 ]; then
 fi
 
 ######################################################################
-# Database setup
-if [ ! -f $DB_INFO_FILE ]; then
-    echo "DB info file not found, installing sqlite version"
-    cp $DB_INFO_FILE.sqlite $DB_INFO_FILE
-
-    echo "Building needed databases"
-    $NODE_EXE $BUILD_DB_SCRIPT
-
-    echo "Inserting test data"
-    $NODE_EXE $TEST_DATA_SCRIPT
-fi
+# Database start
+echo "Starting database"
+$DB $DB_CONF $DB_OPTIONS &> $DB_LOG.$TIME.log &
+echo $! > $DB_PID
+ln -s -f $DB_LOG.$TIME.log $DB_LINK
 
 ######################################################################
 # Server initialization
 echo "Starting development server"
-TIME=`date $TIMESTAMP_FORM`
-NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $LOG_FILE.$TIME.log &
-ln -s -f $LOG_FILE.$TIME.log $LATEST_LINK
-echo $! > $PID_FILE
+NODE_ENV=development $NODE $INDEX_SCRIPT &> $SERVER_LOG.$TIME.log &
+echo $! > $SERVER_PID
+ln -s -f $SERVER_LOG.$TIME.log $SERVER_LINK

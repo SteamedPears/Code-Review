@@ -12,10 +12,11 @@
 ######################################################################
 # Configuration
 
-PID_FILE="var/server.pid"
+SERVER_PID="var/server.pid"
+DB_PID="var/db.pid"
 
 ######################################################################
-# Stop server
+# Stop server and db
 
-kill -9 `cat $PID_FILE`
-
+kill -9 `cat $SERVER_PID`
+kill -9 `cat $DB_PID`
