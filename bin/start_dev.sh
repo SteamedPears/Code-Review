@@ -9,20 +9,20 @@
 # back ends via node.
 ######################################################################
 
+ROOT_DIR=`pwd`
+
 ######################################################################
 # Configuration
-
-SERVER_DIR="src/server"
-DB_INFO_FILE="models/db_info.js"
-PID_FILE="var/server.pid"
-LOG_FILE="var/server.log"
-ARCHIVE_FILE="var/logs/server"
-TIMESTAMP_FILE="var/last_start.time"
 TIMESTAMP_FORM="+%Y-%m-%dT%H%M%S%Z"
 NODE_EXE="node"
-BUILD_DB_SCRIPT="models/build_db.js"
-TEST_DATA_SCRIPT="models/test_data.js"
-INDEX_SCRIPT="index.js"
+PID_FILE=$ROOT_DIR/var/server.pid
+LATEST_LINK=$ROOT_DIR/var/server.log
+LOG_FILE=$ROOT_DIR/var/logs/server
+SERVER_DIR=$ROOT_DIR/src/server
+DB_INFO_FILE=$SERVER_DIR/models/db_info.js
+BUILD_DB_SCRIPT=$SERVER_DIR/models/build_db.js
+TEST_DATA_SCRIPT=$SERVER_DIR/models/test_data.js
+INDEX_SCRIPT=$SERVER_DIR/index.js
 
 ######################################################################
 # Silently stop server, in case it's running
@@ -38,17 +38,15 @@ fi
 
 ######################################################################
 # Install needed packages
-
-ROOT_DIR=`pwd`
-
 cd $SERVER_DIR
-
-echo "Installing needed packages"
-npm install
+OUTDATED=`npm outdated 2> /dev/null`
+if [ ${#OUTDATED} -ne 0 ]; then
+    echo "Updating server dependencies"
+    npm udpate
+fi
 
 ######################################################################
 # Database setup
-
 if [ ! -f $DB_INFO_FILE ]; then
     echo "DB info file not found, installing sqlite version"
     cp $DB_INFO_FILE.sqlite $DB_INFO_FILE
@@ -61,16 +59,9 @@ if [ ! -f $DB_INFO_FILE ]; then
 fi
 
 ######################################################################
-# Rotate logs
-if [ -f $ROOT_DIR/$TIMESTAMP_FILE ]; then
-    TIME=`cat $ROOT_DIR/$TIMESTAMP_FILE`
-    mv $ROOT_DIR/$LOG_FILE $ROOT_DIR/$ARCHIVE_FILE.$TIME.log
-fi
-
-######################################################################
 # Server initialization
-
-echo Starting development server
-NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $ROOT_DIR/$LOG_FILE &
-echo $! > $ROOT_DIR/$PID_FILE
-date $TIMESTAMP_FORM > $ROOT_DIR/$TIMESTAMP_FILE
+echo "Starting development server"
+TIME=`date $TIMESTAMP_FORM`
+NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $LOG_FILE.$TIME.log &
+ln -s -f $LOG_FILE.$TIME.log $LATEST_LINK
+echo $! > $PID_FILE
