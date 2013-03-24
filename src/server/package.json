@@ -27,6 +27,7 @@
     "sqlite3":          ">=2.0.0",
     "sequelize":        ">=1.4.x",
     "connect":          ">=2.7.3",
+    "cors":             ">=0.0.5",
     "proxy-middleware": ">=0.3.1"
   },
   "repository": {
