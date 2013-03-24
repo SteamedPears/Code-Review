@@ -63,5 +63,5 @@ fi
 echo "Starting development server"
 TIME=`date $TIMESTAMP_FORM`
 NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $LOG_FILE.$TIME.log &
-ln -s -f $LOG_FILE.$TIME.log $LATEST_LINK
 echo $! > $PID_FILE
+ln -s -f $LOG_FILE.$TIME.log $LATEST_LINK
