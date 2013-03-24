@@ -39,15 +39,19 @@ var postRoutes = {
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
 };
+var corsRoutes = [
+  '/newcode'
+];
 
 /******************************************************************************
 * Start the server                                                            *
 ******************************************************************************/
 var app = connect()
   .use(connect.logger(devMode?'dev':'short'))
-  .use(connect.timeout(requestTimeout))
-  .use(function(request,response,next) {
-    // Preflight OPTIONS requests -- CORS
+  .use(connect.timeout(requestTimeout));
+
+for(var route in corsRoutes) {
+  app.use(route,function(request,response,next) {
     if (request.method && request.method.toUpperCase() === 'OPTIONS') {
       response.writeHead(
         '204',
@@ -63,6 +67,7 @@ var app = connect()
     }
     next();
   });
+}
 
 for(var route in getRoutes) {
   app.use(route,{handle:getRoutes[route]});
@@ -73,7 +78,6 @@ app.use(connect.bodyParser());
 for(var route in postRoutes) {
   app.use(route,{handle:postRoutes[route]});
 }
-
 
 app.listen(serverPort);
 
