@@ -59,7 +59,6 @@ var app = connect()
           'Access-Control-Max-Age': 10, // Seconds.
           'Content-Length': 0
         });
-      
       return response.end();
     }
     next();

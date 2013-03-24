@@ -115,7 +115,7 @@ exports.newcode = function newcode(request,response) {
     lang: obj.lang
   }).save().success(function(code){
     return success(response,code);
-  }).error(function(err){
+  }).error(function(){
     return error(response,500,'Error writing code to database');
   });
 };
@@ -157,7 +157,7 @@ exports.newcomment = function newcomment(request,response) {
       }).save()
         .success(function(comment){ // success!!
           return success(response,comment);
-        }).error(function(err) { // invalid comment
+        }).error(function() { // invalid comment
           return error(response,502,'Error while saving comment');
         });
     });
