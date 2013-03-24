@@ -49,7 +49,7 @@ cd $SERVER_DIR
 OUTDATED=`npm outdated 2> /dev/null`
 if [ ${#OUTDATED} -ne 0 ]; then
     echo "Updating server dependencies"
-    npm udpate
+    npm update
 fi
 
 ######################################################################

@@ -8,6 +8,7 @@
 ******************************************************************************/
 
 var connect = require('connect');
+var cors = require('cors');
 
 /******************************************************************************
 * Configuration                                                               *
@@ -51,22 +52,7 @@ var app = connect()
   .use(connect.timeout(requestTimeout));
 
 for(var route in corsRoutes) {
-  app.use(route,function(request,response,next) {
-    if (request.method && request.method.toUpperCase() === 'OPTIONS') {
-      response.writeHead(
-        '204',
-        'No Content',
-        {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'content-type, accept',
-          'Access-Control-Max-Age': 10, // Seconds.
-          'Content-Length': 0
-        });
-      return response.end();
-    }
-    next();
-  });
+  app.use(route,cors());
 }
 
 for(var route in getRoutes) {
