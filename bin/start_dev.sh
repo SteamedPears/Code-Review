@@ -16,8 +16,9 @@ SERVER_DIR="src/server"
 DB_INFO_FILE="models/db_info.js"
 PID_FILE="var/server.pid"
 LOG_FILE="var/server.log"
-ARCHIVE_FILE="var/logs/server.log_"
+ARCHIVE_FILE="var/logs/server"
 TIMESTAMP_FILE="var/last_start.time"
+TIMESTAMP_FORM="+%Y-%m-%dT%H%M%S%Z"
 NODE_EXE="node"
 BUILD_DB_SCRIPT="models/build_db.js"
 TEST_DATA_SCRIPT="models/test_data.js"
@@ -63,7 +64,7 @@ fi
 # Rotate logs
 if [ -f $ROOT_DIR/$TIMESTAMP_FILE ]; then
     TIME=`cat $ROOT_DIR/$TIMESTAMP_FILE`
-    mv $ROOT_DIR/$LOG_FILE $ROOT_DIR/$ARCHIVE_FILE.$TIME
+    mv $ROOT_DIR/$LOG_FILE $ROOT_DIR/$ARCHIVE_FILE.$TIME.log
 fi
 
 ######################################################################
@@ -72,4 +73,4 @@ fi
 echo Starting development server
 NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $ROOT_DIR/$LOG_FILE &
 echo $! > $ROOT_DIR/$PID_FILE
-date +%s > $ROOT_DIR/$TIMESTAMP_FILE
+date $TIMESTAMP_FORM > $ROOT_DIR/$TIMESTAMP_FILE
