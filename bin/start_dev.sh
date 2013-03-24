@@ -17,7 +17,7 @@ DB_INFO_FILE="models/db_info.js"
 PID_FILE="var/server.pid"
 LOG_FILE="var/server.log"
 ARCHIVE_FILE="var/logs/server.log_"
-TIMESTAMP_FILE="var/time.log"
+TIMESTAMP_FILE="var/last_start.time"
 NODE_EXE="node"
 BUILD_DB_SCRIPT="models/build_db.js"
 TEST_DATA_SCRIPT="models/test_data.js"
@@ -70,7 +70,6 @@ fi
 # Server initialization
 
 echo Starting development server
-NODE_ENV=development $NODE_EXE $INDEX_SCRIPT \
-    1>> $ROOT_DIR/$LOG_FILE 2>> $ROOT_DIR/$LOG_FILE &
+NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $ROOT_DIR/$LOG_FILE &
 echo $! > $ROOT_DIR/$PID_FILE
-date +%s >$ROOT_DIR/$TIMESTAMP_FILE
+date +%s > $ROOT_DIR/$TIMESTAMP_FILE
