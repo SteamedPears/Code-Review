@@ -32,9 +32,9 @@ var requestHandlers = require('./requestHandlers');
 * Connect the request handlers, aka. Routes                                   *
 ******************************************************************************/
 var getRoutes = {
-  '/code':       requestHandlers.code,
-  '/comment':    requestHandlers.comment,
-  '/comments':   requestHandlers.comments
+  '/codeByID':       requestHandlers.codeByID,
+  '/commentsOnLine':    requestHandlers.commentsOnLine,
+  '/countComments':   requestHandlers.countComments
 };
 var postRoutes = {
   '/newcode':    requestHandlers.newcode,

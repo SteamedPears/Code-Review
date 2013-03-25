@@ -75,11 +75,22 @@ require([
   // initialize the view
   view.init();
 
+  function addButtons(code_id) {
+    return function(counts) {
+      view.addCommentButtons(counts,function(line) {
+        comment.getCommentsOnLine(code_id,
+                                  line,
+                                  view.displayComments,
+                                  view.displayError);
+      });
+    };
+  }
+
   // ajaxify forms
   $('#code-form').ajaxForm({
     success: function(ob) {
-      history.pushState({},"CodeReview","index.html?id="+ob.uuid);
-      view.initCommentMode(ob.uuid);
+      history.pushState({},"CodeReview","index.html?id="+ob.id);
+      view.initCommentMode(ob.id);
     },
     error: function(ob) {
       view.displayError("Failed to upload code");
@@ -90,7 +101,7 @@ require([
       view.hideCommentEditor();
       $('#comment-form').resetForm();
       comment.getCommentCounts(ob.code_id,
-                               view.addCommentButtons,
+                               addButtons(ob.code_id),
                                view.displayError);
     }
   });
@@ -107,7 +118,7 @@ require([
     code.getCode(query.id,function(ob) {
       view.displayCode(ob);
       comment.getCommentCounts(query.id,
-                               view.addCommentButtons,
+                               addButtons(query.id),
                                view.displayError);
     },view.displayError);
   }

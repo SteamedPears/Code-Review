@@ -14,7 +14,7 @@ define([
   var code = {};
 
   code.getCode = function(id,callback,error_fn) {
-    $.ajax('/do/code',{
+    $.ajax('/do/codeByID',{
       data:   {id:id},
       dataType: 'json',
       error:  error_fn,
