@@ -13,8 +13,8 @@ define([
 ], function($) {
   var code = {};
 
-  code.getCode = function(id,callback,error_fn) {
-    $.ajax('/do/codeByID',{
+  code.getCode = function(id, callback, error_fn) {
+    $.ajax('/do/codeByID', {
       data:   {id:id},
       dataType: 'json',
       error:  error_fn,

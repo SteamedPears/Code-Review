@@ -13,7 +13,7 @@ define([
 ], function($) {
   var comment = {};
 
-  comment.getCommentCounts = function(code_id,callback,error_fn) {
+  comment.getCommentCounts = function(code_id, callback, error_fn) {
     comments = {};
     $.ajax('/do/countComments',{
       data:   {code_id:code_id},
@@ -23,9 +23,9 @@ define([
     });
   };
 
-  comment.getCommentsOnLine = function(code_id,line,callback,error_fn) {
+  comment.getCommentsOnLine = function(code_id, line, callback, error_fn) {
     $.ajax('/do/commentsOnLine',{
-      data:   {code_id:code_id,line:line},
+      data:   {code_id:code_id, line:line},
       dataType: 'json',
       error:  error_fn,
       success:  callback
