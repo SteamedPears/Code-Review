@@ -12,7 +12,7 @@ Requirements:
  * npm (1.2.11)
  * node-gyp (v0.8.4)
  * redis (2.6.10)
- * g++ (4.7.2)
+ * gcc (4.7.2)
  * GNU Wget (1.14)
 
 Instructions:
