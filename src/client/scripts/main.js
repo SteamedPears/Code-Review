@@ -89,7 +89,7 @@ require([
   // ajaxify forms
   $('#code-form').ajaxForm({
     success: function(ob) {
-      history.pushState({}, "CodeReview", "index.html?id="+ob.id);
+      history.pushState({}, "CodeReview", "index.html?id=" + ob.id);
       view.initCommentMode(ob.id);
     },
     error: function(ob) {
