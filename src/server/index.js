@@ -33,8 +33,8 @@ var requestHandlers = require('./requestHandlers');
 ******************************************************************************/
 var getRoutes = {
   '/codeByID':       requestHandlers.codeByID,
-  '/commentsOnLine':    requestHandlers.commentsOnLine,
-  '/countComments':   requestHandlers.countComments
+  '/commentsOnLine': requestHandlers.commentsOnLine,
+  '/countComments':  requestHandlers.countComments
 };
 var postRoutes = {
   '/newcode':    requestHandlers.newcode,
