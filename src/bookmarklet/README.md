@@ -1,6 +1,11 @@
 #Code Review Bookmarklet
 
-##Development Usage
+##Usage
+
+Open `index.html` and drag one of the bookmarklet links to you bookmarks bar.
+Boom!  You can now use it.
+
+##Development
 
 After cloning the project, run `make install` to get the bookmarklet to a
 working state. It will download all the vendor dependencies, build them, and
