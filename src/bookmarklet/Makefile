@@ -72,13 +72,12 @@ clean:
 
 # Build the production version of the bookmarklet. Does what the build target
 # does, but it strips debug code and minifies it.
-# NOTE: THIS TARGET IS A STUB. IT IS NON-FUNCTIONAL.
-# TODO: MAKE FUNCTIONAL
-.PHONY: production
-production: makeproductiondirs
+# NOTE: THIS TARGET CURRENTLY IS A STUB. IT IS NON-FUNCTIONAL.
+# TODO: Make this a functional target.
+.PHONY: build-production
+build-production: makeproductiondirs
 	@echo "Minifying and moving to $(TARGET)"
 	cat bookmarklet.js |\
 		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
 		uglify \
 		> $(TARGET)/bookmarklet.min.js
-
