@@ -48,7 +48,7 @@ var corsRoutes = [
 * Start the server                                                            *
 ******************************************************************************/
 var app = connect()
-  .use(connect.logger(devMode?'dev':'short'))
+  .use(connect.logger(devMode ? 'dev' : 'short'))
   .use(connect.timeout(requestTimeout));
 
 for(var route in corsRoutes) {
