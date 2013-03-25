@@ -7,8 +7,8 @@ var client = redis.createClient();
 /******************************************************************************
 * Handle DB errors                                                            *
 ******************************************************************************/
-client.on("error", function (err) {
-  console.log("DB Error: " + err);
+client.on('error', function (err) {
+  console.log('DB Error: ' + err);
 });
 
 /******************************************************************************
@@ -28,12 +28,6 @@ function error(response, errno, errtext) {
   response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
-}
-
-function errorCheck(err, next) {
-  if (err !== null)
-    return error(response, 500, 'Error while writing to database.');
-  return next();
 }
 
 function isUndefined(x) {
@@ -65,11 +59,13 @@ exports.codeByID = function codeByID(request, response) {
   if (id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  client.get('code:'+id, function(err, reply) {
-    if (err !== null)
+  client.get('code:' + id, function(err, reply) {
+    if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
-    if (reply === null)
+    }
+    if (reply === null) {
       return error(response, 404, 'Code not found');
+    }
     return success(response, JSON.parse(reply));
   });
 };
@@ -84,11 +80,13 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   if (line === undefined) {
     return error(response, 400, 'Invalid line number');
   }
-  client.lrange('comment:'+id+':'+line, 0, -1, function(err, reply) {
-    if (err !== null)
+  client.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+    if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
-    if (reply === null)
+    }
+    if (reply === null) {
       return error(response, 404, 'Comment not found');
+    }
     var out = [];
     for (var i in reply) {
       out.push(JSON.parse(reply[i]));
@@ -100,16 +98,18 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
 exports.countComments = function countComments(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  client.smembers('comment:'+code_id+':indices', function(err, reply) {
-    if (err !== null)
+  client.smembers('comment:' + code_id + ':indices', function(err, reply) {
+    if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
-    if (reply === null)
-      return error(response, 404, 'Comments not found.')
+    }
+    if (reply === null) {
+      return error(response, 404, 'Comments not found.');
+    }
     var multi = client.multi();
     for (var i in reply) {
       if (reply.hasOwnProperty(i)) {
         console.log(i, reply[i]);
-        multi.llen('comment:'+code_id+':'+reply[i]);
+        multi.llen('comment:' + code_id + ':' + reply[i]);
       }
     }
     multi.exec(function(err, replies) {
@@ -133,9 +133,10 @@ exports.newcode = function newcode(request, response) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
-  client.set('code:'+id, JSON.stringify(obj), function(err, replies) {
-    if (err !== null)
+  client.set('code:' + id, JSON.stringify(obj), function(err) {
+    if (err !== null) {
       return error(response, 500, 'Error while writing to database.');
+    }
     return success(response, {id:id});
   });
 };
@@ -162,11 +163,13 @@ exports.newcomment = function newcomment(request, response) {
   }
   // upon successfully saving comment, this function will update comment indices
   client.multi()
-    .lpush('comment:'+fields.code_id+':'+fields.line_start, JSON.stringify(fields))
-    .sadd('comment:'+fields.code_id+':indices', fields.line_start)
-    .exec(function(err, replies) {
-      if (err !== null)
+    .lpush('comment:' + fields.code_id + ':' + fields.line_start,
+           JSON.stringify(fields))
+    .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
+    .exec(function(err) {
+      if (err !== null) {
         return error(response, 500, 'Error while writing to database.');
+      }
       return success(response, fields);
     });
 };
