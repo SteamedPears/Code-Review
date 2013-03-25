@@ -1,12 +1,21 @@
 # Copyright by Steamed Pears, 2013. For licensing information, 
 # see the LICENCE file in the root directory of this project.
 
+# Root folder where the bookmarklet will be built. Typically, this would be the
+# folder that would be pushed to production.
 TARGET=../client/bookmarklet
+
+# Where raw dependencies/vendor code are stored. This folder is populated by the
+# get get vendor target
 LIB=lib
+
+# Where the code that will wrap vendor deps or build them will be stored
 VENDORS_SRC=vendors_src
+
+# Where vendors are built to. 
 VENDORS=vendors
 
-#Initialize the bookmarklet
+#Initialize the bookmarklet after cloning Code Review
 .PHONY: install
 install: makedirs getvendors build
 
@@ -14,6 +23,8 @@ install: makedirs getvendors build
 lint:
 	jshint bookmarklet.js
 
+
+# Build the readability vendor
 .PHONY: readability
 readability:
 	@echo "Wrapping $@ and compiling to $(VENDORS)"
@@ -23,11 +34,16 @@ readability:
 			$(VENDORS_SRC)/readability_footer.js \
 			> $(VENDORS)/readability.js
 
+# Download all the vendors
+# TODO: Refactor this target into a separate script which read a text file that
+# contains a list of dependencies/vendors.
 .PHONY: getvendors
 getvendors:
 	@echo "Downloading vendors"
 	cd $(LIB); git clone git@github.com:fb55/readabilitySAX.git
 
+# Build all the vendors locally. As we get more, add them as target
+# dependencies.
 .PHONY: buildvendors
 buildvendors: readability
 
@@ -41,8 +57,9 @@ makeproductiondirs:
 	mkdir -p $(TARGET)
 	mkdir -p $(TARGET)/$(VENDORS)
 
-#Build the bookmarklet, compile/wrap the vendors, move everything to the
-#TARGET directory
+# Build the bookmarklet, compile/wrap the vendors, move everything to the
+# TARGET directory. This makes a test build that keeps all debugging code and
+# does not minify the source.
 .PHONY: build
 build: makeproductiondirs buildvendors
 	cp bookmarklet.js $(TARGET)
@@ -53,7 +70,10 @@ build: makeproductiondirs buildvendors
 clean:
 	rm -rf *.min.js vendors/* $(TARGET)
 
-#TODO: minify vendors too.
+# Build the production version of the bookmarklet. Does what the build target
+# does, but it strips debug code and minifies it.
+# NOTE: THIS TARGET IS A STUB. IT IS NON-FUNCTIONAL.
+# TODO: MAKE FUNCTIONAL
 .PHONY: production
 production: makeproductiondirs
 	@echo "Minifying and moving to $(TARGET)"
