@@ -9,17 +9,20 @@
 # back ends via node.
 ######################################################################
 
+ROOT_DIR=`pwd`
+
 ######################################################################
 # Configuration
-
-SERVER_DIR="src/server"
-DB_INFO_FILE="models/db_info.js"
-PID_FILE="var/server.pid"
-LOG_FILE="var/server.log"
+TIMESTAMP_FORM="+%Y-%m-%dT%H%M%S%Z"
 NODE_EXE="node"
-BUILD_DB_SCRIPT="models/build_db.js"
-TEST_DATA_SCRIPT="models/test_data.js"
-INDEX_SCRIPT="index.js"
+PID_FILE=$ROOT_DIR/var/server.pid
+LATEST_LINK=$ROOT_DIR/var/server.log
+LOG_FILE=$ROOT_DIR/var/logs/server
+SERVER_DIR=$ROOT_DIR/src/server
+DB_INFO_FILE=$SERVER_DIR/models/db_info.js
+BUILD_DB_SCRIPT=$SERVER_DIR/models/build_db.js
+TEST_DATA_SCRIPT=$SERVER_DIR/models/test_data.js
+INDEX_SCRIPT=$SERVER_DIR/index.js
 
 ######################################################################
 # Silently stop server, in case it's running
@@ -35,17 +38,14 @@ fi
 
 ######################################################################
 # Install needed packages
-
-ROOT_DIR=`pwd`
-
 cd $SERVER_DIR
-
-echo "Installing needed packages"
-npm install
+if [ "`npm outdated 2> /dev/null`" ]; then
+    echo "Updating server dependencies"
+    npm update
+fi
 
 ######################################################################
 # Database setup
-
 if [ ! -f $DB_INFO_FILE ]; then
     echo "DB info file not found, installing sqlite version"
     cp $DB_INFO_FILE.sqlite $DB_INFO_FILE
@@ -59,8 +59,8 @@ fi
 
 ######################################################################
 # Server initialization
-
-echo Starting development server
-NODE_ENV=development $NODE_EXE $INDEX_SCRIPT \
-    1>> $ROOT_DIR/$LOG_FILE 2>> $ROOT_DIR/$LOG_FILE &
-echo $! > $ROOT_DIR/$PID_FILE
+echo "Starting development server"
+TIME=`date $TIMESTAMP_FORM`
+NODE_ENV=development $NODE_EXE $INDEX_SCRIPT &> $LOG_FILE.$TIME.log &
+echo $! > $PID_FILE
+ln -s -f $LOG_FILE.$TIME.log $LATEST_LINK

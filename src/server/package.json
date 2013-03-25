@@ -1,43 +1,39 @@
 {
-    "name": "Code-Review"
-  , "author" : "Steamed Pears <steamedpears.com>"
-  , "description": "Interactive source code reviewing, commenting and sharing"
-  , "version": "0.0.2"
-  , "private": true
-  , "contributors": [
+  "name":        "Code-Review",
+  "author" :     "Steamed Pears <steamedpears.com>",
+  "description": "Interactive source code reviewing, commenting and sharing",
+  "version":     "0.0.2",
+  "private":     true,
+  "contributors": [
     {
-        "name": "Alexis Beingessner"
-      , "email": "alexis@steamedpears.com"
+      "name":  "Alexis Beingessner",
+      "email": "alexis@steamedpears.com"
+    },{
+      "name":  "Christian Delahousse",
+      "email": "christian@delahousse.ca"
+    },{
+      "name":  "Bheesham Persaud",
+      "email": "bheesham.persaud@live.ca"
+    },{
+      "name":  "Simon Pratt",
+      "email": "me@simondavidpratt.com"
+    },{
+      "name":  "Peter Simonyi",
+      "email": "peter@steamedpears.com"
     }
-    ,{
-        "name": "Christian Delahousse"
-      , "email": "christian@delahousse.ca"
-    }
-    ,{
-        "name": "Bheesham Persaud"
-      , "email": "bheesham.persaud@live.ca"
-    }
-    ,{
-        "name": "Simon Pratt"
-      , "email": "me@simondavidpratt.com"
-    }
-    ,{
-        "name": "Peter Simonyi"
-      , "email": "peter@steamedpears.com"
-    }
-  ]
-  , "dependencies": {
-        "formidable": "1.0.x"
-      , "http-proxy": "0.8.1"
-      , "node-uuid": "1.3.x"
-      , "sqlite3": ">=2.0.0"
-      , "sequelize": "1.4.x"
-      , "node-static": "0.6.x"
-  }
-  , "repository": {
+  ],
+  "dependencies": {
+    "node-uuid":        ">=1.3.x",
+    "sqlite3":          ">=2.0.0",
+    "sequelize":        ">=1.4.x",
+    "connect":          ">=2.7.3",
+    "cors":             ">=0.0.5",
+    "proxy-middleware": ">=0.3.1"
+  },
+  "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/sdp/codereviewservermaster.git"
-  }
-  , "license": "ISC License"
-  , "engine" : ">=0.7.9-pre"
+    "url":  "https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears.git"
+  },
+  "license": "ISC License",
+  "engine" : ">=0.7.9-pre"
 }
