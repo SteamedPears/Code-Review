@@ -30,9 +30,9 @@ function error(response, errno, errtext) {
   response.end();
 }
 
-function errorCheck(err,next) {
-  if(err !== null)
-    return error(response,500,'Error while writing to database.');
+function errorCheck(err, next) {
+  if (err !== null)
+    return error(response, 500, 'Error while writing to database.');
   return next();
 }
 
@@ -65,60 +65,60 @@ exports.codeByID = function codeByID(request, response) {
   if (id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  client.get('code:'+id,function(err,reply) {
-    if(err !== null)
-      return error(response,500,'Error while reading from database.');
-    if(reply === null)
-      return error(response,404,'Code not found');
-    return success(response,JSON.parse(reply));
+  client.get('code:'+id, function(err, reply) {
+    if (err !== null)
+      return error(response, 500, 'Error while reading from database.');
+    if (reply === null)
+      return error(response, 404, 'Code not found');
+    return success(response, JSON.parse(reply));
   });
 };
 
-exports.commentsOnLine = function commentsOnLine(request,response) {
+exports.commentsOnLine = function commentsOnLine(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.code_id;
   var line = query.line;
-  if(id === undefined) {
-    return error(response,400,'Invalid comment id');
+  if (id === undefined) {
+    return error(response, 400, 'Invalid comment id');
   }
-  if(line === undefined) {
-    return error(response,400,'Invalid line number');
+  if (line === undefined) {
+    return error(response, 400, 'Invalid line number');
   }
-  client.lrange('comment:'+id+':'+line,0,-1,function(err,reply) {
-    if(err !== null)
-      return error(response,500,'Error while reading from database.');
-    if(reply === null)
-      return error(response,404,'Comment not found');
+  client.lrange('comment:'+id+':'+line, 0, -1, function(err, reply) {
+    if (err !== null)
+      return error(response, 500, 'Error while reading from database.');
+    if (reply === null)
+      return error(response, 404, 'Comment not found');
     var out = [];
-    for(var i in reply) {
+    for (var i in reply) {
       out.push(JSON.parse(reply[i]));
     }
-    return success(response,out);
+    return success(response, out);
   });
 };
 
 exports.countComments = function countComments(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  client.smembers('comment:'+code_id+':indices',function(err,reply) {
-    if(err !== null)
-      return error(response,500,'Error while reading from database.');
-    if(reply === null)
-      return error(response,404,'Comments not found.')
+  client.smembers('comment:'+code_id+':indices', function(err, reply) {
+    if (err !== null)
+      return error(response, 500, 'Error while reading from database.');
+    if (reply === null)
+      return error(response, 404, 'Comments not found.')
     var multi = client.multi();
-    for(var i in reply) {
-      if(reply.hasOwnProperty(i)) {
-        console.log(i,reply[i]);
+    for (var i in reply) {
+      if (reply.hasOwnProperty(i)) {
+        console.log(i, reply[i]);
         multi.llen('comment:'+code_id+':'+reply[i]);
       }
     }
-    multi.exec(function(err,replies) {
+    multi.exec(function(err, replies) {
       var out = {};
-      replies.forEach(function(value,index) {
-        console.log(index,reply[index],value);
+      replies.forEach(function(value, index) {
+        console.log(index, reply[index], value);
         out[reply[index]] = value;
       });
-      return success(response,out);
+      return success(response, out);
     });
   });
 };
@@ -134,7 +134,7 @@ exports.newcode = function newcode(request, response) {
   }
   var id=uuid.v4();
   client.set('code:'+id, JSON.stringify(obj), function(err, replies) {
-    if(err !== null)
+    if (err !== null)
       return error(response, 500, 'Error while writing to database.');
     return success(response, {id:id});
   });
@@ -164,8 +164,8 @@ exports.newcomment = function newcomment(request, response) {
   client.multi()
     .lpush('comment:'+fields.code_id+':'+fields.line_start, JSON.stringify(fields))
     .sadd('comment:'+fields.code_id+':indices', fields.line_start)
-    .exec(function(err,replies) {
-      if(err !== null)
+    .exec(function(err, replies) {
+      if (err !== null)
         return error(response, 500, 'Error while writing to database.');
       return success(response, fields);
     });
