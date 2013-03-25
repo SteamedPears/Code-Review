@@ -1,3 +1,5 @@
+# Copyright by Steamed Pears, 2013. For licensing information, 
+# see the LICENCE file in the root directory of this project.
 
 TARGET=../client/bookmarklet
 LIB=lib
