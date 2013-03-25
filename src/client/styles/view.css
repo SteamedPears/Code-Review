@@ -18,6 +18,11 @@ label{
   margin-right:1em;
 }
 
+#footer { 
+  clear: both;
+  text-align: center;
+}
+
 #error {
   background-color: #FE2E2E;
   text-decoration:none;
