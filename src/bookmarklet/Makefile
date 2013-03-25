@@ -6,7 +6,7 @@
 TARGET=../client/bookmarklet
 
 # Where raw dependencies/vendor code are stored. This folder is populated by the
-# get get vendor target
+# getvendor target
 LIB=lib
 
 # Where the code that will wrap vendor deps or build them will be stored
