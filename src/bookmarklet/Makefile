@@ -15,47 +15,13 @@ VENDORS_SRC=vendors_src
 # Where vendors are built to. 
 VENDORS=vendors
 
+###############################################################################
+# BUILDING
+###############################################################################
+
 #Initialize the bookmarklet after cloning Code Review
 .PHONY: install
 install: makedirs getvendors build
-
-.PHONY: lint
-lint:
-	jshint bookmarklet.js
-
-
-# Build the readability vendor
-.PHONY: readability
-readability:
-	@echo "Wrapping $@ and compiling to $(VENDORS)"
-	cat $(VENDORS_SRC)/readability_header.js \
-			$(LIB)/readabilitySAX/readabilitySAX.js \
-			$(LIB)/readabilitySAX/browsers/DOMasSAX.js \
-			$(VENDORS_SRC)/readability_footer.js \
-			> $(VENDORS)/readability.js
-
-# Download all the vendors
-# TODO: Refactor this target into a separate script which read a text file that
-# contains a list of dependencies/vendors.
-.PHONY: getvendors
-getvendors:
-	@echo "Downloading vendors"
-	cd $(LIB); git clone git@github.com:fb55/readabilitySAX.git
-
-# Build all the vendors locally. As we get more, add them as target
-# dependencies.
-.PHONY: buildvendors
-buildvendors: readability
-
-.PHONY: makedirs
-makedirs:
-	mkdir -p $(LIB)
-	mkdir -p $(VENDORS)
-
-.PHONY: makeproductiondirs
-makeproductiondirs:
-	mkdir -p $(TARGET)
-	mkdir -p $(TARGET)/$(VENDORS)
 
 # Build the bookmarklet, compile/wrap the vendors, move everything to the
 # TARGET directory. This makes a test build that keeps all debugging code and
@@ -81,3 +47,50 @@ build-production: makeproductiondirs
 		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
 		uglify \
 		> $(TARGET)/bookmarklet.min.js
+
+
+###############################################################################
+# VENDORS 
+###############################################################################
+
+# Download all the vendors
+# TODO: Refactor this target into a separate script which read a text file that
+# contains a list of dependencies/vendors.
+.PHONY: getvendors
+getvendors:
+	@echo "Downloading vendors"
+	cd $(LIB); git clone git@github.com:fb55/readabilitySAX.git
+
+# Build all the vendors locally. As we get more, add them as target
+# dependencies.
+.PHONY: buildvendors
+buildvendors: readability
+
+# Build the readability vendor
+.PHONY: readability
+readability:
+	@echo "Wrapping $@ and compiling to $(VENDORS)"
+	cat $(VENDORS_SRC)/readability_header.js \
+			$(LIB)/readabilitySAX/readabilitySAX.js \
+			$(LIB)/readabilitySAX/browsers/DOMasSAX.js \
+			$(VENDORS_SRC)/readability_footer.js \
+			> $(VENDORS)/readability.js
+
+###############################################################################
+# HELPERS
+###############################################################################
+
+.PHONY: lint
+lint:
+	jshint bookmarklet.js
+
+.PHONY: makedirs
+makedirs:
+	mkdir -p $(LIB)
+	mkdir -p $(VENDORS)
+
+.PHONY: makeproductiondirs
+makeproductiondirs:
+	mkdir -p $(TARGET)
+	mkdir -p $(TARGET)/$(VENDORS)
+
