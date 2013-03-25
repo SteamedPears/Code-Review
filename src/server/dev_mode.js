@@ -35,9 +35,9 @@ module.exports = function(serverPort) {
   console.log('Starting proxy server proxying:');
 
   var proxyServer = connect();
-  for(var route in proxyRoutes) {
+  for (var route in proxyRoutes) {
     console.log('\t' + route + ' -> ' + proxyRoutes[route]);
-    proxyServer.use(route,proxy(url.parse(proxyRoutes[route])));
+    proxyServer.use(route, proxy(url.parse(proxyRoutes[route])));
   }
   proxyServer.listen(proxyPort);
 };

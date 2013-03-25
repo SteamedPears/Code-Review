@@ -19,7 +19,7 @@ var requestTimeout = 3000; // ms
 // check if this app is being run in development or production environment
 var devMode = (process.env.NODE_ENV === 'development');
 
-if(devMode) {
+if (devMode) {
   require('./dev_mode')(serverPort);
 }
 
@@ -51,18 +51,18 @@ var app = connect()
   .use(connect.logger(devMode ? 'dev' : 'short'))
   .use(connect.timeout(requestTimeout));
 
-for(var route in corsRoutes) {
-  app.use(route,cors());
+for (var route in corsRoutes) {
+  app.use(route, cors());
 }
 
-for(var route in getRoutes) {
-  app.use(route,{handle:getRoutes[route]});
+for (var route in getRoutes) {
+  app.use(route, {handle:getRoutes[route]});
 }
 
 app.use(connect.bodyParser());
 
-for(var route in postRoutes) {
-  app.use(route,{handle:postRoutes[route]});
+for (var route in postRoutes) {
+  app.use(route, {handle:postRoutes[route]});
 }
 
 app.listen(serverPort);

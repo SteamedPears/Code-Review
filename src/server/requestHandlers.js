@@ -20,7 +20,7 @@ Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
 /******************************************************************************
 * Helper Functions                                                            *
 ******************************************************************************/
-function success(response,ob) {
+function success(response, ob) {
   response.writeHead(200, {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
@@ -29,8 +29,8 @@ function success(response,ob) {
   response.end();
 }
 
-function error(response,errno,errtext) {
-  console.log('===ERROR===',errno,errtext);
+function error(response, errno, errtext) {
+  console.log('===ERROR===', errno, errtext);
   response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
@@ -59,54 +59,54 @@ function isValidPositiveIntegerString(x) {
 /******************************************************************************
 * Getters                                                                     *
 ******************************************************************************/
-exports.code = function code(request,response) {
+exports.code = function code(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.id;
-  if(id === undefined) {
-    return error(response,400,'Invalid code id');
+  if (id === undefined) {
+    return error(response, 400, 'Invalid code id');
   }
   Code
     .find({where:{uuid:id}})
     .success(function(code) {
-      if(code === null) {
-        return error(response,404,'Code not found');
+      if (code === null) {
+        return error(response, 404, 'Code not found');
       }
-      return success(response,code);
+      return success(response, code);
     });
 };
 
-exports.comment = function comment(request,response) {
+exports.comment = function comment(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.id;
-  if(id === undefined) {
-    return error(response,400,'Invalid comment id');
+  if (id === undefined) {
+    return error(response, 400, 'Invalid comment id');
   }
   Comment
     .find(Number(id))
     .success(function(comment) {
-      if(comment === null) {
-        return error(response,404,'Comment not found');
+      if (comment === null) {
+        return error(response, 404, 'Comment not found');
       }
-      return success(response,comment);
+      return success(response, comment);
     });
 };
 
-exports.comments = function comments(request,response) {
+exports.comments = function comments(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
   Comment.findAll({where: {code_id: code_id}}).success(function(comments) {
-    return success(response,{code_id:code_id,comments:comments});
+    return success(response, {code_id:code_id, comments:comments});
   });
 };
 
 /******************************************************************************
 * Setters                                                                     *
 ******************************************************************************/
-exports.newcode = function newcode(request,response) {
+exports.newcode = function newcode(request, response) {
   // do some basic validation
   var obj = request.body;
-  if(obj === null || !isValidString(obj.text)) {
-    return error(response,400,'Invalid code text.');
+  if (obj === null || !isValidString(obj.text)) {
+    return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
   Code.build({
@@ -114,37 +114,37 @@ exports.newcode = function newcode(request,response) {
     text: obj.text,
     lang: obj.lang
   }).save().success(function(code){
-    return success(response,code);
+    return success(response, code);
   }).error(function(){
-    return error(response,500,'Error writing code to database');
+    return error(response, 500, 'Error writing code to database');
   });
 };
 
-exports.newcomment = function newcomment(request,response) {
+exports.newcomment = function newcomment(request, response) {
   // reject if no referer
-  if(request === null ||
+  if (request === null ||
      request.headers === undefined ||
      request.headers.referer === undefined) {
-    return error(response,400,'Invalid referer');
+    return error(response, 400, 'Invalid referer');
   }
   // do some basic validation
   var fields = request.body;
-  if(fields === null ||
+  if (fields === null ||
      !isValidString(fields.user) ||
      !isValidString(fields.text) ||
      !isValidPositiveIntegerString(fields.line_start) ||
      !isValidPositiveIntegerString(fields.line_end)) {
-    return error(response,400,'Invalid field');
+    return error(response, 400, 'Invalid field');
   }
   // make sure the line numbers are sane
-  if(Number(fields.line_start) > Number(fields.line_end)) {
-    return error(response,400,'Invalid line numbers');
+  if (Number(fields.line_start) > Number(fields.line_end)) {
+    return error(response, 400, 'Invalid line numbers');
   }
   // first find the code associated with the new comment
   Code.find({where:{uuid:fields.code_id}})
     .success(function (code) {
-      if(code === null) {
-        return error(response,400,'Invalid code id');
+      if (code === null) {
+        return error(response, 400, 'Invalid code id');
       }
       // Once we've established it's legit, build the comment
       Comment.build({
@@ -156,9 +156,9 @@ exports.newcomment = function newcomment(request,response) {
         diffs: fields.diffs
       }).save()
         .success(function(comment){ // success!!
-          return success(response,comment);
+          return success(response, comment);
         }).error(function() { // invalid comment
-          return error(response,502,'Error while saving comment');
+          return error(response, 502, 'Error while saving comment');
         });
     });
 };
