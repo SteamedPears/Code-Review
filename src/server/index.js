@@ -1,71 +1,70 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
 /******************************************************************************
- * Server entry point (index)                                                  *
- *                                                                             *
- * Project: Code Review                                                        *
- * By:      Steamed Pears                                                      *
- *                                                                             *
- * This is the node script that pulls together the various modules and         *
- * starts the Code Review server.                                              *
- ******************************************************************************/
+* Server entry point (index)                                                  *
+*                                                                             *
+* This is the node script that pulls together the various modules and         *
+* starts the Code Review server.                                              *
+******************************************************************************/
+
+var connect = require('connect');
+var cors = require('cors');
 
 /******************************************************************************
- * Configuration
- ******************************************************************************/
+* Configuration                                                               *
+******************************************************************************/
 var serverPort = 20193;
+var requestTimeout = 3000; // ms
 
-// development mode options
-var staticPort = 8888;
-var proxyPort  = 8080;
-var staticDirectory = '../client/';
+// check if this app is being run in development or production environment
+var devMode = (process.env.NODE_ENV === 'development');
 
-// check NODE_ENV environment variable
-var startDevProxy = (process.env.NODE_ENV === 'development');
-
-/******************************************************************************
- * Load Modules                                                                *
- ******************************************************************************/
-var server = require("./server");
-var router = require("./router");
-var requestHandlers = require("./requestHandlers");
-
-/******************************************************************************
- * Connect the request handlers, aka. Routes                                   *
- ******************************************************************************/
-var handle = {};
-handle["/"] = requestHandlers.start;
-handle["/code"] = requestHandlers.code;
-handle["/comment"] = requestHandlers.comment;
-handle["/newcode"] = requestHandlers.newcode;
-handle["/newcomment"] = requestHandlers.newcomment;
-handle["/comments"] = requestHandlers.comments;
-handle["not_found"] = requestHandlers.not_found;
-
-/******************************************************************************
- * Start the server                                                            *
- ******************************************************************************/
-try{
-
-  //////////////////////////////////////////////////////////////////////
-  // Development Static Server and Proxy
-  if (startDevProxy) {
-    console.log('Developement Mode');
-
-    require('./static-server').start(staticPort,staticDirectory);
-
-    require("./proxy").start(proxyPort,{
-      router: { 
-        'localhost/do/' : 'localhost:' + serverPort,
-        'localhost/'    : 'localhost:' + staticPort
-      }
-    });
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  // Server
-  server.start(serverPort, router.route, handle);
-
-} catch(e) {
-  console.log("===ERROR===");
-  console.log(e);
+if (devMode) {
+  require('./dev_mode')(serverPort);
 }
+
+/******************************************************************************
+* Load Modules                                                                *
+******************************************************************************/
+var requestHandlers = require('./requestHandlers');
+
+/******************************************************************************
+* Connect the request handlers, aka. Routes                                   *
+******************************************************************************/
+var getRoutes = {
+  '/code':       requestHandlers.code,
+  '/comment':    requestHandlers.comment,
+  '/comments':   requestHandlers.comments
+};
+var postRoutes = {
+  '/newcode':    requestHandlers.newcode,
+  '/newcomment': requestHandlers.newcomment,
+};
+var corsRoutes = [
+  '/newcode'
+];
+
+/******************************************************************************
+* Start the server                                                            *
+******************************************************************************/
+var app = connect()
+  .use(connect.logger(devMode ? 'dev' : 'short'))
+  .use(connect.timeout(requestTimeout));
+
+for (var route in corsRoutes) {
+  app.use(route, cors());
+}
+
+for (var route in getRoutes) {
+  app.use(route, {handle:getRoutes[route]});
+}
+
+app.use(connect.bodyParser());
+
+for (var route in postRoutes) {
+  app.use(route, {handle:postRoutes[route]});
+}
+
+app.listen(serverPort);
+
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
