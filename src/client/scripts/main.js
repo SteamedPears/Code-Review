@@ -65,7 +65,7 @@ require([
   "comment",
   "language",
   "editor"
-], function($,URI) {
+], function($, URI) {
   var view = require("view");
   var code = require("code");
   var comment = require("comment");
@@ -77,7 +77,7 @@ require([
 
   function addButtons(code_id) {
     return function(counts) {
-      view.addCommentButtons(counts,function(line) {
+      view.addCommentButtons(counts, function(line) {
         comment.getCommentsOnLine(code_id,
                                   line,
                                   view.displayComments,
@@ -89,7 +89,7 @@ require([
   // ajaxify forms
   $('#code-form').ajaxForm({
     success: function(ob) {
-      history.pushState({},"CodeReview","index.html?id="+ob.id);
+      history.pushState({}, "CodeReview", "index.html?id="+ob.id);
       view.initCommentMode(ob.id);
     },
     error: function(ob) {
@@ -108,19 +108,19 @@ require([
 
   // dispatch based on query
   var query = URI(document.URL).query(true);
-  if(query.error !== undefined)
+  if (query.error !== undefined)
     view.displayError(query.error);
-  if(query.id === undefined) {
+  if (query.id === undefined) {
     view.initCodeMode();
     view.populateLanguageList(language.langs);
   } else {
     view.initCommentMode(query.id);
-    code.getCode(query.id,function(ob) {
+    code.getCode(query.id, function(ob) {
       view.displayCode(ob);
       comment.getCommentCounts(query.id,
                                addButtons(query.id),
                                view.displayError);
-    },view.displayError);
+    }, view.displayError);
   }
 });
 
