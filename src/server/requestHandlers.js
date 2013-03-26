@@ -1,13 +1,12 @@
 // Libraries
 var url = require('url');
 var uuid = require('node-uuid');
-var redis = require('redis');
-var client = redis.createClient();
+var redis = require('redis').createClient();
 
 /******************************************************************************
 * Handle DB errors                                                            *
 ******************************************************************************/
-client.on('error', function (err) {
+redis.on('error', function (err) {
   console.log('DB Error: ' + err);
 });
 
@@ -59,7 +58,7 @@ exports.codeByID = function codeByID(request, response) {
   if (id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  client.get('code:' + id, function(err, reply) {
+  redis.get('code:' + id, function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
@@ -80,7 +79,7 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   if (line === undefined) {
     return error(response, 400, 'Invalid line number');
   }
-  client.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+  redis.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
@@ -98,14 +97,14 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
 exports.countComments = function countComments(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  client.smembers('comment:' + code_id + ':indices', function(err, reply) {
+  redis.smembers('comment:' + code_id + ':indices', function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
     if (reply === null) {
       return error(response, 404, 'Comments not found.');
     }
-    var multi = client.multi();
+    var multi = redis.multi();
     for (var i in reply) {
       if (reply.hasOwnProperty(i)) {
         console.log(i, reply[i]);
@@ -133,7 +132,7 @@ exports.newcode = function newcode(request, response) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
-  client.set('code:' + id, JSON.stringify(obj), function(err) {
+  redis.set('code:' + id, JSON.stringify(obj), function(err) {
     if (err !== null) {
       return error(response, 500, 'Error while writing to database.');
     }
@@ -162,7 +161,7 @@ exports.newcomment = function newcomment(request, response) {
     return error(response, 400, 'Invalid line numbers');
   }
   // upon successfully saving comment, this function will update comment indices
-  client.multi()
+  redis.multi()
     .lpush('comment:' + fields.code_id + ':' + fields.line_start,
            JSON.stringify(fields))
     .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
