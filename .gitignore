@@ -7,12 +7,9 @@ lib-cov
 *.pid
 *.gz
 
-pids
 logs
-results
 
 npm-debug.log
 *.db
 *.DS_Store
 *~
-var/db/*

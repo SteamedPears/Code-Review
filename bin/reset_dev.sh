@@ -9,4 +9,4 @@
 ######################################################################
 
 bin/stop_dev.sh 2> /dev/null
-git clean -qxdff
+git clean -qXdff
