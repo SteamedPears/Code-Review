@@ -14,9 +14,9 @@ TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
-NODE="node"
+NODE=node
 
-DB="redis-server"
+DB=redis-server
 DB_DIR=$ROOT_DIR/var/db/
 DB_OPTIONS="--dir $DB_DIR"
 DB_CONF=$ROOT_DIR/etc/redis.conf
