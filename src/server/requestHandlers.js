@@ -97,21 +97,21 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
 exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  db.smembers('comment:' + code_id + ':indices', function(err, reply) {
+  db.smembers('comment:' + code_id + ':indices', function(err, indices) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
-    if (reply === null) {
+    if (indices === null) {
       return error(response, 404, 'Comments not found.');
     }
     var multi = db.multi();
-    reply.forEach(function(value) {
-      multi.llen('comment:' + code_id + ':' + value);
+    indices.forEach(function(index) {
+      multi.llen('comment:' + code_id + ':' + index);
     });
-    multi.exec(function(err, replies) {
+    multi.exec(function(err, lengths) {
       var out = {};
-      replies.forEach(function(value, index) {
-        out[reply[index]] = value;
+      lengths.forEach(function(length, i) {
+        out[indices[i]] = length;
       });
       return success(response, out);
     });
