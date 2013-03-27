@@ -18,5 +18,5 @@ DB_PID="var/db.pid"
 ######################################################################
 # Stop server and db
 
-kill -9 `cat $SERVER_PID`
-kill -9 `cat $DB_PID`
+kill -SIGKILL $(< $SERVER_PID)
+kill -SIGKILL $(< $DB_PID)
