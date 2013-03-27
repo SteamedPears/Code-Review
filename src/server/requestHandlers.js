@@ -7,7 +7,7 @@ var redis = require('redis').createClient();
 * Handle DB errors                                                            *
 ******************************************************************************/
 redis.on('error', function (err) {
-  console.log('DB Error: ' + err);
+  console.error('DB Error: ' + err);
 });
 
 /******************************************************************************
@@ -23,7 +23,7 @@ function success(response, ob) {
 }
 
 function error(response, errno, errtext) {
-  console.log('===ERROR===', errno, errtext);
+  console.error('===ERROR===', errno, errtext);
   response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
@@ -107,14 +107,12 @@ exports.countComments = function countComments(request, response) {
     var multi = redis.multi();
     for (var i in reply) {
       if (reply.hasOwnProperty(i)) {
-        console.log(i, reply[i]);
         multi.llen('comment:' + code_id + ':' + reply[i]);
       }
     }
     multi.exec(function(err, replies) {
       var out = {};
       replies.forEach(function(value, index) {
-        console.log(index, reply[index], value);
         out[reply[index]] = value;
       });
       return success(response, out);
