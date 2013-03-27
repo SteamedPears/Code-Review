@@ -108,8 +108,9 @@ require([
 
   // dispatch based on query
   var query = URI(document.URL).query(true);
-  if (query.error !== undefined)
+  if (query.error !== undefined) {
     view.displayError(query.error);
+  }
   if (query.id === undefined) {
     view.initCodeMode();
     view.populateLanguageList(language.langs);
