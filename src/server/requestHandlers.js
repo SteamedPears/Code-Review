@@ -94,7 +94,7 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   });
 };
 
-exports.countComments = function countComments(request, response) {
+exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
   redis.smembers('comment:' + code_id + ':indices', function(err, reply) {

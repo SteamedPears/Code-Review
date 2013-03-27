@@ -15,7 +15,7 @@ define([
 
   comment.getCommentCounts = function(code_id, callback, error_fn) {
     comments = {};
-    $.ajax('/do/countComments', {
+    $.ajax('/do/commentCount', {
       data:     {code_id: code_id},
       dataType: 'json',
       error:    error_fn,
