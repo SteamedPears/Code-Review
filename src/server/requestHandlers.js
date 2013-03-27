@@ -1,12 +1,12 @@
 // Libraries
 var url = require('url');
 var uuid = require('node-uuid');
-var redis = require('redis').createClient();
+var db = require('redis').createClient();
 
 /******************************************************************************
 * Handle DB errors                                                            *
 ******************************************************************************/
-redis.on('error', function (err) {
+db.on('error', function (err) {
   console.error('DB Error: ' + err);
 });
 
@@ -58,7 +58,7 @@ exports.codeByID = function codeByID(request, response) {
   if (id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  redis.get('code:' + id, function(err, reply) {
+  db.get('code:' + id, function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
@@ -79,7 +79,7 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   if (line === undefined) {
     return error(response, 400, 'Invalid line number');
   }
-  redis.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+  db.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
@@ -87,9 +87,9 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
       return error(response, 404, 'Comment not found');
     }
     var out = [];
-    for (var i in reply) {
-      out.push(JSON.parse(reply[i]));
-    }
+    reply.forEach(function(value) {
+      out.push(JSON.parse(value));
+    });
     return success(response, out);
   });
 };
@@ -97,19 +97,17 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
 exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  redis.smembers('comment:' + code_id + ':indices', function(err, reply) {
+  db.smembers('comment:' + code_id + ':indices', function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
     if (reply === null) {
       return error(response, 404, 'Comments not found.');
     }
-    var multi = redis.multi();
-    for (var i in reply) {
-      if (reply.hasOwnProperty(i)) {
-        multi.llen('comment:' + code_id + ':' + reply[i]);
-      }
-    }
+    var multi = db.multi();
+    reply.forEach(function(value) {
+      multi.llen('comment:' + code_id + ':' + value);
+    });
     multi.exec(function(err, replies) {
       var out = {};
       replies.forEach(function(value, index) {
@@ -130,7 +128,7 @@ exports.newcode = function newcode(request, response) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
-  redis.set('code:' + id, JSON.stringify(obj), function(err) {
+  db.set('code:' + id, JSON.stringify(obj), function(err) {
     if (err !== null) {
       return error(response, 500, 'Error while writing to database.');
     }
@@ -159,7 +157,7 @@ exports.newcomment = function newcomment(request, response) {
     return error(response, 400, 'Invalid line numbers');
   }
   // upon successfully saving comment, this function will update comment indices
-  redis.multi()
+  db.multi()
     .lpush('comment:' + fields.code_id + ':' + fields.line_start,
            JSON.stringify(fields))
     .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
