@@ -65,7 +65,7 @@ require([
   "comment",
   "language",
   "editor"
-], function($,URI) {
+], function($, URI) {
   var view = require("view");
   var code = require("code");
   var comment = require("comment");
@@ -75,11 +75,22 @@ require([
   // initialize the view
   view.init();
 
+  function addButtons(code_id) {
+    return function(counts) {
+      view.addCommentButtons(counts, function(line) {
+        comment.getCommentsOnLine(code_id,
+                                  line,
+                                  view.displayComments,
+                                  view.displayError);
+      });
+    };
+  }
+
   // ajaxify forms
   $('#code-form').ajaxForm({
     success: function(ob) {
-      history.pushState({},"CodeReview","index.html?id="+ob.uuid);
-      view.initCommentMode(ob.uuid);
+      history.pushState({}, "CodeReview", "index.html?id=" + ob.id);
+      view.initCommentMode(ob.id);
     },
     error: function(ob) {
       view.displayError("Failed to upload code");
@@ -90,26 +101,27 @@ require([
       view.hideCommentEditor();
       $('#comment-form').resetForm();
       comment.getCommentCounts(ob.code_id,
-                               view.addCommentButtons,
+                               addButtons(ob.code_id),
                                view.displayError);
     }
   });
 
   // dispatch based on query
   var query = URI(document.URL).query(true);
-  if(query.error !== undefined)
+  if (query.error !== undefined) {
     view.displayError(query.error);
-  if(query.id === undefined) {
+  }
+  if (query.id === undefined) {
     view.initCodeMode();
     view.populateLanguageList(language.langs);
   } else {
     view.initCommentMode(query.id);
-    code.getCode(query.id,function(ob) {
+    code.getCode(query.id, function(ob) {
       view.displayCode(ob);
       comment.getCommentCounts(query.id,
-                               view.addCommentButtons,
+                               addButtons(query.id),
                                view.displayError);
-    },view.displayError);
+    }, view.displayError);
   }
 });
 

@@ -1,21 +1,14 @@
 // Libraries
 var url = require('url');
-var Sequelize = require('sequelize');
-var DB_Info = require('./models/db_info');
 var uuid = require('node-uuid');
+var db = require('redis').createClient();
 
-// make the db connection
-var sequelize = new Sequelize(DB_Info.db,
-                              DB_Info.user,
-                              DB_Info.pw,
-                              DB_Info.options);
-
-// import the models
-var Code = sequelize.import(__dirname + '/models/code');
-var Comment = sequelize.import(__dirname + '/models/comment');
-
-// set the associations
-Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
+/******************************************************************************
+* Handle DB errors                                                            *
+******************************************************************************/
+db.on('error', function (err) {
+  console.error('DB Error: ' + err);
+});
 
 /******************************************************************************
 * Helper Functions                                                            *
@@ -30,7 +23,7 @@ function success(response, ob) {
 }
 
 function error(response, errno, errtext) {
-  console.log('===ERROR===', errno, errtext);
+  console.error('===ERROR===', errno, errtext);
   response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
@@ -59,43 +52,69 @@ function isValidPositiveIntegerString(x) {
 /******************************************************************************
 * Getters                                                                     *
 ******************************************************************************/
-exports.code = function code(request, response) {
+exports.codeByID = function codeByID(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.id;
   if (id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  Code
-    .find({where:{uuid:id}})
-    .success(function(code) {
-      if (code === null) {
-        return error(response, 404, 'Code not found');
-      }
-      return success(response, code);
-    });
+  db.get('code:' + id, function(err, reply) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (reply === null) {
+      return error(response, 404, 'Code not found');
+    }
+    return success(response, JSON.parse(reply));
+  });
 };
 
-exports.comment = function comment(request, response) {
+exports.commentsOnLine = function commentsOnLine(request, response) {
   var query = url.parse(request.url, true).query;
-  var id = query.id;
+  var id = query.code_id;
+  var line = query.line;
   if (id === undefined) {
     return error(response, 400, 'Invalid comment id');
   }
-  Comment
-    .find(Number(id))
-    .success(function(comment) {
-      if (comment === null) {
-        return error(response, 404, 'Comment not found');
-      }
-      return success(response, comment);
+  if (line === undefined) {
+    return error(response, 400, 'Invalid line number');
+  }
+  db.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (reply === null) {
+      return error(response, 404, 'Comment not found');
+    }
+    var out = [];
+    reply.forEach(function(value) {
+      out.push(JSON.parse(value));
     });
+    return success(response, out);
+  });
 };
 
-exports.comments = function comments(request, response) {
+exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  Comment.findAll({where: {code_id: code_id}}).success(function(comments) {
-    return success(response, {code_id:code_id, comments:comments});
+  db.smembers('comment:' + code_id + ':indices', function(err, indices) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (indices === null) {
+      return error(response, 404, 'Comments not found.');
+    }
+    var multi = db.multi();
+    indices.forEach(function(index) {
+      multi.llen('comment:' + code_id + ':' + index);
+    });
+    multi.exec(function(err, lengths) {
+      var out = {};
+      lengths.forEach(function(length, i) {
+        out[indices[i]] = length;
+      });
+      return success(response, out);
+    });
   });
 };
 
@@ -109,14 +128,11 @@ exports.newcode = function newcode(request, response) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
-  Code.build({
-    uuid: id,
-    text: obj.text,
-    lang: obj.lang
-  }).save().success(function(code){
-    return success(response, code);
-  }).error(function(){
-    return error(response, 500, 'Error writing code to database');
+  db.set('code:' + id, JSON.stringify(obj), function(err) {
+    if (err !== null) {
+      return error(response, 500, 'Error while writing to database.');
+    }
+    return success(response, {id:id});
   });
 };
 
@@ -140,26 +156,16 @@ exports.newcomment = function newcomment(request, response) {
   if (Number(fields.line_start) > Number(fields.line_end)) {
     return error(response, 400, 'Invalid line numbers');
   }
-  // first find the code associated with the new comment
-  Code.find({where:{uuid:fields.code_id}})
-    .success(function (code) {
-      if (code === null) {
-        return error(response, 400, 'Invalid code id');
+  // upon successfully saving comment, this function will update comment indices
+  db.multi()
+    .lpush('comment:' + fields.code_id + ':' + fields.line_start,
+           JSON.stringify(fields))
+    .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
+    .exec(function(err) {
+      if (err !== null) {
+        return error(response, 500, 'Error while writing to database.');
       }
-      // Once we've established it's legit, build the comment
-      Comment.build({
-        user: fields.user,
-        code_id: fields.code_id,
-        line_start: fields.line_start,
-        line_end: fields.line_end,
-        text: fields.text,
-        diffs: fields.diffs
-      }).save()
-        .success(function(comment){ // success!!
-          return success(response, comment);
-        }).error(function() { // invalid comment
-          return error(response, 502, 'Error while saving comment');
-        });
+      return success(response, fields);
     });
 };
 
