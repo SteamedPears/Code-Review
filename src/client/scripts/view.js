@@ -152,7 +152,7 @@ define([
     commentInfoBtn.click(function() {
       view.hideCommentEditor();
       view.showComments();
-      view.displayComments(callback(line));
+      callback(line);
     });
     commentInfo.append(commentInfoBtn);
   };

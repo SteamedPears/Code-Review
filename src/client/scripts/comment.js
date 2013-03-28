@@ -13,34 +13,23 @@ define([
 ], function($) {
   var comment = {};
 
-  var comments = null;
-
-  comment.getCommentCounts = function(code_id,callback,error_fn) {
+  comment.getCommentCounts = function(code_id, callback, error_fn) {
     comments = {};
-    $.ajax('/do/comments',{
-      data:   {code_id:code_id},
+    $.ajax('/do/commentCount', {
+      data:     {code_id: code_id},
       dataType: 'json',
-      error:  error_fn,
-      success:  function(data) {
-        var counts = {};
-        for(var i in data.comments) {
-          var c = data.comments[i];
-          var line_start = c.line_start;
-          if(!counts[line_start])
-            counts[line_start] = 0;
-          ++(counts[line_start]);
-          if(!comments[line_start])
-            comments[line_start] = [];
-          comments[line_start].push(c);
-        }
-        callback(counts,comment.getCommentsOnLine);
-      }
+      error:    error_fn,
+      success:  callback
     });
   };
 
-  comment.getCommentsOnLine = function(line) {
-    if(comments === null) return;
-    return comments[line];
+  comment.getCommentsOnLine = function(code_id, line, callback, error_fn) {
+    $.ajax('/do/commentsOnLine', {
+      data:     {code_id: code_id, line: line},
+      dataType: 'json',
+      error:    error_fn,
+      success:  callback
+    });
   };
   
   return comment;
