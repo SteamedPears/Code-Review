@@ -1,0 +1,19 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
+
+#codeReview-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #fefefe;
+	border-bottom: 2px solid #444;
+}
+
+#codeReview-container #message {
+	display: box;
+	line-height: 2;
+	text-align: center;
+	font-family: "Lucida Grande", "Lucida Sans Unicode",
+		"Lucida Sans", Geneva, Verdana, sans-serif;
+}

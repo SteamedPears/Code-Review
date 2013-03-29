@@ -23,33 +23,55 @@ TEST_DATA_SCRIPT="models/test_data.js"
 INDEX_SCRIPT="index.js"
 
 ######################################################################
-# Install needed packages
+# Configuration
+NODE=node
 
-ROOT_DIR=`pwd`
+DB=redis-server
+DB_DIR=$ROOT_DIR/var/db/
+DB_OPTIONS="--dir $DB_DIR"
+DB_CONF=$ROOT_DIR/etc/redis.conf
+DB_LOG=$ROOT_DIR/var/logs/db
+DB_LINK=$ROOT_DIR/var/db.log
+DB_PID=$ROOT_DIR/var/db.pid
 
-cd $SERVER_DIR
+SERVER_PID=$ROOT_DIR/var/server.pid
+SERVER_LINK=$ROOT_DIR/var/server.log
+SERVER_LOG=$ROOT_DIR/var/logs/server
+SERVER_DIR=$ROOT_DIR/src/server
 
 echo "Installing needed packages"
 $NPM_EXE install
 
 ######################################################################
-# Database setup
+# Silently stop server, in case it's running
+bin/stop_dev.sh &> /dev/null
 
-if [ ! -f $DB_INFO_FILE ]; then
-    echo "DB info file not found, installing sqlite version"
-    cp $DB_INFO_FILE.sqlite $DB_INFO_FILE
-
-    echo "Building needed databases"
-    $NODE_EXE $BUILD_DB_SCRIPT
-
-    echo "Inserting test data"
-    $NODE_EXE $TEST_DATA_SCRIPT
+######################################################################
+# Install Client-Side
+bin/install_client.sh
+if [ $? -ne 0 ]; then
+	echo "There was an error resolving dependencies"
+	exit 1
 fi
 
 ######################################################################
-# Server initialization
+# Install needed packages
+cd $SERVER_DIR
+if [ "`npm outdated 2> /dev/null`" ]; then
+    echo "Updating server dependencies"
+    npm update
+fi
 
-echo Starting development server
-NODE_ENV=development $NODE_EXE $INDEX_SCRIPT \
-    1>> $ROOT_DIR/$LOG_FILE 2>> $ROOT_DIR/$LOG_FILE &
-echo $! > $ROOT_DIR/$PID_FILE
+######################################################################
+# Database start
+echo "Starting database"
+$DB $DB_CONF $DB_OPTIONS &> $DB_LOG.$TIME.log &
+echo $! > $DB_PID
+ln -s -f $DB_LOG.$TIME.log $DB_LINK
+
+######################################################################
+# Server initialization
+echo "Starting development server"
+NODE_ENV=development $NODE $INDEX_SCRIPT &> $SERVER_LOG.$TIME.log &
+echo $! > $SERVER_PID
+ln -s -f $SERVER_LOG.$TIME.log $SERVER_LINK

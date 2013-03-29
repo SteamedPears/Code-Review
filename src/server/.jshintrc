@@ -1,0 +1,33 @@
+// Note: double quotes seem to be required...
+{
+  // Enforcing options
+  "bitwise": true,
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noempty": true,
+  "nonew": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "trailing": true,
+  "maxlen": 80,
+
+  // Relaxing options
+  "es5": true,
+
+  // Environments (globals to expect)
+  "node": true,
+  //"devel": true,
+  "globals": {
+    "define": true,
+    "require": true
+  }
+}
+
+/* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
