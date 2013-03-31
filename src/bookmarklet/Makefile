@@ -21,33 +21,37 @@ VENDORS=vendors
 
 #Initialize the bookmarklet after cloning Code Review
 .PHONY: install
-install: clean makedirs getvendors build
+install: reset build
+
+#Build locally (do not move to TARGET)
+.PHONY: build-local
+build-local: buildvendors
 
 # Build the bookmarklet, compile/wrap the vendors, move everything to the
 # TARGET directory. This makes a test build that keeps all debugging code and
 # does not minify the source.
 .PHONY: build
-build: makeproductiondirs buildvendors
-	cp bookmarklet.js $(TARGET)
-	cp style.css $(TARGET)
-	cp vendors/* $(TARGET)/$(VENDORS)
-
-.PHONY: clean
-clean:
-	rm -rf *.min.js lib/* vendors/* $(TARGET)
+build: build-local make-target-dirs move-to-target
 
 # Build the production version of the bookmarklet. Does what the build target
 # does, but it strips debug code and minifies it.
 # NOTE: THIS TARGET CURRENTLY IS A STUB. IT IS NON-FUNCTIONAL.
 # TODO: Make this a functional target.
 .PHONY: build-production
-build-production: makeproductiondirs
+build-production: make-target-dirs buildvendors
 	@echo "Minifying and moving to $(TARGET)"
 	cat bookmarklet.js |\
 		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
-		uglify \
+		uglifyjs \
 		> $(TARGET)/bookmarklet.min.js
 
+#Reset bookmarklet by deleting all generated files and redownloading dependencies
+.PHONY: reset
+reset: clean make-local-dirs getvendors 
+
+.PHONY: clean
+clean:
+	rm -rf *.min.js lib/* vendors/* $(TARGET)
 
 ###############################################################################
 # VENDORS 
@@ -84,13 +88,18 @@ readability:
 lint:
 	jshint bookmarklet.js
 
-.PHONY: makedirs
-makedirs:
+.PHONY: make-local-dirs
+make-local-dirs:
 	mkdir -p $(LIB)
 	mkdir -p $(VENDORS)
 
-.PHONY: makeproductiondirs
-makeproductiondirs:
+.PHONY: make-target-dirs
+make-target-dirs:
 	mkdir -p $(TARGET)
 	mkdir -p $(TARGET)/$(VENDORS)
 
+.PHONY: move-to-target
+move-to-target:
+	cp bookmarklet.js $(TARGET)
+	cp style.css $(TARGET)
+	cp vendors/* $(TARGET)/$(VENDORS)
