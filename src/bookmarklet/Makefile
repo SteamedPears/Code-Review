@@ -21,7 +21,7 @@ VENDORS=vendors
 
 #Initialize the bookmarklet after cloning Code Review
 .PHONY: install
-install: makedirs getvendors build
+install: clean makedirs getvendors build
 
 # Build the bookmarklet, compile/wrap the vendors, move everything to the
 # TARGET directory. This makes a test build that keeps all debugging code and
@@ -34,7 +34,7 @@ build: makeproductiondirs buildvendors
 
 .PHONY: clean
 clean:
-	rm -rf *.min.js vendors/* $(TARGET)
+	rm -rf *.min.js lib/* vendors/* $(TARGET)
 
 # Build the production version of the bookmarklet. Does what the build target
 # does, but it strips debug code and minifies it.
