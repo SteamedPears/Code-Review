@@ -32,18 +32,13 @@ build-local: buildvendors
 # does not minify the source.
 .PHONY: build
 build: build-local make-target-dirs move-to-target
+	cp bookmarklet.js $(TARGET)
 
-# Build the production version of the bookmarklet. Does what the build target
-# does, but it strips debug code and minifies it.
-# NOTE: THIS TARGET CURRENTLY IS A STUB. IT IS NON-FUNCTIONAL.
-# TODO: Make this a functional target.
+# Build the production version of the bookmarklet to $TARGET
 .PHONY: build-production
-build-production: make-target-dirs buildvendors
-	@echo "Minifying and moving to $(TARGET)"
-	cat bookmarklet.js |\
-		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
-		uglifyjs \
-		> $(TARGET)/bookmarklet.min.js
+build-production: make-target-dirs buildvendors 
+	bin/build_production.sh $(TARGET)
+
 
 #Reset bookmarklet by deleting all generated files and redownloading dependencies
 .PHONY: reset
@@ -100,6 +95,5 @@ make-target-dirs:
 
 .PHONY: move-to-target
 move-to-target:
-	cp bookmarklet.js $(TARGET)
 	cp style.css $(TARGET)
 	cp vendors/* $(TARGET)/$(VENDORS)
