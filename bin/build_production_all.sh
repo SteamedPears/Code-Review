@@ -1,15 +1,12 @@
 #!/bin/bash
 
 ###############################################################################
-# Configuration
+# Configuration																																#
 ###############################################################################
 
 HELPERS="bin/helpers.sh"
 CLIENT_DIR="$PWD/src/client"
 CLIENT_SCRIPTS_DIR="$CLIENT_DIR/scripts"
-
-RJS="$CLIENT_DIR/node_modules/requirejs/bin/r.js"
-RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
 
 BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 
@@ -20,11 +17,16 @@ then
 	#Defaults to `production/`
 	TARGET="$PWD/production"
 fi
+#Temporary folder for the build
+TARGET_TMP="$TARGET""_tmp"
+
+RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
+RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
 
 source $HELPERS
 
 ###############################################################################
-# Sanity check
+# Sanity check																																#
 ###############################################################################
 
 for DIR in "$CLIENT_DIR" "$BOOKMARKLET_DIR"; do
@@ -33,8 +35,11 @@ for DIR in "$CLIENT_DIR" "$BOOKMARKLET_DIR"; do
 	exitIfFailed "Please run this file from the root directory of the project"
 done
 
+type uglifyjs >/dev/null 2>&1
+exitIfFailed "UglifyJS is not installed"
+
 ###############################################################################
-# Let's get down to business
+# Let's get down to business																									#
 ###############################################################################
 
 echo "Resetting client"
@@ -43,13 +48,18 @@ bash bin/reset_client.sh
 echo "Building vanilla client"
 bash bin/install_client.sh
 
+echo "Deleting previous build"
+rm -rf "$TARGET"
+rm -rf "$TARGET_TMP"
+
 echo "Building production version to $TARGET"
 
 echo "Creating TARGET directory"
 mkdir -p "$TARGET"
+mkdir -p "$TARGET_TMP"
 
 echo "Installing r.js"
-cd "$CLIENT_DIR"; npm install requirejs
+cd "$TARGET_TMP"; npm install requirejs
 
 echo "Optimizing client using r.js"
-cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" 
+cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" dir="$TARGET"
