@@ -51,7 +51,6 @@
       exports:'introJs'
     }
   },
-  //optimizeCss: "standard.keepLines",
-  optimize: "none"
+  optimizeCss: "standard.keepLines",
 })
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
