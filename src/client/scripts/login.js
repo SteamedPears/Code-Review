@@ -21,11 +21,11 @@ define([
     navigator.id.watch({
       loggedInUser: null,
       onlogin: function (assertion) {
-	console.log("Logged in: " + assertion);
+	console.log('Logged in: ' + assertion);
 	// This should pass the assertion on to the server.
       },
       onlogout: function () {
-	console.log("Logged out.");
+	console.log('Logged out.');
 	// This should tell the server...
       }
     });
