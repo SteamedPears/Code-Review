@@ -22,6 +22,7 @@
     'jquery':'lib/jquery-1.9.1.min',
     'intro':'lib/intro.js-0.2.1/minified/intro.min'
   },
-  optimizeCss: "standard.keepLines",
+  //optimizeCss: "standard.keepLines",
+  optimize: "none"
 })
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

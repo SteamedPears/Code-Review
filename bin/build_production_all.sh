@@ -4,7 +4,7 @@
 # see the LICENCE file in the root directory of this project.
 
 ###############################################################################
-# Configuration																																#
+# Configuration                                                               #
 ###############################################################################
 
 CLIENT_DIR="$PWD/src/client"
@@ -16,8 +16,8 @@ BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 TARGET="$PWD/$1"
 if [ -z "$1" ]
 then
-	#Defaults to `production/`
-	TARGET="$PWD/production"
+  #Defaults to `production/`
+  TARGET="$PWD/production"
 fi
 #Temporary folder for the build
 TARGET_TMP="$TARGET""_tmp"
@@ -30,20 +30,20 @@ HELPERS="bin/helpers.sh"
 source $HELPERS
 
 ###############################################################################
-# Sanity check																																#
+# Sanity check                                                                #
 ###############################################################################
 
 for DIR in "$CLIENT_DIR" "$BOOKMARKLET_DIR"; do
-	test -d "$DIR"
-	exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this script \
-		from the project root."
+  test -d "$DIR"
+  exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this script \
+    from the project root."
 done
 
 type uglifyjs >/dev/null 2>&1
 exitIfFailed "UglifyJS is not installed"
 
 ###############################################################################
-# Let's get down to business																									#
+# Let's get down to business                                                  #
 ###############################################################################
 
 echo "Deleting previous build"
@@ -67,8 +67,8 @@ echo "Optimizing client using r.js, saving to `basename $TARGET_TMP`"
 cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" dir="$TARGET_TMP"
 
 echo "Copying important client files to `basename $TARGET`"
-cp -avr "$TARGET_TMP/scripts"  "$TARGET/scripts"
-cp -avr "$TARGET_TMP/styles"  "$TARGET/styles"
+cp -av "$TARGET_TMP/scripts"  "$TARGET/scripts"
+cp -av "$TARGET_TMP/styles"  "$TARGET/styles"
 cp -av "$TARGET_TMP/index.html"  "$TARGET/index.html"
 
 echo "Resetting Bookmarklet"
