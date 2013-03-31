@@ -22,6 +22,35 @@
     'jquery':'lib/jquery-1.9.1.min',
     'intro':'lib/intro.js-0.2.1/minified/intro.min'
   },
+  shim:{
+    'QUnit':{
+      exports:'QUnit'
+    },
+    'underscore':{
+      exports:'underscore'
+    },
+    'URI':{
+      exports:'URI'
+    },
+    'CodeMirror':{
+      exports:'CodeMirror'
+    },
+    'jquery.form':{
+      deps:['jquery'],
+      init:function($) {
+        return $.ajaxForm;
+      }
+    },
+    'diff':{
+      exports:'diff',
+      init:function() {
+        return new diff_match_patch();
+      }
+    },
+    'intro':{
+      exports:'introJs'
+    }
+  },
   //optimizeCss: "standard.keepLines",
   optimize: "none"
 })
