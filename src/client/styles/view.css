@@ -1,11 +1,5 @@
-html, body {
-  height: 99.99%;
-  width: 99%;
-}
-
 div, p, pre, img, table, h1, h2, h3, h4, textarea, input {
   padding: 0px;
-  margin: 0px;
 }
 
 a { 
@@ -16,6 +10,15 @@ label{
   float:left;
   width:200px;
   margin-right:1em;
+}
+
+#user-id {
+  float: right;
+  padding: 0.5em;
+}
+
+#title, #persona-login {
+  display: inline;
 }
 
 #footer { 
