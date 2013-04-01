@@ -9,9 +9,13 @@
 define([
   'jquery'
 ], function login_main($) {
+  var label_span = null;
   var user_display = null;
+  var button = null;
   $(document).ready(function() {
-    user_display = $('#comment-user');
+    user_display = $('#comment-user, #user-email');
+    button = $('#persona-button-text');
+    label_span = $('#user-label');
   });
 
   $.getScript('https://login.persona.org/include.js', ready);
@@ -49,13 +53,25 @@ define([
     console.error("Error while logging out");
   }
   function login_success(data) {
+    if(label_span !== null) {
+      label_span.show();
+    }
     if(user_display !== null) {
       user_display.text(data.email);
     }
+    if(button !== null) {
+      button.text('Sign Out');
+    }
   }
   function logout_success(data) {
+    if(label_span !== null) {
+      label_span.hide();
+    }
     if(user_display !== null) {
       user_display.text('Anonymous');
+    }
+    if(button !== null) {
+      button.text('Sign In');
     }
   }
 });
