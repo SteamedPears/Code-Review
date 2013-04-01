@@ -124,12 +124,16 @@ function commentCount(request, response) {
 ******************************************************************************/
 function newcode(request, response) {
   // do some basic validation
-  var obj = request.body;
-  if (obj === null || !isValidString(obj.text)) {
+  var fields = request.body;
+  if (fields === null || !isValidString(fields.text)) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
-  db.set('code:' + id, JSON.stringify(obj), function(err) {
+  var data = {
+    text: fields.text,
+    lang: fields.lang
+  };
+  db.set('code:' + id, JSON.stringify(data), function(err) {
     if (err !== null) {
       return error(response, 500, 'Error while writing to database.');
     }
