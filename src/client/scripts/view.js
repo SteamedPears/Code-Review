@@ -123,6 +123,7 @@ define([
     $('#line-end-num').text(end+1);
     editor.setDiffSelected(start,end);
     var pos = editor.getLinePosition(start);
+    console.log(pos);
     $('#comment-new').css('top',pos);
     $('#comment-new').slideDown();
   };

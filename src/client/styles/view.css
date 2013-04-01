@@ -25,21 +25,15 @@ label{
   display: inline;
 }
 
-#footer { 
-  clear: both;
-  text-align: center;
-}
-
 #error {
   background-color: #FE2E2E;
   text-decoration:none;
 }
 
-#code {
+#code-form {
   width: 45%;
   float: left;
 }
-
 
 #comment-info{
   float:left;
