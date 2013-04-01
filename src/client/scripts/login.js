@@ -19,7 +19,9 @@ define([
     label_span = $('#user-label');
   });
 
-  $.getScript('https://login.persona.org/include.js', function persona_ready() {
+  require([
+    'https://login.persona.org/include.js'
+  ], function persona_ready() {
     navigator.id.watch({
       loggedInUser: null,
       onlogin: function (assertion) {
