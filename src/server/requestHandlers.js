@@ -1,4 +1,5 @@
 // Libraries
+var https = require('https');
 var url = require('url');
 var uuid = require('node-uuid');
 var db = require('redis').createClient();
@@ -171,11 +172,52 @@ exports.newcomment = function newcomment(request, response) {
 
 /******************************************************************************
 * Authentication                                                              *
+*                                                                             *
+* In the event of implementing more than just persona for authentication, you *
+* should replace most of the following code with a library like               *
+*                                                                             *
+* passport           http://passportjs.org/                                   *
+* passport-browserid https://github.com/jaredhanson/passport-browserid        *
+*                                                                             *
 ******************************************************************************/
 
 exports.login = function login(request, response) {
-  // TBI
-  return success(response, {});
+  if(request === null ||
+     request.body === null ||
+     request.body.assertion === null) {
+    return error(response, 400, 'Invalid assertion');
+  }
+  var assertion = request.body.assertion;
+  var content = 'assertion=' + assertion + '&audience=http://localhost:8080';
+  var auth_request = https.request({
+    host: 'verifier.login.persona.org',
+    port: 443,
+    path: '/verify',
+    method: 'POST',
+    headers: {'Content-Length': content.length,
+              'Content-Type': 'application/x-www-form-urlencoded'}
+  },function(auth_response) {
+    var data_ob = null;
+    // assume uft8
+    auth_response.setEncoding('utf8');
+    auth_response.on('data',function(data) {
+      data_ob = JSON.parse(data);
+    });
+    auth_response.on('end',function() {
+      if (auth_response.statusCode === 200 &&
+          data_ob !== null &&
+          data_ob.status === 'okay') {
+        console.log('=== AUTH ===');
+        console.dir(data_ob);
+        return success(response, {});
+      } else {
+        return error(response, auth_response.statusCode, 'Error validating assertion');
+      }
+    });
+  });
+
+  auth_request.write(content);
+  auth_request.end();
 };
 
 exports.logout = function logout(request, response) {
