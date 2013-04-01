@@ -67,8 +67,8 @@ echo "Optimizing client using r.js, saving to `basename $TARGET_TMP`"
 cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" dir="$TARGET_TMP"
 
 echo "Copying important client files to `basename $TARGET`"
-cp -avr "$TARGET_TMP/scripts"  "$TARGET/scripts"
-cp -avr "$TARGET_TMP/styles"  "$TARGET/styles"
+cp -avR "$TARGET_TMP/scripts"  "$TARGET/scripts"
+cp -avR "$TARGET_TMP/styles"  "$TARGET/styles"
 cp -av "$TARGET_TMP/index.html"  "$TARGET/index.html"
 
 echo "Resetting Bookmarklet"
