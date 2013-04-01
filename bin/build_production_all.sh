@@ -18,6 +18,7 @@ if [ -z "$1" ]; then
   #Defaults to `production/`
   TARGET="$PWD/production"
 fi
+
 #Temporary folder for the build
 TARGET_TMP="$TARGET""_tmp"
 
