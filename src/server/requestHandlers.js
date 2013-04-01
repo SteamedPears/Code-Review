@@ -170,7 +170,7 @@ function newcomment(request, response) {
     data.user = request.session.email;
   }
   db.multi()
-    .lpush('comment:' + data.code_id + ':' + data.line_start,
+    .rpush('comment:' + data.code_id + ':' + data.line_start,
            JSON.stringify(data))
     .sadd('comment:' + data.code_id + ':indices', data.line_start)
     .exec(function(err) {
