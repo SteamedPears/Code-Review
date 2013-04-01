@@ -30,9 +30,13 @@ label{
   text-decoration:none;
 }
 
-#code-form {
+#code {
   width: 45%;
   float: left;
+}
+
+#code-form {
+  display: inline;
 }
 
 #comment-info{
@@ -43,8 +47,8 @@ label{
 }
 
 .commentButton {
-    display: block;
-    position: absolute;
+  display: block;
+  position: absolute;
 }
 
 .right-side {
