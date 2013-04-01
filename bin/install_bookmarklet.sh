@@ -4,9 +4,9 @@
 # Configuration
 ###############################################################################
  
-HELPERS="bin/helpers.sh"
 BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 
+HELPERS="bin/helpers.sh"
 source $HELPERS 
 
 ###############################################################################
