@@ -71,7 +71,8 @@ public_api.codeByID = function codeByID(request, response) {
     if (reply === null) {
       return error(response, 404, 'Code not found');
     }
-    return success(response, JSON.parse(reply));
+    var data = JSON.parse(reply);
+    return success(response, data);
   });
 };
 
