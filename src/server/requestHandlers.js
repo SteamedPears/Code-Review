@@ -147,7 +147,6 @@ function newcomment(request, response) {
   // do some basic validation
   var fields = request.body;
   if (fields === null ||
-     !isValidString(fields.user) ||
      !isValidString(fields.text) ||
      !isValidPositiveIntegerString(fields.line_start) ||
      !isValidPositiveIntegerString(fields.line_end)) {
@@ -158,15 +157,27 @@ function newcomment(request, response) {
     return error(response, 400, 'Invalid line numbers');
   }
   // upon successfully saving comment, this function will update comment indices
+  var data = {
+    user: 'Anonymous',
+    code_id: fields.code_id,
+    text: fields.text,
+    line_start: fields.line_start,
+    line_end: fields.line_end,
+    diffs: fields.diffs
+  };
+  if(request.session.email) {
+    console.log('new comment by ' + request.session.email);
+    data.user = request.session.email;
+  }
   db.multi()
-    .lpush('comment:' + fields.code_id + ':' + fields.line_start,
-           JSON.stringify(fields))
-    .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
+    .lpush('comment:' + data.code_id + ':' + data.line_start,
+           JSON.stringify(data))
+    .sadd('comment:' + data.code_id + ':indices', data.line_start)
     .exec(function(err) {
       if (err !== null) {
         return error(response, 500, 'Error while writing to database.');
       }
-      return success(response, fields);
+      return success(response, data);
     });
 };
 
@@ -211,9 +222,7 @@ module.exports = function(host, clientPort) {
         if (auth_response.statusCode === 200 &&
             data_ob !== null &&
             data_ob.status === 'okay') {
-          // TBI
-          console.log('=== AUTH ===');
-          console.dir(data_ob);
+          request.session.email = data_ob.email;
           return success(response, {});
         } else {
           return error(response,
@@ -228,7 +237,7 @@ module.exports = function(host, clientPort) {
   };
 
   exports.logout = function logout(request, response) {
-    // TBI
+    delete request.session.email;
     return success(response, {});
   };
 
