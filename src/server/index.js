@@ -39,6 +39,8 @@ var getRoutes = {
 var postRoutes = {
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
+  '/login':      requestHandlers.login,
+  '/logout':     requestHandlers.logout
 };
 var corsRoutes = [
   '/newcode'

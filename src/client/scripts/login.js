@@ -23,12 +23,35 @@ define([
       onlogin: function (assertion) {
 	console.log('Logged in: ' + assertion);
 	// This should pass the assertion on to the server.
+        $.ajax('/do/login', {
+          method: 'POST',
+          data: {assertion: assertion},
+          error: login_error,
+          success: login_success
+        });
       },
       onlogout: function () {
 	console.log('Logged out.');
 	// This should tell the server...
+        $.ajax('/do/logout', {
+          method: 'POST',
+          error: logout_error,
+          success: logout_success
+        });
       }
     });
+  }
+  function login_error() {
+    console.error("Error while logging in");
+  }
+  function logout_error() {
+    console.error("Error while logging out");
+  }
+  function login_success() {
+    console.log("Successfully logged in");
+  }
+  function logout_success() {
+    console.log("Successfully logged out");
   }
 });
 

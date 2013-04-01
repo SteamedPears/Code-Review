@@ -169,4 +169,18 @@ exports.newcomment = function newcomment(request, response) {
     });
 };
 
+/******************************************************************************
+* Authentication                                                              *
+******************************************************************************/
+
+exports.login = function login(request, response) {
+  // TBI
+  return success(response, {});
+};
+
+exports.logout = function logout(request, response) {
+  // TBI
+  return success(response, {});
+};
+
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
