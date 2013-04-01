@@ -13,6 +13,8 @@ var cors = require('cors');
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
+var host = 'review.steamedpears.com';
+var clientPort = 80;
 var serverPort = 20193;
 var requestTimeout = 3000; // ms
 
@@ -20,13 +22,15 @@ var requestTimeout = 3000; // ms
 var devMode = (process.env.NODE_ENV === 'development');
 
 if (devMode) {
-  require('./dev_mode')(serverPort);
+  host = 'localhost';
+  clientPort = 8080;
+  require('./dev_mode')(host,serverPort,clientPort);
 }
 
 /******************************************************************************
 * Load Modules                                                                *
 ******************************************************************************/
-var requestHandlers = require('./requestHandlers');
+var requestHandlers = require('./requestHandlers')(host,clientPort);
 
 /******************************************************************************
 * Connect the request handlers, aka. Routes                                   *

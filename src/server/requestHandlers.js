@@ -53,7 +53,7 @@ function isValidPositiveIntegerString(x) {
 /******************************************************************************
 * Getters                                                                     *
 ******************************************************************************/
-exports.codeByID = function codeByID(request, response) {
+function codeByID(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.id;
   if (id === undefined) {
@@ -70,7 +70,7 @@ exports.codeByID = function codeByID(request, response) {
   });
 };
 
-exports.commentsOnLine = function commentsOnLine(request, response) {
+function commentsOnLine(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.code_id;
   var line = query.line;
@@ -95,7 +95,7 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   });
 };
 
-exports.commentCount = function commentCount(request, response) {
+function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
   db.smembers('comment:' + code_id + ':indices', function(err, indices) {
@@ -122,7 +122,7 @@ exports.commentCount = function commentCount(request, response) {
 /******************************************************************************
 * Setters                                                                     *
 ******************************************************************************/
-exports.newcode = function newcode(request, response) {
+function newcode(request, response) {
   // do some basic validation
   var obj = request.body;
   if (obj === null || !isValidString(obj.text)) {
@@ -137,7 +137,7 @@ exports.newcode = function newcode(request, response) {
   });
 };
 
-exports.newcomment = function newcomment(request, response) {
+function newcomment(request, response) {
   // reject if no referer
   if (request === null ||
      request.headers === undefined ||
@@ -181,48 +181,64 @@ exports.newcomment = function newcomment(request, response) {
 *                                                                             *
 ******************************************************************************/
 
-exports.login = function login(request, response) {
-  if(request === null ||
-     request.body === null ||
-     request.body.assertion === null) {
-    return error(response, 400, 'Invalid assertion');
-  }
-  var assertion = request.body.assertion;
-  var content = 'assertion=' + assertion + '&audience=http://localhost:8080';
-  var auth_request = https.request({
-    host: 'verifier.login.persona.org',
-    port: 443,
-    path: '/verify',
-    method: 'POST',
-    headers: {'Content-Length': content.length,
-              'Content-Type': 'application/x-www-form-urlencoded'}
-  },function(auth_response) {
-    var data_ob = null;
-    // assume uft8
-    auth_response.setEncoding('utf8');
-    auth_response.on('data',function(data) {
-      data_ob = JSON.parse(data);
+module.exports = function(host, clientPort) {
+  var exports = {};
+  
+  exports.login = function login(request, response) {
+    if(request === null ||
+       request.body === null ||
+       request.body.assertion === null) {
+      return error(response, 400, 'Invalid assertion');
+    }
+    var assertion = request.body.assertion;
+    var content = 'assertion=' + assertion + '&audience=http://';
+    content += host + ':' + clientPort;
+    var auth_request = https.request({
+      host: 'verifier.login.persona.org',
+      port: 443,
+      path: '/verify',
+      method: 'POST',
+      headers: {'Content-Length': content.length,
+                'Content-Type': 'application/x-www-form-urlencoded'}
+    },function(auth_response) {
+      var data_ob = null;
+      // assume uft8
+      auth_response.setEncoding('utf8');
+      auth_response.on('data',function(data) {
+        data_ob = JSON.parse(data);
+      });
+      auth_response.on('end',function() {
+        if (auth_response.statusCode === 200 &&
+            data_ob !== null &&
+            data_ob.status === 'okay') {
+          // TBI
+          console.log('=== AUTH ===');
+          console.dir(data_ob);
+          return success(response, {});
+        } else {
+          return error(response,
+                       auth_response.statusCode,
+                       'Error validating assertion');
+        }
+      });
     });
-    auth_response.on('end',function() {
-      if (auth_response.statusCode === 200 &&
-          data_ob !== null &&
-          data_ob.status === 'okay') {
-        console.log('=== AUTH ===');
-        console.dir(data_ob);
-        return success(response, {});
-      } else {
-        return error(response, auth_response.statusCode, 'Error validating assertion');
-      }
-    });
-  });
 
-  auth_request.write(content);
-  auth_request.end();
-};
+    auth_request.write(content);
+    auth_request.end();
+  };
 
-exports.logout = function logout(request, response) {
-  // TBI
-  return success(response, {});
+  exports.logout = function logout(request, response) {
+    // TBI
+    return success(response, {});
+  };
+
+  exports.codeByID = codeByID;
+  exports.commentsOnLine = commentsOnLine;
+  exports.commentCount = commentCount;
+  exports.newcode = newcode;
+  exports.newcomment = newcomment;
+
+  return exports;
 };
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
