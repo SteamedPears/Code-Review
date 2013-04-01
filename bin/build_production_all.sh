@@ -16,8 +16,8 @@ BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 TARGET="$PWD/$1"
 if [ -z "$1" ]
 then
-        #Defaults to `production/`
-        TARGET="$PWD/production"
+  #Defaults to `production/`
+  TARGET="$PWD/production"
 fi
 #Temporary folder for the build
 TARGET_TMP="$TARGET""_tmp"
@@ -34,9 +34,9 @@ source $HELPERS
 ###############################################################################
 
 for DIR in "$CLIENT_DIR" "$BOOKMARKLET_DIR"; do
-        test -d "$DIR"
-        exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this \
-          script from the project root."
+  test -d "$DIR"
+  exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this \
+    script from the project root."
 done
 
 type uglifyjs >/dev/null 2>&1
