@@ -154,6 +154,7 @@ define([
       view.hideCommentEditor();
       view.showComments();
       callback(line);
+      return false;
     });
     commentInfo.append(commentInfoBtn);
   };

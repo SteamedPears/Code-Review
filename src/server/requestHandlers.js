@@ -134,6 +134,9 @@ public_api.newcode = function newcode(request, response) {
   if (fields === null || !isValidString(fields.text)) {
     return error(response, 400, 'Invalid code text.');
   }
+  if(!isValidString(fields.lang)) {
+    return error(response, 400, 'Invalid code lang.');
+  }
   var id=uuid.v4();
   // whitelist the data fields
   var data = {
