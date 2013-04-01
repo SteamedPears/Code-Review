@@ -6,4 +6,3 @@ do/
 include/CodeMirror
 
 bookmarklet/*
-node_modules*
