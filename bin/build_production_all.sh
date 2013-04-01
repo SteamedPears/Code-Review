@@ -35,12 +35,12 @@ source $HELPERS
 
 for DIR in "$CLIENT_DIR" "$BOOKMARKLET_DIR"; do
   test -d "$DIR"
-  exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this script \
-    from the project root."
+  exitIfFailed "Cannot find" `basename "$DIR"` ". Try running this \
+    script from the project root."
 done
 
 type uglifyjs >/dev/null 2>&1
-exitIfFailed "UglifyJS is not installed"
+exitIfFailed "UglifyJS is not installed."
 
 ###############################################################################
 # Let's get down to business                                                  #
@@ -81,3 +81,5 @@ echo "Deleting TARGET_TMP"
 rm -rf "$TARGET_TMP"
 
 echo "The production ready build is located at $TARGET."
+
+# vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
