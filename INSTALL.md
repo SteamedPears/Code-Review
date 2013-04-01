@@ -4,6 +4,12 @@ Installation Instructions
 Development
 -----------
 
+The setup script (```bin/setup_dev.sh```) will download node and npm,
+from there node can install sqlite. To use the script, edit it and 
+replace the two instances of ``CHANGEME'' with your preferred values.  
+
+**You will need g++ to be installed**.  
+
 Requirements:
 (tested versions appear in parentheses)
 
@@ -20,7 +26,8 @@ Instructions:
  1. open a terminal
  2. cd to the root directory of the project (containing this text
     file).
- 3. Run bin/start_dev.sh
+ 3. Run ```bin/setup_dev.sh```
+ 3. Run ```bin/start_dev.sh```
 
 Now you should be able to access the server running on localhost:8080.
 

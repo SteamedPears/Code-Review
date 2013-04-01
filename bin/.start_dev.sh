@@ -9,8 +9,18 @@
 # back ends via node.
 ######################################################################
 
-ROOT_DIR=`pwd`
-TIME=`date +%Y-%m-%dT%H%M%S%Z`
+######################################################################
+# Configuration
+
+SERVER_DIR="src/server"
+DB_INFO_FILE="models/db_info.js"
+PID_FILE="var/server.pid"
+LOG_FILE="var/server.log"
+NODE_EXE=REPLACE_NODE_EXE
+NPM_EXE=REPLACE_NPM_EXE
+BUILD_DB_SCRIPT="models/build_db.js"
+TEST_DATA_SCRIPT="models/test_data.js"
+INDEX_SCRIPT="index.js"
 
 ######################################################################
 # Configuration
@@ -31,7 +41,8 @@ SERVER_LINK=$ROOT_DIR/var/server.log
 SERVER_LOG=$ROOT_DIR/var/logs/server
 SERVER_DIR=$ROOT_DIR/src/server
 
-INDEX_SCRIPT=$SERVER_DIR/index.js
+echo "Installing needed packages"
+$NPM_EXE install
 
 ######################################################################
 # Silently stop server, in case it's running
