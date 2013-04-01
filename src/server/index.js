@@ -51,7 +51,8 @@ var corsRoutes = [
 ******************************************************************************/
 var app = connect()
   .use(connect.logger(devMode ? 'dev' : 'short'))
-  .use(connect.timeout(requestTimeout));
+  .use(connect.timeout(requestTimeout))
+  .use(connect.session({secret: 'keyboard kitties'});
 
 for (var route in corsRoutes) {
   app.use(route, cors());
