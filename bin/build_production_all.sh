@@ -25,7 +25,6 @@ TARGET_TMP="$TARGET""_tmp"
 RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
 RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
 
-#Helper Functions
 HELPERS="bin/helpers.sh"
 source $HELPERS
 

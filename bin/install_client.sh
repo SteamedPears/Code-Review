@@ -3,12 +3,12 @@
 ######################################################################
 # Configuration
 
-HELPERS="bin/helpers.sh"
 CLIENT_DIR="$PWD/src/client"
 LIB_DIR="$CLIENT_DIR/scripts/lib"
 RAW_DEPS_FILE="$CLIENT_DIR/raw.deps.dev.txt"
 ZIP_DEPS_FILE="$CLIENT_DIR/zip.deps.dev.txt"
 
+HELPERS="bin/helpers.sh"
 source $HELPERS 
 
 ######################################################################
