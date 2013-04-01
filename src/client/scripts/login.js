@@ -9,6 +9,11 @@
 define([
   'jquery'
 ], function login_main($) {
+  var user_display = null;
+  $(document).ready(function() {
+    user_display = $('#comment-user');
+  });
+
   $.getScript('https://login.persona.org/include.js', ready);
   $('#persona-login').click(function login_persona_click() {
     navigator.id.request();
@@ -21,8 +26,6 @@ define([
     navigator.id.watch({
       loggedInUser: null,
       onlogin: function (assertion) {
-	console.log('Logged in: ' + assertion);
-	// This should pass the assertion on to the server.
         $.ajax('/do/login', {
           method: 'POST',
           data: {assertion: assertion},
@@ -31,8 +34,6 @@ define([
         });
       },
       onlogout: function () {
-	console.log('Logged out.');
-	// This should tell the server...
         $.ajax('/do/logout', {
           method: 'POST',
           error: logout_error,
@@ -47,11 +48,15 @@ define([
   function logout_error() {
     console.error("Error while logging out");
   }
-  function login_success() {
-    console.log("Successfully logged in");
+  function login_success(data) {
+    if(user_display !== null) {
+      user_display.text(data.email);
+    }
   }
-  function logout_success() {
-    console.log("Successfully logged out");
+  function logout_success(data) {
+    if(user_display !== null) {
+      user_display.text('Anonymous');
+    }
   }
 });
 

@@ -223,7 +223,7 @@ module.exports = function(host, clientPort) {
             data_ob !== null &&
             data_ob.status === 'okay') {
           request.session.email = data_ob.email;
-          return success(response, {});
+          return success(response, {email: data_ob.email});
         } else {
           return error(response,
                        auth_response.statusCode,
