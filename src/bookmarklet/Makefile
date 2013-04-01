@@ -21,33 +21,41 @@ VENDORS=vendors
 
 #Initialize the bookmarklet after cloning Code Review
 .PHONY: install
-install: makedirs getvendors build
+install: reset build
+
+#Build locally (do not move to TARGET)
+.PHONY: build-local
+build-local: buildvendors
 
 # Build the bookmarklet, compile/wrap the vendors, move everything to the
 # TARGET directory. This makes a test build that keeps all debugging code and
 # does not minify the source.
 .PHONY: build
-build: makeproductiondirs buildvendors
+build: build-local make-target-dirs move-to-target
 	cp bookmarklet.js $(TARGET)
-	cp style.css $(TARGET)
-	cp vendors/* $(TARGET)/$(VENDORS)
+
+# Build the production version of the bookmarklet to $TARGET
+.PHONY: build-production
+build-production: make-target-dirs buildvendors 
+	@echo "Minifying bookmarklet.js to bookmarklet.min.js"
+	@cat bookmarklet.js |\
+		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
+		uglifyjs \
+		> "$(TARGET)/bookmarklet.min.js"
+
+	@for VDR in `ls vendors`; \
+	do \
+		echo "Minifying vendors/$$VDR"; \
+		uglifyjs -o "$(TARGET)/$(VENDORS)/$$VDR" "$(VENDORS)/$$VDR"; \
+	done
+
+#Reset bookmarklet by deleting all generated files and redownloading dependencies
+.PHONY: reset
+reset: clean make-local-dirs getvendors 
 
 .PHONY: clean
 clean:
-	rm -rf *.min.js vendors/* $(TARGET)
-
-# Build the production version of the bookmarklet. Does what the build target
-# does, but it strips debug code and minifies it.
-# NOTE: THIS TARGET CURRENTLY IS A STUB. IT IS NON-FUNCTIONAL.
-# TODO: Make this a functional target.
-.PHONY: build-production
-build-production: makeproductiondirs
-	@echo "Minifying and moving to $(TARGET)"
-	cat bookmarklet.js |\
-		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
-		uglify \
-		> $(TARGET)/bookmarklet.min.js
-
+	rm -rf *.min.js lib/* vendors/* $(TARGET)
 
 ###############################################################################
 # VENDORS 
@@ -70,7 +78,7 @@ buildvendors: readability
 .PHONY: readability
 readability:
 	@echo "Wrapping $@ and compiling to $(VENDORS)"
-	cat $(VENDORS_SRC)/readability_header.js \
+	@cat $(VENDORS_SRC)/readability_header.js \
 			$(LIB)/readabilitySAX/readabilitySAX.js \
 			$(LIB)/readabilitySAX/browsers/DOMasSAX.js \
 			$(VENDORS_SRC)/readability_footer.js \
@@ -84,13 +92,17 @@ readability:
 lint:
 	jshint bookmarklet.js
 
-.PHONY: makedirs
-makedirs:
+.PHONY: make-local-dirs
+make-local-dirs:
 	mkdir -p $(LIB)
 	mkdir -p $(VENDORS)
 
-.PHONY: makeproductiondirs
-makeproductiondirs:
+.PHONY: make-target-dirs
+make-target-dirs:
 	mkdir -p $(TARGET)
 	mkdir -p $(TARGET)/$(VENDORS)
 
+.PHONY: move-to-target
+move-to-target:
+	cp style.css $(TARGET)
+	cp vendors/* $(TARGET)/$(VENDORS)
