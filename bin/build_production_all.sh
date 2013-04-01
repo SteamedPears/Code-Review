@@ -14,8 +14,7 @@ BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 
 #Allow production-build directory to be specified by command line args
 TARGET="$PWD/$1"
-if [ -z "$1" ]
-then
+if [ -z "$1" ]; then
   #Defaults to `production/`
   TARGET="$PWD/production"
 fi
