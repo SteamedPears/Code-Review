@@ -129,6 +129,7 @@ function newcode(request, response) {
     return error(response, 400, 'Invalid code text.');
   }
   var id=uuid.v4();
+  // whitelist the data fields
   var data = {
     text: fields.text,
     lang: fields.lang
@@ -160,7 +161,7 @@ function newcomment(request, response) {
   if (Number(fields.line_start) > Number(fields.line_end)) {
     return error(response, 400, 'Invalid line numbers');
   }
-  // upon successfully saving comment, this function will update comment indices
+  // whitelist the data fields
   var data = {
     user: 'Anonymous',
     code_id: fields.code_id,
@@ -170,7 +171,6 @@ function newcomment(request, response) {
     diffs: fields.diffs
   };
   if(request.session.email) {
-    console.log('new comment by ' + request.session.email);
     data.user = request.session.email;
   }
   db.multi()
