@@ -37,8 +37,17 @@ build: build-local make-target-dirs move-to-target
 # Build the production version of the bookmarklet to $TARGET
 .PHONY: build-production
 build-production: make-target-dirs buildvendors 
-	bin/build_production.sh $(TARGET)
+	@echo "Minifying bookmarklet.js to bookmarklet.min.js"
+	@cat bookmarklet.js |\
+		sed 's/\(g\.debug\s*=\s*\)true/\1false/' |\
+		uglifyjs \
+		> "$(TARGET)/bookmarklet.min.js"
 
+	@for VDR in `ls vendors`; \
+	do \
+		echo "Minifying vendors/$$VDR"; \
+		uglifyjs -o "$(TARGET)/$(VENDORS)/$$VDR" "$(VENDORS)/$$VDR"; \
+	done
 
 #Reset bookmarklet by deleting all generated files and redownloading dependencies
 .PHONY: reset
@@ -69,7 +78,7 @@ buildvendors: readability
 .PHONY: readability
 readability:
 	@echo "Wrapping $@ and compiling to $(VENDORS)"
-	cat $(VENDORS_SRC)/readability_header.js \
+	@cat $(VENDORS_SRC)/readability_header.js \
 			$(LIB)/readabilitySAX/readabilitySAX.js \
 			$(LIB)/readabilitySAX/browsers/DOMasSAX.js \
 			$(VENDORS_SRC)/readability_footer.js \
