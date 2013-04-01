@@ -12,21 +12,14 @@ define([
   var label_span = null;
   var user_display = null;
   var button = null;
+  
   $(document).ready(function() {
     user_display = $('#comment-user, #user-email');
     button = $('#persona-button-text');
     label_span = $('#user-label');
   });
 
-  $.getScript('https://login.persona.org/include.js', ready);
-  $('#persona-login').click(function login_persona_click() {
-    navigator.id.request();
-    return false;
-  });
-  $('#persona-logout').click(function login_persona_click() {
-    navigator.id.logout();
-  });
-  function ready() {
+  $.getScript('https://login.persona.org/include.js', function persona_ready() {
     navigator.id.watch({
       loggedInUser: null,
       onlogin: function (assertion) {
@@ -45,7 +38,14 @@ define([
         });
       }
     });
-  }
+  });
+  $('#persona-login').click(function login_persona_click() {
+    navigator.id.request();
+    return false;
+  });
+  $('#persona-logout').click(function login_persona_click() {
+    navigator.id.logout();
+  });
   function login_error() {
     console.error("Error while logging in");
   }
