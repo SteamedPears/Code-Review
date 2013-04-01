@@ -9,24 +9,14 @@
 # back ends via node.
 ######################################################################
 
-######################################################################
-# Configuration
-
-SERVER_DIR="src/server"
-DB_INFO_FILE="models/db_info.js"
-PID_FILE="var/server.pid"
-LOG_FILE="var/server.log"
-NODE_EXE=REPLACE_NODE_EXE
-NPM_EXE=REPLACE_NPM_EXE
-BUILD_DB_SCRIPT="models/build_db.js"
-TEST_DATA_SCRIPT="models/test_data.js"
-INDEX_SCRIPT="index.js"
+ROOT_DIR=`pwd`
+TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
 NODE_BIN=$ROOT_DIR/bin/exe/node/bin
-NODE=$NODE_BIN/node
 NPM=$NODE_BIN/npm
+NODE=$NODE_BIN/node
 
 DB=redis-server
 DB_DIR=$ROOT_DIR/var/db/
@@ -41,8 +31,7 @@ SERVER_LINK=$ROOT_DIR/var/server.log
 SERVER_LOG=$ROOT_DIR/var/logs/server
 SERVER_DIR=$ROOT_DIR/src/server
 
-echo "Installing needed packages"
-$NPM_EXE install
+INDEX_SCRIPT=$SERVER_DIR/index.js
 
 ######################################################################
 # Silently stop server, in case it's running
@@ -60,8 +49,8 @@ fi
 # Install needed packages
 cd $SERVER_DIR
 if [ "`$NPM outdated 2> /dev/null`" ]; then
-    echo "Updating server dependencies"
-    $NPM update
+	echo "Updating server dependencies"
+	$NPM update
 fi
 
 ######################################################################
