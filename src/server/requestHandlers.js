@@ -5,6 +5,11 @@ var uuid = require('node-uuid');
 var db = require('redis').createClient();
 
 /******************************************************************************
+* The methods on this object will be exported as the public api.              *
+******************************************************************************/
+var public_api = {};
+
+/******************************************************************************
 * Handle DB errors                                                            *
 ******************************************************************************/
 db.on('error', function (err) {
@@ -53,7 +58,7 @@ function isValidPositiveIntegerString(x) {
 /******************************************************************************
 * Getters                                                                     *
 ******************************************************************************/
-function codeByID(request, response) {
+public_api.codeByID = function codeByID(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.id;
   if (id === undefined) {
@@ -70,7 +75,7 @@ function codeByID(request, response) {
   });
 };
 
-function commentsOnLine(request, response) {
+public_api.commentsOnLine = function commentsOnLine(request, response) {
   var query = url.parse(request.url, true).query;
   var id = query.code_id;
   var line = query.line;
@@ -95,7 +100,7 @@ function commentsOnLine(request, response) {
   });
 };
 
-function commentCount(request, response) {
+public_api.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
   db.smembers('comment:' + code_id + ':indices', function(err, indices) {
@@ -122,7 +127,7 @@ function commentCount(request, response) {
 /******************************************************************************
 * Setters                                                                     *
 ******************************************************************************/
-function newcode(request, response) {
+public_api.newcode = function newcode(request, response) {
   // do some basic validation
   var fields = request.body;
   if (fields === null || !isValidString(fields.text)) {
@@ -142,7 +147,7 @@ function newcode(request, response) {
   });
 };
 
-function newcomment(request, response) {
+public_api.newcomment = function newcomment(request, response) {
   // reject if no referer
   if (request === null ||
      request.headers === undefined ||
@@ -197,9 +202,7 @@ function newcomment(request, response) {
 ******************************************************************************/
 
 module.exports = function(host, clientPort) {
-  var exports = {};
-  
-  exports.login = function login(request, response) {
+  public_api.login = function login(request, response) {
     if(request === null ||
        request.body === null ||
        request.body.assertion === null) {
@@ -240,18 +243,12 @@ module.exports = function(host, clientPort) {
     auth_request.end();
   };
 
-  exports.logout = function logout(request, response) {
+  public_api.logout = function logout(request, response) {
     delete request.session.email;
     return success(response, {});
   };
 
-  exports.codeByID = codeByID;
-  exports.commentsOnLine = commentsOnLine;
-  exports.commentCount = commentCount;
-  exports.newcode = newcode;
-  exports.newcomment = newcomment;
-
-  return exports;
+  return public_api;
 };
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
