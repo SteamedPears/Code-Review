@@ -175,8 +175,8 @@ public_api.newcomment = function newcomment(request, response) {
     user: 'Anonymous',
     code_id: fields.code_id,
     text: fields.text,
-    line_start: fields.line_start,
-    line_end: fields.line_end,
+    line_start: parseInt(fields.line_start),
+    line_end: parseInt(fields.line_end),
     diffs: fields.diffs
   };
   if(request.session.email) {
