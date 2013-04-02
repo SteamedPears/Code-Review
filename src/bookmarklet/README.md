@@ -14,12 +14,16 @@ move everything to them to where they can be served.
 Run `make build` to build the test-build version of the bookmarklet and vendors
 and move them to where files are are served. 
 
+Run `make build-local` to build the project to the bookmarklet project's folder
+without moving it to where the files are served.
+
 All vendors must be built before they can be used. Use `make buildvendors`.
 
 To prepare the bookmarklet for production (eg. minification, concatenation,
 etc), use `make build-production`.
 
-Use `make clean` to delete all built files. 
+Use `make clean` to delete all built files and `make reset` to clean and
+redownload dependencies.
 
 ##Vendors
 
