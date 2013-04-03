@@ -140,8 +140,8 @@ parameters.
 
 ### HTTP 400 Response
 
-One of the input parameters was invalid.  The response is in JSON format and has
-a single attribute:
+One of the input parameters, or the referer was invalid.  The response is in
+JSON format and has a single attribute:
 
 * `error`: a string description of which parameter was invalid.
 
