@@ -78,15 +78,15 @@ public_api.codeByID = function codeByID(request, response) {
 
 public_api.commentsOnLine = function commentsOnLine(request, response) {
   var query = url.parse(request.url, true).query;
-  var id = query.code_id;
+  var code_id = query.code_id;
   var line = query.line;
-  if (id === undefined) {
-    return error(response, 400, 'Invalid comment id');
+  if (code_id === undefined) {
+    return error(response, 400, 'Invalid code id');
   }
   if (line === undefined) {
     return error(response, 400, 'Invalid line number');
   }
-  db.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+  db.lrange('comment:' + code_id + ':' + line, 0, -1, function(err, reply) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
@@ -104,6 +104,9 @@ public_api.commentsOnLine = function commentsOnLine(request, response) {
 public_api.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
+  if(code_id === undefined) {
+    return error(response, 400, 'Invalid code id');
+  }
   db.smembers('comment:' + code_id + ':indices', function(err, indices) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
@@ -223,22 +226,21 @@ module.exports = function(host, clientPort) {
       headers: {'Content-Length': content.length,
                 'Content-Type': 'application/x-www-form-urlencoded'}
     },function(auth_response) {
-      var data_ob = null;
+      var data_str = '';
       // assume uft8
       auth_response.setEncoding('utf8');
       auth_response.on('data',function(data) {
-        data_ob = JSON.parse(data);
+        data_str += data;
       });
       auth_response.on('end',function() {
+        var data_ob = JSON.parse(data_str);
         if (auth_response.statusCode === 200 &&
             data_ob !== null &&
             data_ob.status === 'okay') {
           request.session.email = data_ob.email;
           return success(response, {email: data_ob.email});
         } else {
-          return error(response,
-                       auth_response.statusCode,
-                       'Error validating assertion');
+          return error(response,401,'Error validating assertion');
         }
       });
     });
