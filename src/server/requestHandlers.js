@@ -94,6 +94,8 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   });
 };
 
+// Retrieves from the database the hashtable mapping line numbers to number of
+// comments that start on that line
 exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
@@ -126,6 +128,8 @@ exports.newcode = function newcode(request, response) {
   });
 };
 
+// Add the comment to the database and also update the hashtable that maps line
+// numbers to number of comments that start on that line
 exports.newcomment = function newcomment(request, response) {
   // reject if no referer
   if (request === null ||
