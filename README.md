@@ -18,10 +18,10 @@ See http://review.steamedpears.com for the prototype.
 # Documentation
 
 Our project's documentation is spread out through the project in a component
-specific way. Installation instructions for the server side component is located
-in `./INSTALL`. All docs relating to building and developing the bookmarklet are
-in `./src/bookmarklet/README.md`. Usage instructions for the client component
-can be found in the tutorial available to new users.
+specific way. Installation instructions for the server side component are
+located in `./INSTALL`. All docs relating to building and developing the
+bookmarklet are in `./src/bookmarklet/README.md`. Usage instructions for the
+client component can be found in the tutorial available to new users.
 
 All of Code Review's code adheres to a strict [coding
 standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards).
