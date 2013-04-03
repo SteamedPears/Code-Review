@@ -147,7 +147,7 @@ exports.newcomment = function newcomment(request, response) {
     return error(response, 400, 'Invalid line numbers');
   }
   var comment_key = 'comment:' + fields.code_id + ':' + fields.line_start;
-  return db.lpush(key, JSON.stringify(fields), function(err) {
+  return db.lpush(comment_key, JSON.stringify(fields), function(err) {
     if (err !== null) {
       return error(response, 500, 'Error writing comment to database.');
     }
