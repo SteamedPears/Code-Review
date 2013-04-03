@@ -147,17 +147,15 @@ exports.newcomment = function newcomment(request, response) {
     return error(response, 400, 'Invalid line numbers');
   }
   var comment_key = 'comment:' + fields.code_id + ':' + fields.line_start;
-  return db.lpush(comment_key, JSON.stringify(fields), function(err) {
+  var transaction = db.multi();
+  transaction.lpush(comment_key, JSON.stringify(fields));
+  var indices_key = 'comment:' + fields.code_id + ':indices';
+  transaction.hincrby(indices_key, fields.line_start, 1);
+  return transaction.exec(function(err) {
     if (err !== null) {
       return error(response, 500, 'Error writing comment to database.');
     }
-    var indices_key = 'comment:' + fields.code_id + ':indices';
-    return db.hincrby(indices_key, fields.line_start, 1, function(err) {
-      if (err !== null) {
-        return error(response, 500, 'Error incrementing count in database.');
-      }
-      return success(response, fields);
-    });
+    return success(response, fields);
   });
 };
 
