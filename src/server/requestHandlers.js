@@ -146,21 +146,19 @@ exports.newcomment = function newcomment(request, response) {
   if (Number(fields.line_start) > Number(fields.line_end)) {
     return error(response, 400, 'Invalid line numbers');
   }
-  function comment_done(err) {
+  var comment_key = 'comment:' + fields.code_id + ':' + fields.line_start;
+  return db.lpush(key, JSON.stringify(fields), function(err) {
     if (err !== null) {
       return error(response, 500, 'Error writing comment to database.');
     }
-    db.hincrby('comment:' + fields.code_id + ':indices', fields.line_start, 1,
-               hincr_done);
-  }
-  function hincr_done(err) {
-    if (err !== null) {
-      return error(response, 500, 'Error incrementing count in database.');
-    }
-    return success(response, fields);
-  }
-  db.lpush('comment:' + fields.code_id + ':' + fields.line_start,
-           JSON.stringify(fields), comment_done);
+    var indices_key = 'comment:' + fields.code_id + ':indices';
+    return db.hincrby(indices_key, fields.line_start, 1, function(err) {
+      if (err !== null) {
+        return error(response, 500, 'Error incrementing count in database.');
+      }
+      return success(response, fields);
+    });
+  });
 };
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */
