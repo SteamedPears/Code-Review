@@ -211,7 +211,7 @@ public_api.newcomment = function newcomment(request, response) {
 
 module.exports = function(host, clientPort) {
   public_api.login = function login(request, response) {
-    if(request.body || request.body.assertion) {
+    if ( !( request.body && request.body.assertion )) {
       return error(response, 400, 'Invalid assertion');
     }
     var assertion = request.body.assertion;
