@@ -158,17 +158,15 @@ public_api.newcode = function newcode(request, response) {
 // numbers to number of comments that start on that line
 public_api.newcomment = function newcomment(request, response) {
   // reject if no referer
-  if (request === null ||
-     request.headers === undefined ||
-     request.headers.referer === undefined) {
+  if (!request.headers || !request.headers.referer) {
     return error(response, 400, 'Invalid referer');
   }
   // do some basic validation
   var fields = request.body;
-  if (fields === null ||
-     !isValidString(fields.text) ||
-     !isValidPositiveIntegerString(fields.line_start) ||
-     !isValidPositiveIntegerString(fields.line_end)) {
+  if (!(fields &&
+        isValidString(fields.text) &&
+        isValidPositiveIntegerString(fields.line_start) &&
+        isValidPositiveIntegerString(fields.line_end))) {
     return error(response, 400, 'Invalid field');
   }
   // make sure the line numbers are sane
@@ -213,9 +211,7 @@ public_api.newcomment = function newcomment(request, response) {
 
 module.exports = function(host, clientPort) {
   public_api.login = function login(request, response) {
-    if(request === null ||
-       request.body === null ||
-       request.body.assertion === null) {
+    if(request.body || request.body.assertion) {
       return error(response, 400, 'Invalid assertion');
     }
     var assertion = request.body.assertion;
