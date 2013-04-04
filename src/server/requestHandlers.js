@@ -240,8 +240,7 @@ module.exports = function(host, clientPort) {
           return error(response, 500, 'Invalid verification server response');
         }
         if (auth_response.statusCode === 200 &&
-            data_ob && data_ob.status &&
-            data_ob.status === 'okay') {
+            data_ob && data_ob.status === 'okay') {
           request.session.email = data_ob.email;
           return success(response, {email: data_ob.email});
         } else {
