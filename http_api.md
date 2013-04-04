@@ -94,7 +94,7 @@ URL: `/do/newcode`
 Required parameters:
 
 * `text`: The (code) text of the code object.
-* `lang': The programming language in which the text is written.
+* `lang`: The programming language in which the text is written.
 
 ### HTTP 200 Response
 
