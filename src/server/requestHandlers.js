@@ -2,6 +2,8 @@
 var https = require('https');
 var url = require('url');
 var uuid = require('node-uuid');
+var querystring = require('querystring');
+var util = require('util');
 var db = require('redis').createClient();
 
 // The methods on this object will be exported as the public api
@@ -132,10 +134,10 @@ public_api.commentCount = function commentCount(request, response) {
 public_api.newcode = function newcode(request, response) {
   // do some basic validation
   var fields = request.body;
-  if (fields === null || !isValidString(fields.text)) {
+  if (!fields || !fields.text || !isValidString(fields.text)) {
     return error(response, 400, 'Invalid code text.');
   }
-  if(!isValidString(fields.lang)) {
+  if(!fields.lang || !isValidString(fields.lang)) {
     return error(response, 400, 'Invalid code lang.');
   }
   var id=uuid.v4();
@@ -214,8 +216,10 @@ module.exports = function(host, clientPort) {
       return error(response, 400, 'Invalid assertion');
     }
     var assertion = request.body.assertion;
-    var content = 'assertion=' + assertion + '&audience=http://';
-    content += host + ':' + clientPort;
+    var content = querystring.stringify({
+      assertion: assertion,
+      audience: util.format('http://%s:%s',host,clientPort)
+    });
     var auth_request = https.request({
       host: 'verifier.login.persona.org',
       port: 443,
