@@ -4,9 +4,7 @@ var url = require('url');
 var uuid = require('node-uuid');
 var db = require('redis').createClient();
 
-/******************************************************************************
-* The methods on this object will be exported as the public api.              *
-******************************************************************************/
+// The methods on this object will be exported as the public api
 var public_api = {};
 
 /******************************************************************************
