@@ -66,12 +66,16 @@ public_api.codeByID = function codeByID(request, response) {
   }
   db.get('code:' + id, function(err, reply) {
     if (err !== null) {
-      return error(response, 500, 'Error while reading from database.');
+      return error(response, 500, 'Error while reading from database');
     }
     if (reply === null) {
       return error(response, 404, 'Code not found');
     }
-    var data = JSON.parse(reply);
+    try {
+      var data = JSON.parse(reply);
+    } catch(err) {
+      return error(response, 500, 'Error while parsing database reply');
+    }
     return success(response, data);
   });
 };
@@ -88,14 +92,18 @@ public_api.commentsOnLine = function commentsOnLine(request, response) {
   }
   db.lrange('comment:' + code_id + ':' + line, 0, -1, function(err, reply) {
     if (err !== null) {
-      return error(response, 500, 'Error while reading from database.');
+      return error(response, 500, 'Error while reading from database');
     }
     if (reply === null) {
       return error(response, 404, 'Comment not found');
     }
     var out = [];
     reply.forEach(function(value) {
-      out.push(JSON.parse(value));
+      try {
+        out.push(JSON.parse(value));
+      } catch(err) {
+        return error(response, 500, 'Error while parsing database reply');
+      }
     });
     return success(response, out);
   });
@@ -109,10 +117,10 @@ public_api.commentCount = function commentCount(request, response) {
   }
   db.smembers('comment:' + code_id + ':indices', function(err, indices) {
     if (err !== null) {
-      return error(response, 500, 'Error while reading from database.');
+      return error(response, 500, 'Error while reading from database');
     }
     if (indices === null) {
-      return error(response, 404, 'Comments not found.');
+      return error(response, 404, 'Comments not found');
     }
     var multi = db.multi();
     indices.forEach(function(index) {
@@ -235,9 +243,13 @@ module.exports = function(host, clientPort) {
         data_str += data;
       });
       auth_response.on('end',function() {
-        var data_ob = JSON.parse(data_str);
+        try {
+          var data_ob = JSON.parse(data_str);
+        } catch(err) {
+          return error(response, 500, 'Invalid verification server response');
+        }
         if (auth_response.statusCode === 200 &&
-            data_ob !== null &&
+            data_ob && data_ob.status &&
             data_ob.status === 'okay') {
           request.session.email = data_ob.email;
           return success(response, {email: data_ob.email});
