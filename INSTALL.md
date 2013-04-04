@@ -51,7 +51,7 @@ Requirements:
 
 Instructions:
 
-(Assuming ssh`d into server, pulled latest repo and reading this.)
+(Assuming ssh'd into server, pulled latest repo and reading this.)
 
  1. cd to root directory
  2. run bin/update_server.sh
