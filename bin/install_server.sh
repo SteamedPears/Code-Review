@@ -14,16 +14,17 @@ TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
+######################################################################
 BIN_DIR=$ROOT_DIR/bin/exe
-
-HOME_FOLDER=/home/bheesham/
 
 # A valid node version
 NODE_VERSION=0.10.2
 
 # Can be either 64 or 86
 NODE_ARCH=64
+
 ######################################################################
+
 NODE_F=node-v$NODE_VERSION-linux-x$NODE_ARCH
 NODE_BINS=$BIN_DIR/node/bin
 
@@ -35,6 +36,3 @@ echo Download complete, extracting node.js
 tar -xf $NODE_F.tar.gz -C $BIN_DIR/
 rm $NODE_F.tar.gz
 mv $NODE_F node
-
-echo Configuring npm
-$NODE_BINS/npm config list >> $HOME_FOLDER/.npmrc
