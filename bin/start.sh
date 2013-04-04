@@ -1,12 +1,12 @@
 #!/bin/bash
 ######################################################################
-# Development Server Start Script
+# Server Start Script
 #
 # Project: Code Review
 # By:      Steamed Pears
 #
-# This script should start a development server serving the front and
-# back ends via node.
+# This script should start a server serving the front and back ends 
+# via node.
 ######################################################################
 
 ROOT_DIR=`pwd`
@@ -62,7 +62,22 @@ ln -s -f $DB_LOG.$TIME.log $DB_LINK
 
 ######################################################################
 # Server initialization
-echo "Starting development server"
-NODE_ENV=development $NODE $INDEX_SCRIPT &> $SERVER_LOG.$TIME.log &
+echo "Starting server"
+
+if [[ "$1" == "--prod" ]]; then
+	export NODE_ENV=
+elif [[ -n "$1" ]]; then
+	echo "Aborting; unrecognized parameter: $1"
+	exit 1;
+else
+	export NODE_ENV=development
+fi
+
+$NODE $INDEX_SCRIPT &> $SERVER_LOG.$TIME.log &
+
 echo $! > $SERVER_PID
 ln -s -f $SERVER_LOG.$TIME.log $SERVER_LINK
+
+
+
+
