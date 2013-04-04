@@ -29,7 +29,8 @@ and [development
 process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). The web facing API documentation is can be found in `./http_api`.
 
 All remaining [required
-documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project) is located in the `./docs` folder.
+documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project)
+is located in the `./docs` submodule folder.
 
 # Milestones
 

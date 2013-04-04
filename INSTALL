@@ -18,8 +18,8 @@ Requirements:
 
 Installation Instructions:
 
-  1. open a terminal.
-  2. git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git 
+  1. open a terminal
+  2. `git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git`
 
 This will clone the project into a folder and initialize it's git submodules.
 
