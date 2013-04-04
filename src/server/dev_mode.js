@@ -12,15 +12,14 @@ var proxy = require('proxy-middleware');
 
 console.log('Development Mode');
 
-module.exports = function(serverPort) {
+module.exports = function(host, serverPort, clientPort) {
   // Configuration
   var staticPort = 8888;
   var staticDirectory = '../client/';
 
-  var proxyPort  = 8080;
   var proxyRoutes = {
-    '/do' : 'http://localhost:' + serverPort,
-    '/'   : 'http://localhost:' + staticPort
+    '/do' : 'http://' + host + ':' + serverPort,
+    '/'   : 'http://' + host + ':' + staticPort
   };
 
   // Static server
@@ -39,5 +38,5 @@ module.exports = function(serverPort) {
     console.log('\t' + route + ' -> ' + proxyRoutes[route]);
     proxyServer.use(route, proxy(url.parse(proxyRoutes[route])));
   }
-  proxyServer.listen(proxyPort);
+  proxyServer.listen(clientPort);
 };
