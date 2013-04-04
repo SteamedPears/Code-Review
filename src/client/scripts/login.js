@@ -51,24 +51,24 @@ define([
     console.error("Error while logging out");
   }
   function login_success(data) {
-    if(label_span !== null) {
+    if (label_span !== null) {
       label_span.show();
     }
-    if(user_display !== null) {
+    if (user_display !== null) {
       user_display.text(data.email);
     }
-    if(button !== null) {
+    if (button !== null) {
       button.text('Sign Out');
     }
   }
   function logout_success(data) {
-    if(label_span !== null) {
+    if (label_span !== null) {
       label_span.hide();
     }
-    if(user_display !== null) {
+    if (user_display !== null) {
       user_display.text('Anonymous');
     }
-    if(button !== null) {
+    if (button !== null) {
       button.text('Sign In');
     }
   }
