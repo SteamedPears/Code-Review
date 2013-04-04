@@ -109,30 +109,22 @@ public_api.commentsOnLine = function commentsOnLine(request, response) {
   });
 };
 
+// Retrieves from the database the hashtable mapping line numbers to number of
+// comments that start on that line
 public_api.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
   if(code_id === undefined) {
     return error(response, 400, 'Invalid code id');
   }
-  db.smembers('comment:' + code_id + ':indices', function(err, indices) {
+  db.hgetall('comment:' + code_id + ':indices', function(err, indices) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database');
     }
     if (indices === null) {
       return error(response, 404, 'Comments not found');
     }
-    var multi = db.multi();
-    indices.forEach(function(index) {
-      multi.llen('comment:' + code_id + ':' + index);
-    });
-    multi.exec(function(err, lengths) {
-      var out = {};
-      lengths.forEach(function(length, i) {
-        out[indices[i]] = length;
-      });
-      return success(response, out);
-    });
+    return success(response, indices);
   });
 };
 
@@ -156,12 +148,14 @@ public_api.newcode = function newcode(request, response) {
   };
   db.set('code:' + id, JSON.stringify(data), function(err) {
     if (err !== null) {
-      return error(response, 500, 'Error while writing to database.');
+      return error(response, 500, 'Error while writing code to database.');
     }
     return success(response, {id:id});
   });
 };
 
+// Add the comment to the database and also update the hashtable that maps line
+// numbers to number of comments that start on that line
 public_api.newcomment = function newcomment(request, response) {
   // reject if no referer
   if (request === null ||
@@ -193,16 +187,17 @@ public_api.newcomment = function newcomment(request, response) {
   if(request.session.email) {
     data.user = request.session.email;
   }
-  db.multi()
-    .rpush('comment:' + data.code_id + ':' + data.line_start,
-           JSON.stringify(data))
-    .sadd('comment:' + data.code_id + ':indices', data.line_start)
-    .exec(function(err) {
-      if (err !== null) {
-        return error(response, 500, 'Error while writing to database.');
-      }
-      return success(response, data);
-    });
+  var comment_key = 'comment:' + data.code_id + ':' + data.line_start;
+  var transaction = db.multi();
+  transaction.lpush(comment_key, JSON.stringify(data));
+  var indices_key = 'comment:' + data.code_id + ':indices';
+  transaction.hincrby(indices_key, data.line_start, 1);
+  return transaction.exec(function(err) {
+    if (err !== null) {
+      return error(response, 500, 'Error writing comment to database.');
+    }
+    return success(response, data);
+  });
 };
 
 /******************************************************************************

@@ -20,7 +20,8 @@ Instructions:
  1. open a terminal
  2. cd to the root directory of the project (containing this text
     file).
- 3. Run bin/start_dev.sh
+ 3. Run ```bin/install_server.sh```
+ 4. Run ```bin/start_dev.sh```
 
 Now you should be able to access the server running on localhost:8080.
 
@@ -46,8 +47,7 @@ Requirements:
  * unix (Server uses CentOS release 5.8 (Final))
  * node (Server uses v0.6.18)
  * nginx (Server uses ??)
- * MySQL (Server uses Ver 14.12 Distrib 5.0.95, for redhat-linux-gnu
-   (i686) using readline 5.1)
+ * Redis (Server uses 2.6.10)
 
 Instructions:
 
