@@ -1,4 +1,6 @@
 server_port: 25414
 req_timeout: 3000
+host: localhost
+client_port: 8080
 
 # vim: ft=yaml
