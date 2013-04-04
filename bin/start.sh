@@ -18,7 +18,7 @@ NODE_BIN=$ROOT_DIR/bin/exe/node/bin
 NPM=$NODE_BIN/npm
 NODE=$NODE_BIN/node
 
-DB=redis-server
+DB=$ROOT_DIR/bin/exe/redis/src/redis-server
 DB_DIR=$ROOT_DIR/var/db/
 DB_OPTIONS="--dir $DB_DIR"
 DB_CONF=$ROOT_DIR/etc/redis.conf
