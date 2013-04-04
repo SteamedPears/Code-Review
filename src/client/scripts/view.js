@@ -10,12 +10,14 @@
 
 define([
   "jquery",
+  "language",
   "editor",
   "diff",
   "tutorial"
 ], function($) {
   var editor = require('editor');
   var diff = require('diff');
+  var language = require('language');
   var tutorial = require('tutorial');
   
   var view = {};
@@ -39,13 +41,8 @@ define([
   view.initCodeMode = function() {
     // never run again
     view.initCodeMode = codeMode;
-    
-    var select = $('#language_id');
-    select.change(function(eventOb) {
-      view.setHighlighting(select
-                           .children('[value='+selected_lang_id+']')
-                           .data('lang'));
-    });
+
+    view.populateLanguageList(language.langs);
     codeMode();
   };
 
