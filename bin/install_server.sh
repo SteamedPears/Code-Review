@@ -14,6 +14,9 @@ ROOT_DIR=`pwd`
 ######################################################################
 # Configuration
 ######################################################################
+
+CLIENT_TARGET_DIR=~/webapps/cr_front
+
 BIN_DIR=$ROOT_DIR/bin/exe
 
 # A valid node version
@@ -35,3 +38,5 @@ echo Download complete, extracting node.js
 tar -xf $NODE_F.tar.gz -C $BIN_DIR/
 rm $NODE_F.tar.gz
 mv $NODE_F node
+
+cp -R $ROOT_DIR/src/client/* $CLIENT_TARGET_DIR/
