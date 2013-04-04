@@ -1,39 +1,30 @@
 // Libraries
-var url = require("url");
-var querystring = require("querystring");
-var formidable = require("formidable");
-var Sequelize = require("sequelize");
-var DB_Info = require("./models/db_info");
+var url = require('url');
 var uuid = require('node-uuid');
+var db = require('redis').createClient();
 
-// make the db connection
-var sequelize = new Sequelize(DB_Info.db,
-                              DB_Info.user,
-                              DB_Info.pw,
-                              DB_Info.options);
-
-// import the models
-var Code = sequelize.import(__dirname + "/models/code");
-var Comment = sequelize.import(__dirname + "/models/comment");
-var langs = require('./languageList.js');
-
-// set the associations
-Code.hasMany(Comment, {as: 'Comments', foreignKey: 'code_id'});
+/******************************************************************************
+* Handle DB errors                                                            *
+******************************************************************************/
+db.on('error', function (err) {
+  console.error('DB Error: ' + err);
+});
 
 /******************************************************************************
 * Helper Functions                                                            *
 ******************************************************************************/
-function success(response,ob) {
+function success(response, ob) {
   response.writeHead(200, {
-    "Content-Type" : "application/json", 
-    "Access-Control-Allow-Origin" : "*"
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
   });
   response.write(JSON.stringify(ob));
   response.end();
 }
 
-function error(response,errno,errtext) {
-  response.writeHead(errno, {"Content-Type": "application/json"});
+function error(response, errno, errtext) {
+  console.error('===ERROR===', errno, errtext);
+  response.writeHead(errno, {'Content-Type': 'application/json'});
   response.write(JSON.stringify({error:errtext}));
   response.end();
 }
@@ -61,191 +52,115 @@ function isValidPositiveIntegerString(x) {
 /******************************************************************************
 * Getters                                                                     *
 ******************************************************************************/
-function code(request,response) {
-  var query = url.parse(request.url).query;
-  var params = querystring.parse(query);
-  var id = params["id"];
-  if(id === undefined) {
-    return error(response,400,'Invalid code id');
+exports.codeByID = function codeByID(request, response) {
+  var query = url.parse(request.url, true).query;
+  var id = query.id;
+  if (id === undefined) {
+    return error(response, 400, 'Invalid code id');
   }
-  console.log('Finding code with id '+id);
-  Code
-    .find({where:{uuid:id}})
-    .success(function(code) {
-      if(code === null) {
-        return error(response,404,'Code not found');
-      }
-      return success(response,code);
-    });
-}
-
-function comment(request,response) {
-  var query = url.parse(request.url).query;
-  var params = querystring.parse(query);
-  var id = params["id"];
-  if(id === undefined) {
-    return error(response,400,'Invalid comment id');
-  }
-  Comment
-    .find(Number(id))
-    .success(function(comment) {
-      if(comment === null) {
-        return error(response,404,'Comment not found');
-      }
-      return success(response,comment);
-    });
-}
-
-function comments(request,response) {
-  var query = url.parse(request.url).query;
-  var params = querystring.parse(query);
-  var code_id = params["code_id"];
-  Comment.findAll({where: {code_id: code_id}}).success(function(comments) {
-    return success(response,{code_id:code_id,comments:comments});
+  db.get('code:' + id, function(err, reply) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (reply === null) {
+      return error(response, 404, 'Code not found');
+    }
+    return success(response, JSON.parse(reply));
   });
-}
+};
+
+exports.commentsOnLine = function commentsOnLine(request, response) {
+  var query = url.parse(request.url, true).query;
+  var id = query.code_id;
+  var line = query.line;
+  if (id === undefined) {
+    return error(response, 400, 'Invalid comment id');
+  }
+  if (line === undefined) {
+    return error(response, 400, 'Invalid line number');
+  }
+  db.lrange('comment:' + id + ':' + line, 0, -1, function(err, reply) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (reply === null) {
+      return error(response, 404, 'Comment not found');
+    }
+    var out = [];
+    reply.forEach(function(value) {
+      out.push(JSON.parse(value));
+    });
+    return success(response, out);
+  });
+};
+
+// Retrieves from the database the hashtable mapping line numbers to number of
+// comments that start on that line
+exports.commentCount = function commentCount(request, response) {
+  var query = url.parse(request.url, true).query;
+  var code_id = query.code_id;
+  db.hgetall('comment:' + code_id + ':indices', function(err, indices) {
+    if (err !== null) {
+      return error(response, 500, 'Error while reading from database.');
+    }
+    if (indices === null) {
+      return error(response, 404, 'Comments not found.');
+    }
+    return success(response, indices);
+  });
+};
 
 /******************************************************************************
 * Setters                                                                     *
 ******************************************************************************/
-function newcode(request,response) {
-
-  /****************************************************************************
-  * Preflight OPTIONS requests -- CORS                                        *
-  ****************************************************************************/
-  if (request.method && request.method.toUpperCase() === 'OPTIONS') {
-    response.writeHead(
-        "204",
-        "No Content",
-        {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "content-type, accept",
-          "Access-Control-Max-Age": 10, // Seconds.
-          "Content-Length": 0
-        });
-
-    return response.end();
+exports.newcode = function newcode(request, response) {
+  // do some basic validation
+  var obj = request.body;
+  if (obj === null || !isValidString(obj.text)) {
+    return error(response, 400, 'Invalid code text.');
   }
-
-  /****************************************************************************
-  * POST requests                                                             *
-  ****************************************************************************/
-
-  //On validation or parsing success
-  var writetodb = function(err,obj, files) {
-    // do some basic validation
-    if( obj === null || !isValidString(obj['text'])) {
-      return error(response,400,'Invalid code text.');
+  var id=uuid.v4();
+  db.set('code:' + id, JSON.stringify(obj), function(err) {
+    if (err !== null) {
+      return error(response, 500, 'Error while writing code to database.');
     }
-    var id=uuid.v4();
-    Code.build({
-      uuid: id,
-      text: obj.text,
-      lang: obj.lang
-    }).save().success(function(code){
-      return success(response,code);
-    }).error(function(err){
-      console.log('===ERROR===');
-      console.log(err);
-      return error(response,500,'Error writing code to database');
-    });
-  }
-  //Test if request is form data or a json object
-  var content_type = request.headers['content-type'];
-  if (content_type && content_type.indexOf('x-www-form-urlencoded') >= 0) {
-    var form = new formidable.IncomingForm();
-    form.type = 'multipart';
-    form.parse(request, writetodb );
-  }
-  //Handle JSON
-  else if (content_type && content_type.indexOf('application/json') >= 0) {
-    
-    request.setEncoding('utf8');
-    var json_str = '';
+    return success(response, {id:id});
+  });
+};
 
-    //Build JSON string
-    request.on('data', function(chunk) {
-      json_str += chunk;
-    });
-
-    request.on('end', function() {
-      var json_obj = JSON.parse(json_str);
-      writetodb(undefined,json_obj, undefined);
-    });
-  }
-  //Otherwise, fail gracefully
-  else {
-    return error(response,400,'Invalid content type header.');
-  }
-}
-
-function newcomment(request,response) {
+// Add the comment to the database and also update the hashtable that maps line
+// numbers to number of comments that start on that line
+exports.newcomment = function newcomment(request, response) {
   // reject if no referer
-  if(request === null ||
+  if (request === null ||
      request.headers === undefined ||
      request.headers.referer === undefined) {
-    return error(response,400,'Invalid referer');
+    return error(response, 400, 'Invalid referer');
   }
-  var query = url.parse(request.headers.referer).query;
-  var params = querystring.parse(query);
-  // otherwise, go ahead
-  var form = new formidable.IncomingForm();
-  form.type = 'multipart';
-  form.parse(request, function(err, fields, files) {
-    // do some basic validation
-    if(fields === null ||
-       !isValidString(fields.user) ||
-       !isValidString(fields.text) ||
-       !isValidPositiveIntegerString(fields.line_start) ||
-       !isValidPositiveIntegerString(fields.line_end)) {
-      return error(response,400,'Invalid field');
+  // do some basic validation
+  var fields = request.body;
+  if (fields === null ||
+     !isValidString(fields.user) ||
+     !isValidString(fields.text) ||
+     !isValidPositiveIntegerString(fields.line_start) ||
+     !isValidPositiveIntegerString(fields.line_end)) {
+    return error(response, 400, 'Invalid field');
+  }
+  // make sure the line numbers are sane
+  if (Number(fields.line_start) > Number(fields.line_end)) {
+    return error(response, 400, 'Invalid line numbers');
+  }
+  var comment_key = 'comment:' + fields.code_id + ':' + fields.line_start;
+  var transaction = db.multi();
+  transaction.lpush(comment_key, JSON.stringify(fields));
+  var indices_key = 'comment:' + fields.code_id + ':indices';
+  transaction.hincrby(indices_key, fields.line_start, 1);
+  return transaction.exec(function(err) {
+    if (err !== null) {
+      return error(response, 500, 'Error writing comment to database.');
     }
-    // make sure the line numbers are sane
-    if(Number(fields.line_start) > Number(fields.line_end)) {
-      return error(response,400,'Invalid line numbers');
-    }
-    // first find the code associated with the new comment
-    Code.find({where:{uuid:fields.code_id}})
-      .success(function (code) {
-        if(code === null) {
-          return error(response,400,'Invalid code id');
-        }
-        // Once we've established it's legit, build the comment
-        Comment.build({
-          user: fields.user,
-          code_id: fields.code_id,
-          line_start: fields.line_start,
-          line_end: fields.line_end,
-          text: fields.text,
-          diffs: fields.diffs
-        }).save()
-          .success(function(comment){ // success!!
-            return success(response,comment);
-          }).error(function(err) { // invalid comment
-            console.log('===ERROR===');
-            console.log(err);
-            return error(response,502,'Error while saving comment');
-          });
-      });
+    return success(response, fields);
   });
-}
-
-/******************************************************************************
-* Errors                                                                      *
-******************************************************************************/
-function not_found(request,response) {
-  return error(response,404,'Path not found');
-}
-
-/******************************************************************************
-* Exports                                                                     *
-******************************************************************************/
-exports.code = code;
-exports.comment = comment;
-exports.comments = comments;
-exports.newcode = newcode;
-exports.newcomment = newcomment;
-exports.not_found = not_found;
+};
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

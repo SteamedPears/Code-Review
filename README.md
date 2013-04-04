@@ -15,6 +15,22 @@ data such as reserved usernames, if we implement that.
 
 See http://review.steamedpears.com for the prototype.
 
+# Documentation
+
+Our project's documentation is spread out through the project in a component
+specific way. Installation instructions for the server side component are
+located in `./INSTALL`. All docs relating to building and developing the
+bookmarklet are in `./src/bookmarklet/README.md`. Usage instructions for the
+client component can be found in the tutorial available to new users.
+
+All of Code Review's code adheres to a strict [coding
+standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards) and
+[development process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). 
+The web facing API documentation can be found in `./http_api`.
+
+All remaining [required documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project)
+is located in the `./docs` folder. This folder is included as a git submodule to
+avoid polluting the projects commit history.
 
 # Milestones
 
@@ -43,3 +59,4 @@ TA: Furkan Alaca (@falaca)
 
 By Peter Simonyi, Christian Delahousse, Simon Pratt, and Bheesham Persaud.
 
+vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:

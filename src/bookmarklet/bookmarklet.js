@@ -1,3 +1,6 @@
+/* Copyright by Steamed Pears, 2013. For licensing information, 
+   see the LICENCE file in the root directory of this project. */
+
 (function(window,document,undefined) {
 'use strict';
 
@@ -112,10 +115,9 @@ var assetLoader = (function() {
       }
     },
     deleteAssets: function () {
-      var a;
       for (var asset in assets) {
         if (assets.hasOwnProperty(asset)) {
-          a = assets[asset];
+          var a = assets[asset];
           a.parentNode.removeChild(a);
           delete assets[asset];
         }
@@ -127,34 +129,66 @@ var assetLoader = (function() {
 /*******************************************************************************
 * Helpers                                                                      *
 *******************************************************************************/
-var helpers = {
-  //Figure out if this url uses a known vendor
-  vendorGetFromUrl: function(url) {
-    var matches;
-    var regex;
+//Figure out if this url uses a known vendor
+function vendorGetFromUrl (url) {
+  var matches;
+  var regex;
 
-    for (var vendor in g.vendors) {
-      if (g.vendors.hasOwnProperty(vendor)) {
-        regex = g.vendors[vendor];
-        matches = regex.test(url);
-        if (matches) return vendor;
-      }
+  for (var vendor in g.vendors) {
+    if (g.vendors.hasOwnProperty(vendor)) {
+      regex = g.vendors[vendor];
+      matches = regex.test(url);
+      if (matches) return vendor;
     }
-    return null;
-  },
-  //Load a given vendor
-  loadVendor: function (vendor, callback) {
-    dbg('helpers.loadVendor: ' + vendor);
-    assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
-  }, 
-  //Returns an XML HTTP request object
-  request: function (method, url, type) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method || 'POST', url, true);
-    xhr.setRequestHeader('Content-type', type || 'application/json');
-    return xhr;
   }
-};
+  return null;
+}
+
+//Load a given vendor
+function loadVendor (vendor, callback) {
+  dbg('helpers.loadVendor: ' + vendor);
+  assetLoader.load(g.baseUrl + g.vendorUri + vendor + '.js', callback);
+} 
+
+//Returns an XML HTTP request object
+function request (method, url, type) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(method || 'POST', url, true);
+  xhr.setRequestHeader('Content-type', type || 'application/json');
+  return xhr;
+}
+
+/*******************************************************************************
+* User interface                                                               *
+*******************************************************************************/
+
+function UI() {
+  assetLoader.load(g.baseUrl + g.bookmarkletUri + '/style.css', function () {
+    dbg('UI: stylesheet loaded');
+  });
+
+  var container = document.createElement('div'); 
+  container.id = 'codeReview-container';
+
+  var message = document.createElement('p');
+  message.id = 'message';
+  message.innerHTML = 'Initializing...';
+  container.appendChild(message);
+
+  document.body.appendChild(container);
+
+  //Write messages to the user
+  this.message = function (msg) {
+    message.innerHTML = msg;
+    dbg('UI: ', msg);
+  };
+  //Exit the UI
+  this.exit = function() {
+    container.parentNode.removeChild(container);
+  };
+}
+
+var ui = new UI();
 
 /*******************************************************************************
 * Global API                                                                   *
@@ -162,9 +196,12 @@ var helpers = {
 
 codeReview.dbg = dbg;
 
+//Exit and clean up
 codeReview.exit = function () {
-  dbg('Exiting...');
+  dbg('Exiting CodeReview');
   assetLoader.deleteAssets();
+  if (ui) ui.exit();
+  delete window.codeReview;
 };
 
 /*******************************************************************************
@@ -172,10 +209,12 @@ codeReview.exit = function () {
 *******************************************************************************/
 
 //Sketch of what's to come
-helpers.loadVendor('readability', function () {
+loadVendor('readability', function () {
+
+  ui.message('Sending content...');
   var content = codeReview.vendor.getContent();
   
-  var req = helpers.request(null,g.baseUrl + g.newCodeApi);
+  var req = request(null,g.baseUrl + g.newCodeApi);
 
   var obj = JSON.stringify({
     language_id: 1,
@@ -183,13 +222,14 @@ helpers.loadVendor('readability', function () {
   });
   req.onreadystatechange = function() {
     if (req.readyState === 4) {
-      console.log(req.responseText);
+      var res = req.responseText;
+      var json_res = JSON.parse(res);
+      ui.message('<a href="' + g.baseUrl + '/index.html?id=' + 
+        json_res.uuid + '">View CodeReview Link<\a>');
     }
   };
   req.send(obj);
-
 });
-
 
 
 })(window,document);

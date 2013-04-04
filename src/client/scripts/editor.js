@@ -67,10 +67,16 @@ define([
   editor.setHighlighting = function(lang) {
     var reqs = resolveRequirements(languages,lang);
     var files = ["CodeMirror"];
+    var lib_path = languages.include_path;
     for(var i in reqs) {
-      var language = reqs[i];
-      if(languages.data[language].file)
-        files.push(languages.include_path + languages.data[language].file);
+      var data = languages.data[reqs[i]];
+      if (data.file) {
+        files.push(lib_path + data.file);
+      }
+      if (data.depends) {
+        Array.prototype.push.apply(files,
+          data.depends.map(function (path) { return lib_path + path; }));
+      }
     }
     require(files,function(CodeMirror) {
       for(var i in files)

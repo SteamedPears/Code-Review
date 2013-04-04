@@ -12,11 +12,13 @@ define([
   "jquery",
   "language",
   "editor",
-  "diff"
+  "diff",
+  "tutorial"
 ], function($) {
   var editor = require('editor');
   var diff = require('diff');
   var language = require('language');
+  var tutorial = require('tutorial');
   
   var view = {};
   var languages = null;
@@ -60,6 +62,8 @@ define([
     $('#code_controls').show();
     $('#comment_controls').hide();
 
+    tutorial.codeMode();
+    
     editor.onCursorActivity(noop);
   };
 
@@ -69,6 +73,8 @@ define([
     $('#comment_instructions').show();
     $('#code_controls').hide();
     $('#comment_controls').show();
+
+    tutorial.commentMode();
 
     editor.onCursorActivity(function() {
       if(!noSelect) {
@@ -80,9 +86,11 @@ define([
           }
           view.hideComments();
           view.showCommentEditor(line_start,line_end);
+          tutorial.commentInputMode();
         } else {
           view.hideCommentEditor();
           view.showComments();
+          tutorial.commentDisplayMode();
         }
       }
     });
@@ -141,7 +149,7 @@ define([
     commentInfoBtn.click(function() {
       view.hideCommentEditor();
       view.showComments();
-      view.displayComments(callback(line));
+      callback(line);
     });
     commentInfo.append(commentInfoBtn);
   };
