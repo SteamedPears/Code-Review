@@ -33,6 +33,9 @@ SERVER_DIR=$ROOT_DIR/src/server
 
 INDEX_SCRIPT=$SERVER_DIR/index.js
 
+PROD_CONF=$ROOT_DIR/etc/server_prod.yml
+DEVEL_CONF=$ROOT_DIR/etc/server_devel.yml
+
 ######################################################################
 # Silently stop server, in case it's running
 bin/stop_dev.sh &> /dev/null
@@ -65,11 +68,13 @@ ln -s -f $DB_LOG.$TIME.log $DB_LINK
 echo "Starting server"
 
 if [[ "$1" == "--prod" ]]; then
+	export SERVER_CONF=$PROD_CONF
 	export NODE_ENV=
 elif [[ -n "$1" ]]; then
 	echo "Aborting; unrecognized parameter: $1"
 	exit 1;
 else
+	export SERVER_CONF=$DEVEL_CONF
 	export NODE_ENV=development
 fi
 

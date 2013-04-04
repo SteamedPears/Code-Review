@@ -7,14 +7,18 @@
 * starts the Code Review server.                                              *
 ******************************************************************************/
 
+require('js-yaml');
 var connect = require('connect');
 var cors = require('cors');
 
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
-var serverPort = 20193;
-var requestTimeout = 3000; // ms
+
+var server_config = require(process.env.SERVER_CONF);
+
+var serverPort = server_config.server_port;
+var requestTimeout = server_config.req_timeout; // ms
 
 // check if this app is being run in development or production environment
 var devMode = (process.env.NODE_ENV === 'development');
