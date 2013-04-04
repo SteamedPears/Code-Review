@@ -7,7 +7,7 @@ Development
 Requirements:
 (tested versions appear in parentheses)
 
- * unix (OS X 10.6.8, OS X 10.8.2, Fedora 18)
+ * unix (OS X 10.6.8, OS X 10.8.2, Fedora 18, Ubuntu 12.10)
  * node (v0.8.17, v0.8.20)
  * npm (1.2.11)
  * node-gyp (v0.8.4)
@@ -15,9 +15,17 @@ Requirements:
  * gcc (4.7.2)
  * GNU Wget (1.14)
 
-Instructions:
 
- 1. open a terminal
+Installation Instructions:
+
+  1. open a terminal.
+  2. git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git 
+
+This will clone the project into a folder and initialize it's git submodules.
+
+
+Usage Instructions:
+
  2. cd to the root directory of the project (containing this text
     file).
  3. Run bin/start_dev.sh
@@ -37,7 +45,6 @@ installation back to a known state, but you will lose all the data in
 your copy of the application.
 
 
-
 Production
 ----------
 
@@ -49,9 +56,12 @@ Requirements:
  * MySQL (Server uses Ver 14.12 Distrib 5.0.95, for redhat-linux-gnu
    (i686) using readline 5.1)
 
+
 Instructions:
 
 (Assuming ssh'd into server, pulled latest repo and reading this.)
 
  1. cd to root directory
  2. run bin/update_server.sh
+
+vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
