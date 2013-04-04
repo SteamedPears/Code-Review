@@ -1,4 +1,4 @@
-Installation Instructions
+nstallation Instructions
 =========================
 
 Development
@@ -20,6 +20,7 @@ Installation Instructions:
 
   1. open a terminal
   2. git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git CodeReview
+ 3. Run ```bin/install_server.sh```
 
 This will clone the project into a folder and initialize its git submodules.
 
@@ -52,8 +53,7 @@ Requirements:
  * unix (Server uses CentOS release 5.8 (Final))
  * node (Server uses v0.6.18)
  * nginx (Server uses ??)
- * MySQL (Server uses Ver 14.12 Distrib 5.0.95, for redhat-linux-gnu
-   (i686) using readline 5.1)
+ * Redis (Server uses 2.6.10)
 
 
 Instructions:

@@ -14,7 +14,9 @@ TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
-NODE=node
+NODE_BIN=$ROOT_DIR/bin/exe/node/bin
+NPM=$NODE_BIN/npm
+NODE=$NODE_BIN/node
 
 DB=redis-server
 DB_DIR=$ROOT_DIR/var/db/
@@ -46,9 +48,9 @@ fi
 ######################################################################
 # Install needed packages
 cd $SERVER_DIR
-if [ "`npm outdated 2> /dev/null`" ]; then
-    echo "Updating server dependencies"
-    npm update
+if [ "`$NPM outdated 2> /dev/null`" ]; then
+	echo "Updating server dependencies"
+	$NPM update
 fi
 
 ######################################################################
