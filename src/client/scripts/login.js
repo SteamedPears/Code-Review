@@ -7,7 +7,8 @@
 ******************************************************************************/
 
 define([
-  'jquery'
+  'jquery',
+  'https://login.persona.org/include.js'
 ], function login_main($) {
   var label_span = null;
   var user_display = null;
@@ -17,36 +18,31 @@ define([
     user_display = $('#comment-user, #user-email');
     button = $('#persona-button-text');
     label_span = $('#user-label');
-  });
-
-  require([
-    'https://login.persona.org/include.js'
-  ], function persona_ready() {
-    navigator.id.watch({
-      loggedInUser: null,
-      onlogin: function (assertion) {
-        $.ajax('/do/login', {
-          method: 'POST',
-          data: {assertion: assertion},
-          error: login_error,
-          success: login_success
-        });
-      },
-      onlogout: function () {
-        $.ajax('/do/logout', {
-          method: 'POST',
-          error: logout_error,
-          success: logout_success
-        });
-      }
+    $('#persona-login').click(function login_persona_click() {
+      navigator.id.request();
+      return false;
+    });
+    $('#persona-logout').click(function login_persona_click() {
+      navigator.id.logout();
     });
   });
-  $('#persona-login').click(function login_persona_click() {
-    navigator.id.request();
-    return false;
-  });
-  $('#persona-logout').click(function login_persona_click() {
-    navigator.id.logout();
+  navigator.id.watch({
+    loggedInUser: null,
+    onlogin: function (assertion) {
+      $.ajax('/do/login', {
+        method: 'POST',
+        data: {assertion: assertion},
+        error: login_error,
+        success: login_success
+      });
+    },
+    onlogout: function () {
+      $.ajax('/do/logout', {
+        method: 'POST',
+        error: logout_error,
+        success: logout_success
+      });
+    }
   });
   function login_error() {
     console.error("Error while logging in");
