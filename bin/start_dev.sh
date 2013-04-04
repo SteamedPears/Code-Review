@@ -14,9 +14,8 @@ TIME=`date +%Y-%m-%dT%H%M%S%Z`
 
 ######################################################################
 # Configuration
-NODE_BIN=$ROOT_DIR/bin/exe/node/bin
-NPM=$NODE_BIN/npm
-NODE=$NODE_BIN/node
+NPM=npm
+NODE=node
 
 DB=redis-server
 DB_DIR=$ROOT_DIR/var/db/

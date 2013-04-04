@@ -1,11 +1,5 @@
-html, body {
-  height: 99.99%;
-  width: 99%;
-}
-
 div, p, pre, img, table, h1, h2, h3, h4, textarea, input {
   padding: 0px;
-  margin: 0px;
 }
 
 a { 
@@ -18,9 +12,17 @@ label{
   margin-right:1em;
 }
 
-#footer { 
-  clear: both;
-  text-align: center;
+#user-id {
+  float: right;
+  padding: 0.5em;
+}
+
+#user-label {
+  display: none;
+}
+
+#title, #persona-login {
+  display: inline;
 }
 
 #error {
@@ -33,6 +35,9 @@ label{
   float: left;
 }
 
+#code-form {
+  display: inline;
+}
 
 #comment-info{
   float:left;
@@ -42,8 +47,8 @@ label{
 }
 
 .commentButton {
-    display: block;
-    position: absolute;
+  display: block;
+  position: absolute;
 }
 
 .right-side {

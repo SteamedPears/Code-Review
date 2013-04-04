@@ -142,7 +142,8 @@ define([
 
   view.addCommentButton = function(line,count,callback) {
     var commentInfo = $("#comment-info");
-    var commentInfoBtn =  $('<button type="button" class="commentButton">');
+    var commentInfoBtn =  $('<button>');
+    commentInfoBtn.addClass('btn btn-info btn-mini commentButton');
     commentInfoBtn.text(count+" comments");
     var pos = editor.getLinePosition(line);
     commentInfoBtn.css('top',pos);
@@ -150,6 +151,7 @@ define([
       view.hideCommentEditor();
       view.showComments();
       callback(line);
+      return false;
     });
     commentInfo.append(commentInfoBtn);
   };

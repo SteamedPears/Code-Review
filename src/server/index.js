@@ -13,6 +13,8 @@ var cors = require('cors');
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
+var host = 'review.steamedpears.com';
+var clientPort = 80;
 var serverPort = 20193;
 var requestTimeout = 3000; // ms
 
@@ -20,13 +22,15 @@ var requestTimeout = 3000; // ms
 var devMode = (process.env.NODE_ENV === 'development');
 
 if (devMode) {
-  require('./dev_mode')(serverPort);
+  host = 'localhost';
+  clientPort = 8080;
+  require('./dev_mode')(host,serverPort,clientPort);
 }
 
 /******************************************************************************
 * Load Modules                                                                *
 ******************************************************************************/
-var requestHandlers = require('./requestHandlers');
+var requestHandlers = require('./requestHandlers')(host,clientPort);
 
 /******************************************************************************
 * Connect the request handlers, aka. Routes                                   *
@@ -39,6 +43,8 @@ var getRoutes = {
 var postRoutes = {
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
+  '/login':      requestHandlers.login,
+  '/logout':     requestHandlers.logout
 };
 var corsRoutes = [
   '/newcode'
@@ -59,7 +65,9 @@ for (var route in getRoutes) {
   app.use(route, {handle:getRoutes[route]});
 }
 
-app.use(connect.bodyParser());
+app.use(connect.bodyParser())
+  .use(connect.cookieParser())
+  .use(connect.session({secret: 'keyboard kitties'}));
 
 for (var route in postRoutes) {
   app.use(route, {handle:postRoutes[route]});

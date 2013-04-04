@@ -63,7 +63,8 @@ require([
   "view",
   "code",
   "comment",
-  "editor"
+  "editor",
+  "login"
 ], function($, URI) {
   var view = require("view");
   var code = require("code");
