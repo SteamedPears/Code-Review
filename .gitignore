@@ -19,3 +19,6 @@ results
 
 bin/exe/*
 !bin/exe/.folder
+
+production/
+production_tmp/

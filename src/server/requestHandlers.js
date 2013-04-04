@@ -94,27 +94,19 @@ exports.commentsOnLine = function commentsOnLine(request, response) {
   });
 };
 
+// Retrieves from the database the hashtable mapping line numbers to number of
+// comments that start on that line
 exports.commentCount = function commentCount(request, response) {
   var query = url.parse(request.url, true).query;
   var code_id = query.code_id;
-  db.smembers('comment:' + code_id + ':indices', function(err, indices) {
+  db.hgetall('comment:' + code_id + ':indices', function(err, indices) {
     if (err !== null) {
       return error(response, 500, 'Error while reading from database.');
     }
     if (indices === null) {
       return error(response, 404, 'Comments not found.');
     }
-    var multi = db.multi();
-    indices.forEach(function(index) {
-      multi.llen('comment:' + code_id + ':' + index);
-    });
-    multi.exec(function(err, lengths) {
-      var out = {};
-      lengths.forEach(function(length, i) {
-        out[indices[i]] = length;
-      });
-      return success(response, out);
-    });
+    return success(response, indices);
   });
 };
 
@@ -130,12 +122,14 @@ exports.newcode = function newcode(request, response) {
   var id=uuid.v4();
   db.set('code:' + id, JSON.stringify(obj), function(err) {
     if (err !== null) {
-      return error(response, 500, 'Error while writing to database.');
+      return error(response, 500, 'Error while writing code to database.');
     }
     return success(response, {id:id});
   });
 };
 
+// Add the comment to the database and also update the hashtable that maps line
+// numbers to number of comments that start on that line
 exports.newcomment = function newcomment(request, response) {
   // reject if no referer
   if (request === null ||
@@ -156,17 +150,17 @@ exports.newcomment = function newcomment(request, response) {
   if (Number(fields.line_start) > Number(fields.line_end)) {
     return error(response, 400, 'Invalid line numbers');
   }
-  // upon successfully saving comment, this function will update comment indices
-  db.multi()
-    .lpush('comment:' + fields.code_id + ':' + fields.line_start,
-           JSON.stringify(fields))
-    .sadd('comment:' + fields.code_id + ':indices', fields.line_start)
-    .exec(function(err) {
-      if (err !== null) {
-        return error(response, 500, 'Error while writing to database.');
-      }
-      return success(response, fields);
-    });
+  var comment_key = 'comment:' + fields.code_id + ':' + fields.line_start;
+  var transaction = db.multi();
+  transaction.lpush(comment_key, JSON.stringify(fields));
+  var indices_key = 'comment:' + fields.code_id + ':indices';
+  transaction.hincrby(indices_key, fields.line_start, 1);
+  return transaction.exec(function(err) {
+    if (err !== null) {
+      return error(response, 500, 'Error writing comment to database.');
+    }
+    return success(response, fields);
+  });
 };
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

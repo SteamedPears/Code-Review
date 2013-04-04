@@ -8,25 +8,8 @@ LIB_DIR="$CLIENT_DIR/scripts/lib"
 RAW_DEPS_FILE="$CLIENT_DIR/raw.deps.dev.txt"
 ZIP_DEPS_FILE="$CLIENT_DIR/zip.deps.dev.txt"
 
-######################################################################
-# Helper functions
-
-function download() {
-	filename=`basename $1`
-	if [ -f $filename ]; then
-		return 0
-	fi
-	echo "Installing $filename..."
-	wget --quiet $1
-}
-
-function exitIfFailed() {
-	ret=$?
-	if [ $ret -ne 0 ]; then
-		echo $1
-		exit $ret
-	fi
-}
+HELPERS="bin/helpers.sh"
+source $HELPERS 
 
 ######################################################################
 # Sanity check
