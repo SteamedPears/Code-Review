@@ -19,7 +19,7 @@ Requirements:
 Installation Instructions:
 
 1. open a terminal
-2. git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git CodeReview
+2. `git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git CodeReview`
 3. Run `bin/install_server.sh`
 
 This will clone the project into a folder and initialize its git submodules.
@@ -28,7 +28,7 @@ This will clone the project into a folder and initialize its git submodules.
 Usage Instructions:
 
 1. cd into CodeReview, the root directory of the project.
-2. Run bin/start_dev.sh
+2. Run `bin/start_dev.sh`
 
 Now you should be able to access the server running on localhost:8080.
 
@@ -60,7 +60,7 @@ Instructions:
 
 (Assuming ssh'd into server, pulled latest repo and reading this.)
 
-1. cd to root directory
-2. run bin/update_server.sh
+1. cd to root directory (CodeReview)
+2. Run `bin/update_server.sh`
 
 vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
