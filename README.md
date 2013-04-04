@@ -24,13 +24,13 @@ bookmarklet are in `./src/bookmarklet/README.md`. Usage instructions for the
 client component can be found in the tutorial available to new users.
 
 All of Code Review's code adheres to a strict [coding
-standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards)
-and [development
-process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). The web facing API documentation is can be found in `./http_api`.
+standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards) and
+[development process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). 
+The web facing API documentation can be found in `./http_api`.
 
-All remaining [required
-documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project)
-is located in the `./docs` submodule folder.
+All remaining [required documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project)
+is located in the `./docs` folder. This folder is included as a git submodule to
+avoid polluting the projects commit history.
 
 # Milestones
 
