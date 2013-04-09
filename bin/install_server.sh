@@ -27,14 +27,17 @@ REDIS_VERSION=2.6.12
 
 ######################################################################
 
+TMP=$PREFIX/tmp
+BIN=$PREFIX/usr/bin
+
+mkdir -p $TMP 2> /dev/null
+mkdir -p $BIN 2> /dev/null
+
 NODE_F=node-v$NODE_VERSION-linux-x$NODE_ARCH
-NODE_BIN=/tmp/node/bin/node
-NPM_BIN=/tmp/node/bin/npm
 
 REDIS_F=redis-$REDIS_VERSION
-REDIS_BIN=/tmp/redis/src/redis-server
 
-cd /tmp
+cd $TMP
 
 ######################################################################
 # nodejs and npm
@@ -43,15 +46,14 @@ cd /tmp
 echo Installing component: node.js
 
 echo - downloading...
-wget -O /tmp/node.tar.gz -q http://nodejs.org/dist/v$NODE_VERSION/$NODE_F.tar.gz
+wget -O $TMP/node.tar.gz -q http://nodejs.org/dist/v$NODE_VERSION/$NODE_F.tar.gz
 
 echo - extracting...
 tar -xf node.tar.gz
 
 echo - installing...
-mkdir -p $PREFIX/usr/bin
-cp /tmp/$NODE_F/bin/node $PREFIX/usr/bin/node
-cp /tmp/$NODE_F/bin/npm $PREFIX/usr/bin/npm
+cp $TMP/$NODE_F/bin/node $BIN/node
+cp $TMP/$NODE_F/bin/npm $BIN/npm
 
 echo - complete!
 
@@ -66,13 +68,14 @@ wget -O redis.tar.gz -q http://redis.googlecode.com/files/$REDIS_F.tar.gz
 
 echo - extracting redis...
 tar -xf redis.tar.gz
-cd /tmp/$REDIS_F 
+cd $TMP/$REDIS_F 
 
 echo - compiling redis...
 make
 
 echo - installing redis...
-cp /tmp/$REDIS_F/src/redis-server $PREFIX/usr/bin/redis-server
+cp $TMP/$REDIS_F/src/redis-server $BIN/redis-server
+cp $TMP/$REDIS_F/src/redis-cli $BIN/redis-cli
 
 echo - complete!
 
