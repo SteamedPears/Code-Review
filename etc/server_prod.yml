@@ -1,4 +1,6 @@
 server_port: 25414
 req_timeout: 3000 #ms
+host: review.steamedpears.com
+client_port: 80
 
 # vim: ft=yaml

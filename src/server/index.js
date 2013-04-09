@@ -7,30 +7,34 @@
 * starts the Code Review server.                                              *
 ******************************************************************************/
 
-require('js-yaml');
 var connect = require('connect');
 var cors = require('cors');
 
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
-
-var server_config = require(process.env.SERVER_CONF);
-
+var yaml_str = require('fs')
+  .readFileSync(process.env.SERVER_CONF, {encoding: 'utf8'});
+var server_config = require('js-yaml').safeLoad(yaml_str, {
+  filename: process.env.SERVER_CONF,
+  strict: true
+});
 var serverPort = server_config.server_port;
-var requestTimeout = server_config.req_timeout; // ms
+var requestTimeout = server_config.req_timeout;
+var host = server_config.host;
+var clientPort = server_config.client_port;
 
 // check if this app is being run in development or production environment
 var devMode = (process.env.NODE_ENV === 'development');
 
 if (devMode) {
-  require('./dev_mode')(serverPort);
+  require('./dev_mode')(host,serverPort,clientPort);
 }
 
 /******************************************************************************
 * Load Modules                                                                *
 ******************************************************************************/
-var requestHandlers = require('./requestHandlers');
+var requestHandlers = require('./requestHandlers')(host,clientPort);
 
 /******************************************************************************
 * Connect the request handlers, aka. Routes                                   *
@@ -43,6 +47,8 @@ var getRoutes = {
 var postRoutes = {
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
+  '/login':      requestHandlers.login,
+  '/logout':     requestHandlers.logout
 };
 var corsRoutes = [
   '/newcode'
@@ -63,7 +69,9 @@ for (var route in getRoutes) {
   app.use(route, {handle:getRoutes[route]});
 }
 
-app.use(connect.bodyParser());
+app.use(connect.bodyParser())
+  .use(connect.cookieParser())
+  .use(connect.session({secret: 'keyboard kitties'}));
 
 for (var route in postRoutes) {
   app.use(route, {handle:postRoutes[route]});

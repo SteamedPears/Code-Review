@@ -10,12 +10,14 @@
 
 define([
   "jquery",
+  "language",
   "editor",
   "diff",
   "tutorial"
 ], function($) {
   var editor = require('editor');
   var diff = require('diff');
+  var language = require('language');
   var tutorial = require('tutorial');
   
   var view = {};
@@ -39,13 +41,8 @@ define([
   view.initCodeMode = function() {
     // never run again
     view.initCodeMode = codeMode;
-    
-    var select = $('#language_id');
-    select.change(function(eventOb) {
-      view.setHighlighting(select
-                           .children('[value='+selected_lang_id+']')
-                           .data('lang'));
-    });
+
+    view.populateLanguageList(language.langs);
     codeMode();
   };
 
@@ -145,7 +142,8 @@ define([
 
   view.addCommentButton = function(line,count,callback) {
     var commentInfo = $("#comment-info");
-    var commentInfoBtn =  $('<button type="button" class="commentButton">');
+    var commentInfoBtn =  $('<button>');
+    commentInfoBtn.addClass('btn btn-info btn-mini commentButton');
     commentInfoBtn.text(count+" comments");
     var pos = editor.getLinePosition(line);
     commentInfoBtn.css('top',pos);
@@ -153,6 +151,7 @@ define([
       view.hideCommentEditor();
       view.showComments();
       callback(line);
+      return false;
     });
     commentInfo.append(commentInfoBtn);
   };

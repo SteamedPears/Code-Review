@@ -9,16 +9,27 @@
 # via node.
 ######################################################################
 
+source bin/helpers.sh
 ROOT_DIR=`pwd`
-TIME=`date +%Y-%m-%dT%H%M%S%Z`
+TIME=`timestamp`
 
 ######################################################################
 # Configuration
-NODE_BIN=$ROOT_DIR/bin/exe/node/bin
-NPM=$NODE_BIN/npm
-NODE=$NODE_BIN/node
 
-DB=$ROOT_DIR/bin/exe/redis/src/redis-server
+if $PROD; then
+  NPM=$ROOT_DIR/bin/exe/node/bin/npm
+  NODE=$ROOT_DIR/bin/exe/node/bin/node
+  DB=$ROOT_DIR/bin/exe/redis/src/redis-server
+  export SERVER_CONF=$ROOT_DIR/etc/server_prod.yml
+  export NODE_ENV=
+else
+  NPM=npm
+  NODE=node
+  DB=redis-server
+  export SERVER_CONF=$ROOT_DIR/etc/server_devel.yml
+  export NODE_ENV=development
+fi
+
 DB_DIR=$ROOT_DIR/var/db/
 DB_OPTIONS="--dir $DB_DIR"
 DB_CONF=$ROOT_DIR/etc/redis.conf
@@ -33,9 +44,6 @@ SERVER_DIR=$ROOT_DIR/src/server
 
 INDEX_SCRIPT=$SERVER_DIR/index.js
 
-PROD_CONF=$ROOT_DIR/etc/server_prod.yml
-DEVEL_CONF=$ROOT_DIR/etc/server_devel.yml
-
 ######################################################################
 # Silently stop server, in case it's running
 bin/stop_dev.sh &> /dev/null
@@ -44,16 +52,16 @@ bin/stop_dev.sh &> /dev/null
 # Install Client-Side
 bin/install_client.sh
 if [ $? -ne 0 ]; then
-	echo "There was an error resolving dependencies"
-	exit 1
+  echo "There was an error resolving dependencies"
+  exit 1
 fi
 
 ######################################################################
 # Install needed packages
 cd $SERVER_DIR
 if [ "`$NPM outdated 2> /dev/null`" ]; then
-	echo "Updating server dependencies"
-	$NPM update
+  echo "Updating server dependencies"
+  $NPM update
 fi
 
 ######################################################################
@@ -67,22 +75,7 @@ ln -s -f $DB_LOG.$TIME.log $DB_LINK
 # Server initialization
 echo "Starting server"
 
-if [[ "$1" == "--prod" ]]; then
-	export SERVER_CONF=$PROD_CONF
-	export NODE_ENV=
-elif [[ -n "$1" ]]; then
-	echo "Aborting; unrecognized parameter: $1"
-	exit 1;
-else
-	export SERVER_CONF=$DEVEL_CONF
-	export NODE_ENV=development
-fi
-
 $NODE $INDEX_SCRIPT &> $SERVER_LOG.$TIME.log &
 
 echo $! > $SERVER_PID
 ln -s -f $SERVER_LOG.$TIME.log $SERVER_LINK
-
-
-
-
