@@ -6,9 +6,6 @@
 # Log files that don't make it into the logs directory
 npm-debug.log
 
-# Directories managed by submodules
-docs/
-
 # Directories created by deployment scripts
 production/
 production_tmp/
