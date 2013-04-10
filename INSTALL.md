@@ -19,15 +19,16 @@ Requirements:
 Installation Instructions:
 
 1. open a terminal
-2. `git clone --recursive-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git CodeReview`
-3. Run `bin/install_server.sh`
+2. `git clone --recurse-submodules git@github.com:CarletonU-COMP2406-W2013/Steamed-Pears.git CodeReview`
+3. cd into `CodeReview`
+4. Run `bin/install_server.sh`
 
 This will clone the project into a folder and initialize its git submodules.
 
 
 Usage Instructions:
 
-1. cd into CodeReview, the root directory of the project.
+1. cd into `CodeReview`, the root directory of the project.
 2. Run `bin/start_dev.sh`
 
 Now you should be able to access the server running on localhost:8080.
