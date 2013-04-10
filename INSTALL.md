@@ -28,14 +28,14 @@ This will clone the project into a folder and initialize its git submodules.
 Usage Instructions:
 
 1. cd into CodeReview, the root directory of the project.
-2. Run `bin/start_dev.sh`
+2. Run `bin/start.sh` 
 
 Now you should be able to access the server running on localhost:8080.
 
 If you would like to stop the server, follow the above instructions
-but instead run bin/stop_dev.sh as the final step.
+but instead run bin/stop.sh as the final step.
 
-If you would like to restart the server, simply run bin/start_dev.sh again.
+If you would like to restart the server, simply run bin/start.sh again.
 
 If something has gone horribly wrong, follow the above instructions
 but instead run bin/reset_dev.sh as the final step.  WARNING!!!  This
@@ -61,6 +61,14 @@ Instructions:
 (Assuming ssh'd into server, pulled latest repo and reading this.)
 
 1. cd to root directory (CodeReview)
-2. Run `bin/update_server.sh`
+2. Be sure to copy the client files into your static http folder.
+3. Run `bin/install_server.sh`
+4. Run `bin/start.sh --prod`
+
+
+NOTE: On some servers, you will not be able to write to /usr/bin, and compile in
+/tmp, so be sure to set a different PREFIX.
+  e.g.  `PREFIX="/home/steamed-pears" bin/install_server.sh`
+This applies to `start.sh` as well.
 
 vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:

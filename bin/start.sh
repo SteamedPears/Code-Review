@@ -46,7 +46,7 @@ INDEX_SCRIPT=$SERVER_DIR/index.js
 
 ######################################################################
 # Silently stop server, in case it's running
-bin/stop_dev.sh &> /dev/null
+bin/stop.sh &> /dev/null
 
 ######################################################################
 # Install Client-Side
