@@ -21,8 +21,7 @@ db.on('error', function (err) {
 ******************************************************************************/
 function success(response, ob) {
   response.writeHead(200, {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Content-Type': 'application/json'
   });
   response.write(JSON.stringify(ob));
   response.end();
@@ -131,6 +130,14 @@ public_api.commentCount = function commentCount(request, response) {
 /******************************************************************************
 * Setters                                                                     *
 ******************************************************************************/
+
+// Return the anti-CSRF token the client needs to send with POST requests. Since
+// this URI is not CORS-whitelisted, only same-origin scripts can get it.
+// Intended to respond to GET requests (but Connect dependencies put it here).
+public_api.anticsrf = function anticsrf(request, response) {
+  return success(response, {csrf_token: request.session._csrf});
+}
+
 public_api.newcode = function newcode(request, response) {
   // do some basic validation
   var fields = request.body;

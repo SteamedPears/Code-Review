@@ -12,13 +12,17 @@ define([
   "jquery",
   "language",
   "editor",
+  "comment",
   "diff",
-  "tutorial"
+  "tutorial",
+  "anticsrf"
 ], function($) {
   var editor = require('editor');
+  var comment = require('comment');
   var diff = require('diff');
   var language = require('language');
   var tutorial = require('tutorial');
+  var anticsrf = require('anticsrf');
   
   var view = {};
   var languages = null;
@@ -36,6 +40,8 @@ define([
     
     editor.codeFromTextArea($('#code-view')[0]);
     editor.diffFromTextArea($('#diffs')[0]);
+
+    anticsrf.onReady(ajaxifyForms);
   };
 
   view.initCodeMode = function() {
@@ -52,6 +58,40 @@ define([
     
     commentMode(id);
   };
+
+  function ajaxifyForms() {
+    $('#code-form').ajaxForm({
+      data: { _csrf: anticsrf.token },
+      success: function(ob) {
+        history.pushState({}, "CodeReview", "index.html?id=" + ob.id);
+        view.initCommentMode(ob.id);
+      },
+      error: function(ob) {
+        view.displayError("Failed to upload code");
+      }
+    });
+    $('#comment-form').ajaxForm({
+      data: { _csrf: anticsrf.token },
+      success: function(ob) {
+        view.hideCommentEditor();
+        $('#comment-form').resetForm();
+        comment.getCommentCounts(ob.code_id,
+                                 addButtons(ob.code_id),
+                                 view.displayError);
+      }
+    });
+  }
+
+  function addButtons(code_id) {
+    return function(counts) {
+      view.addCommentButtons(counts, function(line) {
+        comment.getCommentsOnLine(code_id,
+                                  line,
+                                  view.displayComments,
+                                  view.displayError);
+      });
+    };
+  }
 
 /******************************************************************************
 * View Modes                                                                  *
