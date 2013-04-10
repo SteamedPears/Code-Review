@@ -1,8 +1,12 @@
-npm-debug.log
+# Files produced by various editors/environments
 *.DS_Store
 *~
+.*.swp
+
+# Log files that don't make it into the logs directory
+npm-debug.log
+
+# Directories created by deployment scripts
 production/
 production_tmp/
-docs/
-bin/exe/*
-!bin/exe/.folder
+bin/exe/
