@@ -1,6 +1,6 @@
 #!/bin/bash
 ######################################################################
-# Development server install script
+# Server install script
 #
 # Project: Code Review
 # By:      Steamed Pears
@@ -30,11 +30,11 @@ REDIS_VERSION=2.6.12
 TMP=$PREFIX/tmp
 BIN=$PREFIX/usr/bin
 
-mkdir -p $TMP 2> /dev/null
-mkdir -p $BIN 2> /dev/null
+echo Creating directories...
+mkdir -p $TMP 
+mkdir -p $BIN
 
 NODE_F=node-v$NODE_VERSION-linux-x$NODE_ARCH
-
 REDIS_F=redis-$REDIS_VERSION
 
 cd $TMP
@@ -50,6 +50,7 @@ wget -O $TMP/node.tar.gz -q http://nodejs.org/dist/v$NODE_VERSION/$NODE_F.tar.gz
 
 echo - extracting...
 tar -xf node.tar.gz
+rm node.tar.gz
 
 echo - installing...
 cp $TMP/$NODE_F/bin/node $BIN/node
@@ -68,15 +69,22 @@ wget -O redis.tar.gz -q http://redis.googlecode.com/files/$REDIS_F.tar.gz
 
 echo - extracting redis...
 tar -xf redis.tar.gz
+rm redis.tar.gz
+
 cd $TMP/$REDIS_F 
 
 echo - compiling redis...
 make
+make PREFIX=$PREFIX install
 
 echo - installing redis...
 cp $TMP/$REDIS_F/src/redis-server $BIN/redis-server
 cp $TMP/$REDIS_F/src/redis-cli $BIN/redis-cli
 
 echo - complete!
+
+echo Cleaning up...
+rm -rf $TMP/$REDIS_F
+rm -rf $TMP/$NODE_F
 
 echo The installation has been successful

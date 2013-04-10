@@ -17,9 +17,9 @@ TIME=`timestamp`
 # Configuration
 
 if $PROD; then
-  NPM=$ROOT_DIR/bin/exe/node/bin/npm
-  NODE=$ROOT_DIR/bin/exe/node/bin/node
-  DB=$ROOT_DIR/bin/exe/redis/src/redis-server
+  NPM=$PREFIX/usr/bin/npm
+  NODE=$PREFIX/usr/bin/node
+  DB=$PREFIX/bin/redis-server
   export SERVER_CONF=$ROOT_DIR/etc/server_prod.yml
   export NODE_ENV=
 else
