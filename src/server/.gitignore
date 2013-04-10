@@ -1,8 +1,0 @@
-*.pid
-db_info.js
-node_modules
-models/config/
-models/migrations/
-node_modules*
-server.log
-public/*
