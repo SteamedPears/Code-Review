@@ -38,9 +38,11 @@ var requestHandlers = require('./requestHandlers')(host,clientPort);
 var getRoutes = {
   '/codeByID':       requestHandlers.codeByID,
   '/commentsOnLine': requestHandlers.commentsOnLine,
-  '/commentCount':  requestHandlers.commentCount
+  '/commentCount':   requestHandlers.commentCount
 };
 var postRoutes = {
+  // anticsrf responds to GET, but depends on POST parsing
+  '/anticsrf':   requestHandlers.anticsrf,
   '/newcode':    requestHandlers.newcode,
   '/newcomment': requestHandlers.newcomment,
   '/login':      requestHandlers.login,
@@ -66,8 +68,9 @@ for (var route in getRoutes) {
 }
 
 app.use(connect.bodyParser())
-  .use(connect.cookieParser())
-  .use(connect.session({secret: 'keyboard kitties'}));
+   .use(connect.cookieParser())
+   .use(connect.session({secret: 'keyboard kitties'}))
+   .use(connect.csrf());
 
 for (var route in postRoutes) {
   app.use(route, {handle:postRoutes[route]});
