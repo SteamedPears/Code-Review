@@ -5,32 +5,36 @@ Someone uploads code; then people can comment on selections of the code.
 Later reviewers can see previous comments, too, and comment on those, forming
 comment threads.
 
-* The web client will request resources and make JSON queries. It will render
-the UI.
-* The web server will respond to JSON queries with JSON descriptions of the
-stored data, and translate JSON commands to a database command language for the
-backend store. Also, it will serve web resources -- hence the name.
-* The backend store will keep the code and comments. It may also store extra
-data such as reserved usernames, if we implement that.
+Code Review comprises three major components:
+* The "server" is a Node.js server, with Connect middleware. It does very little
+  work, mostly acting as an interface to a Redis data structure server.
+* The "client" is the web front end, running in a user's browser. It displays
+  and allows editing text with CodeMirror. Several common web libraries,
+  including jQuery and Bootstrap, make coding the user interface easier.
+* The "bookmarklet" is a simple bookmarklet that loads a module for submitting
+  to Code Review, and a module for extracting the code from a page (currently
+  just Readability).
 
 See http://review.steamedpears.com for the prototype.
 
+
 # Documentation
 
-Our project's documentation is spread out through the project in a component
-specific way. Installation instructions for the server side component are
-located in `./INSTALL`. All docs relating to building and developing the
-bookmarklet are in `./src/bookmarklet/README.md`. Usage instructions for the
-client component can be found in the tutorial available to new users.
-
-All of Code Review's code adheres to a strict [coding
-standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards) and
-[development process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). 
-The web facing API documentation can be found in `./http_api`.
+Most documentation is in comments in the code. These are the key exceptions:
+* Installation instructions are in `./INSTALL.md`.
+* Bookmarklet instructions are in `./src/bookmarklet/README.md`.
+* End-user documentation currently consists of the tutorial only.
+* The web-facing API is described in `./http_api`.
 
 All remaining [required documentation](http://homeostasis.scs.carleton.ca/wiki/index.php/WebFund_2013W_Final_Project)
 is located in the `./docs` folder. This folder is included as a git submodule to
-avoid polluting the projects commit history.
+avoid polluting the project's commit history.
+
+All of Code Review's code adheres to a strict
+[coding standard](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Coding-Standards)
+and
+[development process](https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears/wiki/Process). 
+
 
 # Milestones
 
