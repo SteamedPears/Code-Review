@@ -85,7 +85,30 @@ The parameter did not match any comments in the database.
 
 There was an error while reading from the database.
 
+## Anti-CSRF token
+
+URL: `/do/anticsrf`
+
+Required parameters:
+
+None!
+
+### HTTP 200 Response
+
+Provides a token permitting POST requests. (The cross-origin policy prevents
+other domains from retrieving this.)
+
+Response format: JSON
+
+The response is an object with a single attribute:
+
+* `csrf_token`: the token to be sent with all POST requests.
+
 # Setters
+
+All POST requests require, in addition to the parameters listed below, a `_csrf`
+parameter that must match the one returned by `/do/anticsrf`, and will return an
+HTTP 403 response if this requirement is not met.
 
 ## Code
 
@@ -146,6 +169,10 @@ JSON format and has a single attribute:
 * `error`: a string description of which parameter was invalid.
 
 # Authentication
+
+All POST requests require, in addition to the parameters listed below, a `_csrf`
+parameter that must match the one returned by `/do/anticsrf`, and will return an
+HTTP 403 response if this requirement is not met.
 
 ## Login
 
