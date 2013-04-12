@@ -27,7 +27,7 @@ REDIS_VERSION=2.6.12
 
 ######################################################################
 
-TMP=$PREFIX/tmp
+TMP=${TEMP:-${TMP:-/tmp}}
 BIN=$PREFIX/usr/bin
 
 echo Creating directories...
