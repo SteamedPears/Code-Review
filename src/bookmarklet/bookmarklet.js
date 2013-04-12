@@ -22,7 +22,7 @@ g.vendorUri = '/bookmarklet/vendors/';
 g.vendorDefault = 'readability';
 g.bookmarkletUri =  '/bookmarklet';
 g.newCodeApi = '/do/newcode';
-g.baseUrl = g.debug ? '//localhost:8080' : '//review.steamedpears.com';
+g.baseUrl = g.debug ? 'http://localhost:8080' : 'http://review.steamedpears.com';
 
 function dbg() { if (g.debug) console.log.apply(console,arguments); }
 
