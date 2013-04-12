@@ -36,5 +36,5 @@
     "url":  "https://github.com/CarletonU-COMP2406-W2013/Steamed-Pears.git"
   },
   "license": "ISC License",
-  "engine" : ">=0.7.9-pre"
+  "engine" : ">=0.10"
 }

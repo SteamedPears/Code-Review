@@ -12,9 +12,19 @@
   </head>
   <body>
     <h1 id="title"><a href="index.html">CodeReview</a></h1>
+
       Try our
-      <a href="javascript:(function(){window.codeReview&&window.codeReview.exit();var a=document.createElement('script');a.src='//review.steamedpears.com/bookmarklet/bookmarklet.js';(document.head||document.body).appendChild(a)})();">bookmarklet</a>
+      <a id="bookmarklet">bookmarklet</a>
       by dragging the link to your bookmarks bar.
+      <script>
+        (function() {
+          var bookmarklet_link =
+          "javascript:(function(){window.codeReview&&window.codeReview.exit();var a=document.createElement('script');a.src='"
+            + window.location.protocol + '//' + window.location.host
+            + "/bookmarklet/bookmarklet.js';(document.head||document.body).appendChild(a)})();";
+          document.getElementById("bookmarklet").href = bookmarklet_link;
+        })();
+      </script>
     <aside id="user-id">
       <span id="user-label">
         Signed in as:

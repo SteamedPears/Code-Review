@@ -7,6 +7,7 @@
 npm-debug.log
 
 # Directories created by deployment scripts
+node_modules/
 production/
 production_tmp/
 bin/exe/

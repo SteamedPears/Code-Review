@@ -8,7 +8,7 @@ Requirements:
 (tested versions appear in parentheses)
 
 * unix (OS X 10.6.8, OS X 10.8.2, Fedora 18, Ubuntu 12.10)
-* node (v0.8.17, v0.8.20)
+* node (v0.10.1)
 * npm (1.2.11)
 * node-gyp (v0.8.4)
 * redis (2.6.10)

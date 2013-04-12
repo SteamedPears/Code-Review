@@ -74,37 +74,6 @@ require([
   // initialize the view
   view.init();
 
-  function addButtons(code_id) {
-    return function(counts) {
-      view.addCommentButtons(counts, function(line) {
-        comment.getCommentsOnLine(code_id,
-                                  line,
-                                  view.displayComments,
-                                  view.displayError);
-      });
-    };
-  }
-
-  // ajaxify forms
-  $('#code-form').ajaxForm({
-    success: function(ob) {
-      history.pushState({}, "CodeReview", "index.html?id=" + ob.id);
-      view.initCommentMode(ob.id);
-    },
-    error: function(ob) {
-      view.displayError("Failed to upload code");
-    }
-  });
-  $('#comment-form').ajaxForm({
-    success: function(ob) {
-      view.hideCommentEditor();
-      $('#comment-form').resetForm();
-      comment.getCommentCounts(ob.code_id,
-                               addButtons(ob.code_id),
-                               view.displayError);
-    }
-  });
-
   // dispatch based on query
   var query = URI(document.URL).query(true);
   if (query.error !== undefined) {
