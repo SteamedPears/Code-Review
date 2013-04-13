@@ -17,7 +17,7 @@ ROOT_DIR=`pwd`
 ######################################################################
 
 # A valid node version
-NODE_VERSION=0.10.2
+NODE_VERSION=0.10.4
 
 # Can be either 64 or 86
 NODE_ARCH=64
@@ -28,20 +28,20 @@ REDIS_VERSION=2.6.12
 ######################################################################
 
 TMP=${TEMP:-${TMP:-/tmp}}
-BIN=$PREFIX/usr/bin
+BIN=$PREFIX/bin
 
 echo Creating directories...
 mkdir -p $TMP 
 mkdir -p $BIN
 
-NODE_F=node-v$NODE_VERSION-linux-x$NODE_ARCH
+NODE_F=node-v$NODE_VERSION
 REDIS_F=redis-$REDIS_VERSION
-
-cd $TMP
 
 ######################################################################
 # nodejs and npm
 ######################################################################
+
+cd $TMP
 
 echo Installing component: node.js
 
@@ -52,15 +52,21 @@ echo - extracting...
 tar -xf node.tar.gz
 rm node.tar.gz
 
+echo - compiling node...
+cd $TMP/$NODE_F
+./configure --prefix=$PREFIX
+make
+
 echo - installing...
-cp $TMP/$NODE_F/bin/node $BIN/node
-cp $TMP/$NODE_F/bin/npm $BIN/npm
+make install
 
 echo - complete!
 
 ######################################################################
 # redis-server
 ######################################################################
+
+cd $TMP
 
 echo Installing component: redis
 
@@ -74,12 +80,10 @@ rm redis.tar.gz
 cd $TMP/$REDIS_F 
 
 echo - compiling redis...
-CFLAGS=-march=`uname -m` make
-PREFIX=$PREFIX make install
+CFLAGS=-march=native make
 
 echo - installing redis...
-cp $TMP/$REDIS_F/src/redis-server $BIN/redis-server
-cp $TMP/$REDIS_F/src/redis-cli $BIN/redis-cli
+PREFIX=$PREFIX make install
 
 echo - complete!
 
