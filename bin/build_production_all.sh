@@ -62,6 +62,7 @@ cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" dir="$TARGET_TMP"
 echo "Copying important client files to `basename $TARGET`"
 cp -av "$TARGET_TMP/scripts"  "$TARGET/scripts"
 cp -av "$TARGET_TMP/styles"  "$TARGET/styles"
+cp -av "$TARGET_TMP/images"  "$TARGET/images"
 cp -av "$TARGET_TMP/index.html"  "$TARGET/index.html"
 
 echo "Resetting Bookmarklet"
