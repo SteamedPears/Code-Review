@@ -194,7 +194,7 @@ public_api.newcomment = function newcomment(request, response) {
   }
   var comment_key = 'comment:' + data.code_id + ':' + data.line_start;
   var transaction = db.multi();
-  transaction.lpush(comment_key, JSON.stringify(data));
+  transaction.rpush(comment_key, JSON.stringify(data));
   var indices_key = 'comment:' + data.code_id + ':indices';
   transaction.hincrby(indices_key, data.line_start, 1);
   return transaction.exec(function(err) {
