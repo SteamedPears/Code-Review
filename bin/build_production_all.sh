@@ -50,9 +50,6 @@ rm -rf "$TARGET_TMP"
 echo "Creating build directories"
 mkdir -pv "$TARGET_TMP"
 
-echo "Resetting client"
-bash bin/reset_client.sh
-
 echo "Building vanilla client"
 bash bin/install_client.sh
 
