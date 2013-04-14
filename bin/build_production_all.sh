@@ -51,7 +51,7 @@ echo "Creating build directories"
 mkdir -pv "$TARGET_TMP"
 
 echo "Building vanilla client"
-bash bin/install_client.sh
+bin/install_client.sh
 
 echo "Installing r.js"
 cd "$TARGET_TMP"; npm install requirejs
