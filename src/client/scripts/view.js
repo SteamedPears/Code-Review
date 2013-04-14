@@ -53,10 +53,10 @@ define([
     } else {
       code.getCode(query.id, function(ob) {
         view.initCommentMode(query.id);
-	view.displayCode(ob);
-	comment.getCommentCounts(query.id,
-				 addButtons(query.id),
-				 view.displayError);
+        view.displayCode(ob);
+        comment.getCommentCounts(query.id,
+                                 addButtons(query.id),
+                                 view.displayError);
       }, function(err) {
         history.pushState({}, "CodeReview", "index.html");
         view.initCodeMode();
