@@ -13,14 +13,12 @@ CLIENT_SCRIPTS_DIR="$CLIENT_DIR/scripts"
 BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 
 #Allow production-build directory to be specified by command line args
-TARGET="$PWD/$1"
-if [ -z "$1" ]; then
-  #Defaults to `production/`
-  TARGET="$PWD/production"
-fi
+# Defaults to `production/`
+TARGET=${TARGET:-$PWD/production}
 
 #Temporary folder for the build
-TARGET_TMP="$TARGET""_tmp"
+TMP=${TEMP:-${TMP:-/tmp}}
+TARGET_TMP=$TMP/cr
 
 RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
 RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
@@ -46,11 +44,10 @@ exitIfFailed "UglifyJS is not installed."
 ###############################################################################
 
 echo "Deleting previous build"
-rm -rf "$TARGET"
+rm -rf "$TARGET/*"
 rm -rf "$TARGET_TMP"
 
 echo "Creating build directories"
-mkdir -pv "$TARGET"
 mkdir -pv "$TARGET_TMP"
 
 echo "Resetting client"
