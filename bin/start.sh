@@ -17,8 +17,8 @@ TIME=`timestamp`
 # Configuration
 
 if $PROD; then
-  NPM=$PREFIX/usr/bin/npm
-  NODE=$PREFIX/usr/bin/node
+  NPM=$PREFIX/bin/npm
+  NODE=$PREFIX/bin/node
   DB=$PREFIX/bin/redis-server
   export SERVER_CONF=$ROOT_DIR/etc/server_prod.yml
   export NODE_ENV=
