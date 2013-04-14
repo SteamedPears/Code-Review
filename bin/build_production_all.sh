@@ -44,7 +44,7 @@ exitIfFailed "UglifyJS is not installed."
 ###############################################################################
 
 echo "Deleting previous build"
-rm -rf "$TARGET/*"
+rm -rf "$TARGET"/*
 rm -rf "$TARGET_TMP"
 
 echo "Creating build directories"

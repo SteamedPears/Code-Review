@@ -51,13 +51,17 @@ define([
     if (query.id === undefined) {
       view.initCodeMode();
     } else {
-      view.initCommentMode(query.id);
       code.getCode(query.id, function(ob) {
+        view.initCommentMode(query.id);
 	view.displayCode(ob);
 	comment.getCommentCounts(query.id,
 				 addButtons(query.id),
 				 view.displayError);
-      }, view.displayError);
+      }, function(err) {
+        history.pushState({}, "CodeReview", "index.html");
+        view.initCodeMode();
+        view.displayError(err);
+      });
     }
   };
 
