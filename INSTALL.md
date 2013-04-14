@@ -64,12 +64,20 @@ Instructions:
 1. cd to root directory (CodeReview)
 2. Be sure to copy the client files into your static http folder.
 3. Run `bin/install_server.sh`
-4. Run `bin/start.sh --prod`
+4. Run `bin/build_production_all.sh`
+5. Run `bin/start.sh --prod`
 
-
-NOTE: On some servers, you will not be able to write to /usr/bin, and compile in
-/tmp, so be sure to set a different PREFIX.
+Note that for steps 3 and 5 you may specify a PREFIX which is a prefix
+for installing files.  For example, binary executables will be
+installed in $PREFIX/bin
   e.g.  `PREFIX="/home/steamed-pears" bin/install_server.sh`
-This applies to `start.sh` as well.
+
+Note that for steps 3 and 4 you may specify a TEMP in which to store
+temporary files.
+  e.g.  `TEMP="/home/steamed-pears/tmp" bin/install_server.sh`
+
+Note that for step 4 you may specify a TARGET which is where the
+production files will be built.
+  e.g.  `TARGET="~/webapps/cr_front" bin/build_production_all.sh`
 
 vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
