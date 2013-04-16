@@ -80,7 +80,7 @@ rm redis.tar.gz
 cd $TMP/$REDIS_F 
 
 echo - compiling redis...
-CFLAGS=-march=`uname -m` make
+make
 
 echo - installing redis...
 PREFIX=$PREFIX make install

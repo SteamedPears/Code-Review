@@ -80,4 +80,11 @@ Note that for step 4 you may specify a TARGET which is where the
 production files will be built.
   e.g.  `TARGET="~/webapps/cr_front" bin/build_production_all.sh`
 
+Note that compiling Redis (in step 3) may fail with old versions of gcc (we
+found it with gcc 4.1). To fix this, run
+
+    $ export CFLAGS=-march=i686
+
+and try again.
+
 vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
