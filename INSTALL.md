@@ -72,9 +72,9 @@ for installing files.  For example, binary executables will be
 installed in $PREFIX/bin
   e.g.  `PREFIX="/home/steamed-pears" bin/install_server.sh`
 
-Note that for steps 3 and 4 you may specify a TEMP in which to store
-temporary files.
-  e.g.  `TEMP="/home/steamed-pears/tmp" bin/install_server.sh`
+Note that for steps 3 and 4 you may specify a TMPDIR (or whatever your 
+copy of `mktemp` uses) in which to store temporary files.
+  e.g.  `TMPDIR="/home/steamed-pears/tmp" bin/install_server.sh`
 
 Note that for step 4 you may specify a TARGET which is where the
 production files will be built.
