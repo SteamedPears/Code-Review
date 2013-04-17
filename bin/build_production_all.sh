@@ -17,8 +17,7 @@ BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 TARGET=${TARGET:-$PWD/production}
 
 #Temporary folder for the build
-TMP=${TEMP:-${TMP:-/tmp}}
-TARGET_TMP=$TMP/cr
+TARGET_TMP=`mktemp -d --tmpdir codereview-XXXX`
 
 RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
 RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
@@ -45,10 +44,6 @@ exitIfFailed "UglifyJS is not installed."
 
 echo "Deleting previous build"
 rm -rf "$TARGET"/*
-rm -rf "$TARGET_TMP"
-
-echo "Creating build directories"
-mkdir -pv "$TARGET_TMP"
 
 echo "Building vanilla client"
 bin/install_client.sh

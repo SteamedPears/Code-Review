@@ -72,12 +72,19 @@ for installing files.  For example, binary executables will be
 installed in $PREFIX/bin
   e.g.  `PREFIX="/home/steamed-pears" bin/install_server.sh`
 
-Note that for steps 3 and 4 you may specify a TEMP in which to store
-temporary files.
-  e.g.  `TEMP="/home/steamed-pears/tmp" bin/install_server.sh`
+Note that for steps 3 and 4 you may specify a TMPDIR (or whatever your 
+copy of `mktemp` uses) in which to store temporary files.
+  e.g.  `TMPDIR="/home/steamed-pears/tmp" bin/install_server.sh`
 
 Note that for step 4 you may specify a TARGET which is where the
 production files will be built.
   e.g.  `TARGET="~/webapps/cr_front" bin/build_production_all.sh`
+
+Note that compiling Redis (in step 3) may fail with old versions of gcc (we
+found it with gcc 4.1). To fix this, run
+
+    $ export CFLAGS=-march=i686
+
+and try again.
 
 vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
