@@ -13,17 +13,21 @@ var cors = require('cors');
 /******************************************************************************
 * Configuration                                                               *
 ******************************************************************************/
-var host = 'review.steamedpears.com';
-var clientPort = 80;
-var serverPort = 20193;
-var requestTimeout = 3000; // ms
+var yaml_str = require('fs')
+  .readFileSync(process.env.SERVER_CONF, {encoding: 'utf8'});
+var server_config = require('js-yaml').safeLoad(yaml_str, {
+  filename: process.env.SERVER_CONF,
+  strict: true
+});
+var serverPort = server_config.server_port;
+var requestTimeout = server_config.req_timeout;
+var host = server_config.host;
+var clientPort = server_config.client_port;
 
 // check if this app is being run in development or production environment
 var devMode = (process.env.NODE_ENV === 'development');
 
 if (devMode) {
-  host = 'localhost';
-  clientPort = 8080;
   require('./dev_mode')(host,serverPort,clientPort);
 }
 

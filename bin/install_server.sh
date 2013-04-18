@@ -1,12 +1,13 @@
 #!/bin/bash
 ######################################################################
-# Development server install script
+# Server install script
 #
 # Project: Code Review
 # By:      Steamed Pears
 #
-# This script should install nodejs, and use the default configuration
-# for npm.
+# Downloads and installs:
+#   - nodejs and npm
+#   - redis-server
 ######################################################################
 
 ROOT_DIR=`pwd`
@@ -14,24 +15,80 @@ ROOT_DIR=`pwd`
 ######################################################################
 # Configuration
 ######################################################################
-BIN_DIR=$ROOT_DIR/bin/exe
 
 # A valid node version
-NODE_VERSION=0.10.2
+NODE_VERSION=0.10.4
 
 # Can be either 64 or 86
 NODE_ARCH=64
 
+# Redis version
+REDIS_VERSION=2.6.12
+
 ######################################################################
 
-NODE_F=node-v$NODE_VERSION-linux-x$NODE_ARCH
-NODE_BINS=$BIN_DIR/node/bin
+TMP=${TEMP:-${TMP:-/tmp}}
+BIN=$PREFIX/bin
 
-cd $BIN_DIR
-echo Downloading node.js
-wget -q http://nodejs.org/dist/v$NODE_VERSION/$NODE_F.tar.gz
+echo Creating directories...
+mkdir -p $TMP 
+mkdir -p $BIN
 
-echo Download complete, extracting node.js
-tar -xf $NODE_F.tar.gz -C $BIN_DIR/
-rm $NODE_F.tar.gz
-mv $NODE_F node
+NODE_F=node-v$NODE_VERSION
+REDIS_F=redis-$REDIS_VERSION
+
+######################################################################
+# nodejs and npm
+######################################################################
+
+cd $TMP
+
+echo Installing component: node.js
+
+echo - downloading...
+wget -O $TMP/node.tar.gz -q http://nodejs.org/dist/v$NODE_VERSION/$NODE_F.tar.gz
+
+echo - extracting...
+tar -xf node.tar.gz
+rm node.tar.gz
+
+echo - compiling node...
+cd $TMP/$NODE_F
+./configure --prefix=$PREFIX
+make
+
+echo - installing...
+make install
+
+echo - complete!
+
+######################################################################
+# redis-server
+######################################################################
+
+cd $TMP
+
+echo Installing component: redis
+
+echo - downloading...
+wget -O redis.tar.gz -q http://redis.googlecode.com/files/$REDIS_F.tar.gz
+
+echo - extracting redis...
+tar -xf redis.tar.gz
+rm redis.tar.gz
+
+cd $TMP/$REDIS_F 
+
+echo - compiling redis...
+make
+
+echo - installing redis...
+PREFIX=$PREFIX make install
+
+echo - complete!
+
+echo Cleaning up...
+rm -rf $TMP/$REDIS_F
+rm -rf $TMP/$NODE_F
+
+echo The installation has been successful
