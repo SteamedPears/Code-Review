@@ -72,24 +72,8 @@ require([
   var editor = require("editor");
 
   // initialize the view
-  view.init();
-
-  // dispatch based on query
   var query = URI(document.URL).query(true);
-  if (query.error !== undefined) {
-    view.displayError(query.error);
-  }
-  if (query.id === undefined) {
-    view.initCodeMode();
-  } else {
-    view.initCommentMode(query.id);
-    code.getCode(query.id, function(ob) {
-      view.displayCode(ob);
-      comment.getCommentCounts(query.id,
-                               addButtons(query.id),
-                               view.displayError);
-    }, view.displayError);
-  }
+  view.init(query);
 });
 
 /* vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80: */

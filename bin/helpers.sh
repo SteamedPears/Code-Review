@@ -20,4 +20,15 @@ function exitIfFailed() {
   fi
 }
 
+function timestamp() {
+  date +%Y-%m-%dT%H%M%S%Z
+}
+
+if [[ "$1" == "--prod" ]]; then
+  PROD=true
+else
+  PROD=false
+fi
+
+
 # vim: set softtabstop=2 shiftwidth=2 tabstop=8 expandtab textwidth=80:
