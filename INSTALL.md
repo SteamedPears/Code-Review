@@ -8,10 +8,10 @@ Requirements:
 (tested versions appear in parentheses)
 
 * unix (OS X 10.6.8, OS X 10.8.2, Fedora 18, Ubuntu 12.10)
-* node (v0.10.1)
+* node (v0.10.4)
 * npm (1.2.11)
 * node-gyp (v0.8.4)
-* redis (2.6.10)
+* redis (2.6.12)
 * gcc (4.7.2)
 * GNU Wget (1.14)
 
@@ -52,9 +52,9 @@ Production
 Requirements:
 
 * unix (Server uses CentOS release 5.8 (Final))
-* node (Server uses v0.6.18)
+* node (Server uses v0.10.4)
 * nginx (Server uses ??)
-* Redis (Server uses 2.6.10)
+* Redis (Server uses 2.6.12)
 
 
 Instructions:
