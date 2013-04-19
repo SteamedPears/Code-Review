@@ -33,6 +33,7 @@ build-local: buildvendors
 .PHONY: build
 build: build-local make-target-dirs move-to-target
 	cp bookmarklet.js $(TARGET)
+	cp style.css $(TARGET)
 
 # Build the production version of the bookmarklet to $TARGET
 .PHONY: build-production
@@ -48,6 +49,9 @@ build-production: make-target-dirs buildvendors
 		echo "Minifying vendors/$$VDR"; \
 		uglifyjs -o "$(TARGET)/$(VENDORS)/$$VDR" "$(VENDORS)/$$VDR"; \
 	done
+	@echo "Copy over the CSS"
+	cp style.css $(TARGET)
+
 
 #Reset bookmarklet by deleting all generated files and redownloading dependencies
 .PHONY: reset
