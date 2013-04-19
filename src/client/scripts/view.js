@@ -15,7 +15,8 @@ define([
   "comment",
   "diff",
   "tutorial",
-  "anticsrf"
+  "anticsrf",
+  "code"
 ], function($) {
   var editor = require('editor');
   var comment = require('comment');
@@ -23,6 +24,7 @@ define([
   var language = require('language');
   var tutorial = require('tutorial');
   var anticsrf = require('anticsrf');
+  var code = require('code');
   
   var view = {};
   var languages = null;
@@ -34,7 +36,7 @@ define([
 /******************************************************************************
 * Initialization                                                              *
 ******************************************************************************/
-  view.init = function() {
+  view.init = function(query) {
     // never run again
     view.init = noop;
     
@@ -42,6 +44,25 @@ define([
     editor.diffFromTextArea($('#diffs')[0]);
 
     anticsrf.onReady(ajaxifyForms);
+    // dispatch based on query
+    if (query.error !== undefined) {
+      view.displayError(query.error);
+    }
+    if (query.id === undefined) {
+      view.initCodeMode();
+    } else {
+      code.getCode(query.id, function(ob) {
+        view.initCommentMode(query.id);
+        view.displayCode(ob);
+        comment.getCommentCounts(query.id,
+                                 addButtons(query.id),
+                                 view.displayError);
+      }, function(err) {
+        history.pushState({}, "CodeReview", "index.html");
+        view.initCodeMode();
+        view.displayError(err);
+      });
+    }
   };
 
   view.initCodeMode = function() {

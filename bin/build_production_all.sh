@@ -13,14 +13,11 @@ CLIENT_SCRIPTS_DIR="$CLIENT_DIR/scripts"
 BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 
 #Allow production-build directory to be specified by command line args
-TARGET="$PWD/$1"
-if [ -z "$1" ]; then
-  #Defaults to `production/`
-  TARGET="$PWD/production"
-fi
+# Defaults to `production/`
+TARGET=${TARGET:-$PWD/production}
 
 #Temporary folder for the build
-TARGET_TMP="$TARGET""_tmp"
+TARGET_TMP=`mktemp -d --tmpdir codereview-XXXX`
 
 RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
 RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
@@ -46,18 +43,10 @@ exitIfFailed "UglifyJS is not installed."
 ###############################################################################
 
 echo "Deleting previous build"
-rm -rf "$TARGET"
-rm -rf "$TARGET_TMP"
-
-echo "Creating build directories"
-mkdir -pv "$TARGET"
-mkdir -pv "$TARGET_TMP"
-
-echo "Resetting client"
-bash bin/reset_client.sh
+rm -rf "$TARGET"/*
 
 echo "Building vanilla client"
-bash bin/install_client.sh
+bin/install_client.sh
 
 echo "Installing r.js"
 cd "$TARGET_TMP"; npm install requirejs
@@ -68,6 +57,7 @@ cd "$CLIENT_DIR"; node "$RJS" -o "$RJS_BUILD_PROFILE" dir="$TARGET_TMP"
 echo "Copying important client files to `basename $TARGET`"
 cp -av "$TARGET_TMP/scripts"  "$TARGET/scripts"
 cp -av "$TARGET_TMP/styles"  "$TARGET/styles"
+cp -av "$TARGET_TMP/images"  "$TARGET/images"
 cp -av "$TARGET_TMP/index.html"  "$TARGET/index.html"
 
 echo "Resetting Bookmarklet"
