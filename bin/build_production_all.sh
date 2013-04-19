@@ -64,7 +64,7 @@ echo "Resetting Bookmarklet"
 cd "$BOOKMARKLET_DIR"; make reset
 
 echo "Building Bookmarklet for production"
-cd "$BOOKMARKLET_DIR"; make TARGET="$TARGET/bookmarket" build-production 
+cd "$BOOKMARKLET_DIR"; make TARGET="$TARGET/bookmarklet" build-production 
 
 echo "Deleting TARGET_TMP"
 rm -rf "$TARGET_TMP"
