@@ -21,7 +21,7 @@
           var bookmarklet_link =
           "javascript:(function(){window.codeReview&&window.codeReview.exit();var a=document.createElement('script');a.src='"
             + window.location.protocol + '//' + window.location.host
-            + "/bookmarklet/bookmarklet.js';(document.head||document.body).appendChild(a)})();";
+            + "/bookmarklet/bookmarklet.min.js';(document.head||document.body).appendChild(a)})();";
           document.getElementById("bookmarklet").href = bookmarklet_link;
         })();
       </script>
