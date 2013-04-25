@@ -17,7 +17,7 @@ BOOKMARKLET_DIR="$PWD/src/bookmarklet"
 TARGET=${TARGET:-$PWD/production}
 
 #Temporary folder for the build
-TARGET_TMP=`mktemp -d --tmpdir codereview-XXXX`
+TARGET_TMP=`mktemp -d -t codereview-XXXX`
 
 RJS="$TARGET_TMP/node_modules/requirejs/bin/r.js"
 RJS_BUILD_PROFILE="$CLIENT_SCRIPTS_DIR/app.build.js"
