@@ -147,11 +147,9 @@ define([
           }
           view.hideComments();
           view.showCommentEditor(line_start,line_end);
-          tutorial.commentInputMode();
         } else {
           view.hideCommentEditor();
           view.showComments();
-          tutorial.commentDisplayMode();
         }
       }
     });
@@ -171,6 +169,7 @@ define([
 
   view.hideCommentEditor = function() {
     $('#comment-new').hide();
+    tutorial.commentDisplayMode();
   };
 
   view.showCommentEditor = function(start,end) {
@@ -183,6 +182,7 @@ define([
     var pos = editor.getLinePosition(start);
     $('#comment-new').css('top',pos);
     $('#comment-new').slideDown();
+    tutorial.commentInputMode();
   };
 
   view.displayError = function(err_html) {
